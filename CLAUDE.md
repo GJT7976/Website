@@ -2,9 +2,10 @@
 
 Read `README.md`, `ARCHITECTURE.md`, and the master spec
 (`Niagara Inde Apps — Claude Website Build Prompt.md`) before making
-significant changes. This is Phase 1 (Foundation + Core) of a larger
-planned platform — Stripe/tax/accounting/audit/2FA/backups are Phase 2,
-deliberately not implemented yet; don't fake data for them.
+significant changes. Phase 1 (foundation/core) and Phase 2 (Stripe
+checkout + Canadian tax engine + Orders/Sales) are both implemented.
+Full Accounting/Expenses/Audit log/2FA/Backups remain a further phase,
+deliberately not implemented yet — don't fake data for them.
 
 ## Commands
 
@@ -51,6 +52,24 @@ deliberately not implemented yet; don't fake data for them.
 - **SVG uploads are rejected on purpose** (stored-XSS risk — uploads are
   served unsanitized). Don't add `svg` back to the media MIME allow-list
   without adding sanitization first.
+- **Only `App\Services\StripeCheckout` calls the Stripe SDK.** Everything
+  else (`CheckoutController`, `Admin\OrderController`) goes through it, and
+  `App\Services\StripeWebhookHandler` has *zero* Stripe-SDK/HTTP
+  dependency of its own — it just takes a constructed `\Stripe\Event`. This
+  is what makes the webhook tests fast and network-free
+  (`\Stripe\Event::constructFrom([...])`); don't fold Stripe API calls back
+  into the handler or the controllers.
+- **A payment is only ever confirmed by the webhook, never by the
+  checkout success page.** `CheckoutController@success` just displays
+  whatever the order's current status is. If you're tempted to mark an
+  order paid from the success-page controller "to make local testing
+  easier" — don't; use `stripe listen --forward-to` instead (see
+  `STRIPE_SETUP.md`).
+- **`TaxCalculator::calculate()` returns `tax_name`/`percentage` keys, but
+  `sales_tax_lines` columns are `tax_name_snapshot`/`percentage_snapshot`.**
+  `CheckoutController` maps between them explicitly — mass-assigning the
+  calculator's array straight into `$order->taxLines()->create()` will
+  fail on the NOT NULL columns. Keep that mapping if you touch this code.
 
 ## Fonts
 

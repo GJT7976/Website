@@ -7,6 +7,10 @@
             ['label' => 'Apps', 'route' => 'admin.apps.index', 'icon' => '📦'],
             ['label' => 'Media Library', 'route' => 'admin.media.index', 'icon' => '🖼️'],
         ],
+        'Sales' => [
+            ['label' => 'Orders', 'route' => 'admin.orders.index', 'icon' => '🧾'],
+            ['label' => 'Sales', 'route' => 'admin.sales.index', 'icon' => '📈'],
+        ],
         'Content' => [
             ['label' => 'Pages', 'route' => 'admin.content.index', 'icon' => '📄'],
             ['label' => 'FAQs', 'route' => 'admin.faqs.index', 'icon' => '❓'],
@@ -17,13 +21,15 @@
     $ownerNavGroups = [
         'Administration' => [
             ['label' => 'Users', 'route' => 'admin.users.index', 'icon' => '👤'],
+            ['label' => 'Taxes', 'route' => 'admin.tax-rules.index', 'icon' => '🏛️'],
             ['label' => 'Business Settings', 'route' => 'admin.settings.edit', 'params' => ['group' => 'business'], 'icon' => '🏢'],
             ['label' => 'Site Settings', 'route' => 'admin.settings.edit', 'params' => ['group' => 'site'], 'icon' => '🎨'],
             ['label' => 'Store Settings', 'route' => 'admin.settings.edit', 'params' => ['group' => 'store'], 'icon' => '🛒'],
+            ['label' => 'Payments', 'route' => 'admin.settings.edit', 'params' => ['group' => 'payments'], 'icon' => '💳'],
         ],
     ];
 
-    $comingInPhase2 = ['Orders', 'Sales', 'Accounting', 'Expenses', 'Backups', 'Audit Log'];
+    $comingInPhase2 = ['Accounting', 'Expenses', 'Backups', 'Audit Log'];
 @endphp
 <!DOCTYPE html>
 <html lang="en">

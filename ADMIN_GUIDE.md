@@ -74,6 +74,34 @@ Every submission from the public **Contact** page appears under
 it "resolved" once handled. If a business email is configured (Settings →
 Business), a notification email is also sent there.
 
+## Selling an app
+
+1. Set a real price on the app (Apps → the app → Pricing) and check
+   **Enable direct in-browser purchase (Stripe Checkout)**.
+2. Make sure Stripe keys are configured — check **Settings → Payments**
+   (owner only; shows configured/not-configured status, never the actual
+   keys) — see `STRIPE_SETUP.md` if they aren't set up yet.
+3. A real **Buy Now** button now appears on the app's public page.
+
+## Orders & Sales
+
+- **Orders** lists every checkout attempt with its status (pending, paid,
+  failed, refunded). Open one to see the billing details, tax breakdown,
+  payment history, and — for a paid order (owner only) — an **Issue
+  Refund** button.
+- **Sales** shows gross/tax/refunds/net totals for a date range (Today /
+  This Month / This Quarter / This Year / Custom), with a CSV export. This
+  is a basic sales view — full fiscal-year/by-province accounting reports
+  are a further phase.
+- **Taxes** (owner only, under the Administration section) is where
+  Canadian tax rates live — country, province, name, percentage, effective
+  date, and an optional expiry date. Checkout calculates tax by looking up
+  whatever rule(s) are active and in-date for the buyer's billing
+  province; no rule means no tax is charged, so add rules for every
+  jurisdiction you're obligated to collect in. **Verify current
+  Canadian/provincial tax requirements against authoritative sources
+  before relying on the seeded default for a real sale.**
+
 ## Users (owner only)
 
 **Users** lets an owner add or edit administrator accounts, change roles,
@@ -83,7 +111,8 @@ prevents accidentally locking yourself out.
 
 ## What's not here yet
 
-Orders, Sales, Accounting, Expenses, Backups, and the Audit Log are shown
-in the sidebar as "Phase 2 — Soon." They're not implemented — no figures
-are shown for them anywhere in the admin, rather than displaying
-placeholder or fabricated numbers.
+Full Accounting (fiscal-year exports, by-province/country breakdowns,
+Stripe fees), Expenses, Backups, and the Audit Log are shown in the
+sidebar as "Phase 2 — Soon." They're not implemented — no figures are
+shown for them anywhere in the admin, rather than displaying placeholder
+or fabricated numbers.

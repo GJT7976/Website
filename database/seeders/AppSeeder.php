@@ -14,6 +14,7 @@ class AppSeeder extends Seeder
     {
         $this->seedBreadMaker();
         $this->seedPlaceholderApps();
+        $this->seedTestPurchaseApp();
     }
 
     /**
@@ -188,5 +189,29 @@ MD,
                 ]
             );
         }
+    }
+
+    /**
+     * A deliberately fake, clearly-labeled paid app used only to exercise
+     * the Stripe Checkout flow end-to-end locally — published (so its
+     * checkout page is reachable) but never featured, and obviously not a
+     * real product. Remove or unpublish it before a real launch.
+     */
+    private function seedTestPurchaseApp(): void
+    {
+        App::updateOrCreate(
+            ['slug' => 'seed-test-purchase-app'],
+            [
+                'name' => '[SEED] Test Purchase App',
+                'tagline' => 'For testing the Stripe checkout flow locally only',
+                'short_description' => 'Not a real product. Exists only so the Buy Now / Stripe Checkout / tax calculation flow can be tested end-to-end with Stripe test keys. Remove or unpublish before a real launch.',
+                'status' => 'published',
+                'is_featured' => false,
+                'is_free' => false,
+                'price_cents' => 499,
+                'currency' => 'CAD',
+                'direct_purchase_enabled' => true,
+            ]
+        );
     }
 }

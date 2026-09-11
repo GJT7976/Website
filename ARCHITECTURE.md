@@ -20,11 +20,15 @@ app/
   Models/                                 Eloquent models, see schema below
   Services/ImageService.php               GD-based thumbnail generation
   Services/MediaLibrary.php               shared upload handling
+  Services/TaxCalculator.php              effective-dated tax lookup
+  Services/StripeCheckout.php             the only class that calls the Stripe SDK
+  Services/StripeWebhookHandler.php       pure webhook event logic (no SDK calls)
 database/
-  migrations/                             Phase 1 tables (see below)
+  migrations/                             see schema below
   seeders/                                AppCategory, Platform, App
-                                           (Bread Maker + seed placeholders),
-                                           Page, Setting, Faq
+                                           (Bread Maker + seed placeholders +
+                                           a checkout test app), Page,
+                                           Setting, Faq, TaxRule
 resources/views/
   components/                             app-layout, admin-layout, site-nav,
                                            site-footer, app-card, price,
@@ -76,14 +80,14 @@ on `apps`), never floats, per the spec's money-handling requirement.
 `currency` is stored alongside every price-bearing row (default `CAD`) —
 `$` is never assumed to mean CAD internally.
 
-## Database schema — Phase 1 (migrated today)
+## Database schema — implemented
 
 | Table | Purpose |
 |---|---|
 | `users` | Admin accounts only. `role`, `is_active` added to Laravel's default table. |
 | `app_categories` | Lookup: Business, Food & Recipes, Productivity, Utilities, Education, Lifestyle, Other. |
 | `platforms` | Lookup: android, windows, web, pwa, ios, macos. |
-| `apps` | The catalogue. Core fields, pricing (cents), store links, demo fields (1:1 — no separate `demos` table needed), SEO fields, `status` (draft/published/archived), `is_featured` (also gates homepage visibility), soft deletes. |
+| `apps` | The catalogue. Core fields, pricing (cents), store links, `direct_purchase_enabled` (now functional), demo fields (1:1 — no separate `demos` table needed), SEO fields, `status` (draft/published/archived), `is_featured` (also gates homepage visibility), soft deletes. |
 | `app_platform` | Pivot: apps ↔ platforms. |
 | `media` | Media library items: disk/path/thumbnail, mime, size, dimensions, alt/title/description, uploader. |
 | `app_media` | Pivot: apps ↔ media, with `type` (icon / feature_graphic / screenshot) and `sort_order`. |
@@ -93,20 +97,37 @@ on `apps`), never floats, per the spec's money-handling requirement.
 | `faqs` | General (site-wide) or app-specific FAQs. |
 | `settings` | Key/value site settings, grouped (`business`, `site`, `store`). |
 | `support_requests` | Contact form submissions / support inbox. |
+| `orders` | No separate `customers` table (guest checkout only) — billing info is snapshotted directly on the order for financial auditability. `order_number`, billing fields, money in cents, `payment_status`/`order_status`, Stripe session/intent ids. |
+| `order_items` | Snapshotted at purchase time (`app_name_snapshot`, `unit_price_cents`) — never re-reads the live `apps` row for a historical order. |
+| `payments` | One immutable row per **webhook-confirmed** payment event — only ever written by `StripeWebhookHandler`, never by the checkout request itself. |
+| `refunds` | `administrator_id` is null when a refund originated in the Stripe dashboard rather than this admin. |
+| `tax_rules` | Effective-dated Canadian tax configuration (country/province, tax name, percentage, effective/expiry dates) — never a single hard-coded Ontario rate. Admin-editable at Settings → Taxes. |
+| `sales_tax_lines` | Tax actually applied to a given order, snapshotted independently of later `tax_rules` edits. |
 
-## Database schema — Phase 2 (planned, not yet migrated)
-
-Documented here so Phase 2 has an agreed starting point:
+## Database schema — further phase (not yet migrated)
 
 | Table | Purpose |
 |---|---|
-| `customers` | Customer accounts (optional — guest checkout should remain possible). |
-| `orders`, `order_items` | Immutable snapshot of what was purchased, at what price, at time of sale. |
-| `payments`, `refunds` | Stripe payment/refund records, linked to orders. |
-| `tax_rules` | Effective-dated Canadian tax configuration (country/province, tax name, percentage, effective/expiry dates) — never a single hard-coded Ontario rate. |
-| `sales_tax_lines` | Tax actually applied to a given order line, snapshotted. |
+| `customers` | Customer accounts (optional — guest checkout must remain possible). |
 | `expenses`, `expense_categories` | Lightweight business expense tracking. |
 | `audit_logs` | Administrator action history (who/what/when, before/after where reasonable). |
+
+## Checkout & tax engine
+
+`App\Services\TaxCalculator::calculate()` looks up all active `tax_rules`
+matching the billing country (and province, or a province-null country-wide
+rule) effective on the order date — no match means $0 tax, never a guessed
+obligation. `CheckoutController` creates the `Order`/`OrderItem`/
+`SalesTaxLine` rows, then `App\Services\StripeCheckout` (the **only** class
+that calls the Stripe SDK) creates a Checkout Session and redirects there.
+
+Payment confirmation is **never** trusted from the browser's return to the
+success URL — only `StripeWebhookController` (signature-verified via
+`Stripe\Webhook::constructEvent`) marks an order paid, via
+`App\Services\StripeWebhookHandler`, which is deliberately a plain class
+with no Stripe-SDK/HTTP dependency of its own so tests can call it directly
+with `\Stripe\Event::constructFrom([...])` — no network calls, no signature
+verification needed in tests. See `STRIPE_SETUP.md`.
 
 ## Demo system — the routing gotcha
 

@@ -90,7 +90,13 @@
                     <input id="currency" name="currency" maxlength="3" value="{{ old('currency', $app->currency ?? 'CAD') }}" class="{{ $inputClass }}">
                 </x-admin.form-field>
             </div>
-            <x-alert type="info" class="mt-4">Direct in-browser checkout (Stripe) is a Phase 2 feature. External store links below are shown to visitors when set.</x-alert>
+            <label class="mt-4 flex items-center gap-2 text-nav">
+                <input type="checkbox" name="direct_purchase_enabled" value="1" @checked(old('direct_purchase_enabled', $app->direct_purchase_enabled)) class="rounded border-border-strong">
+                Enable direct in-browser purchase (Stripe Checkout)
+            </label>
+            <x-alert type="info" class="mt-3">
+                When enabled, a real "Buy Now" button sends buyers to Stripe Checkout, with Canadian tax calculated from Settings &rarr; Taxes. Make sure Stripe keys are configured (Settings &rarr; Payments) before enabling this on a real app. External store links below are always shown when set, regardless of this setting.
+            </x-alert>
             <div class="mt-4 grid gap-5 sm:grid-cols-3">
                 <x-admin.form-field name="google_play_url" label="Google Play URL">
                     <input id="google_play_url" name="google_play_url" value="{{ old('google_play_url', $app->google_play_url) }}" class="{{ $inputClass }}">

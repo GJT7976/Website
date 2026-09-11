@@ -1,9 +1,12 @@
 {{--
-    Direct Stripe checkout ("direct_purchase_enabled") is modeled in the
-    data but intentionally inert in Phase 1 — no fake "Buy" button that
-    goes nowhere. External store links are always safe to show since they
-    lead somewhere real.
+    Direct Stripe checkout: real and functional now (Phase 2) whenever an
+    app has direct_purchase_enabled + a price. External store links are
+    always shown too when set, since they lead somewhere real either way.
 --}}
+@if (! $app->is_free && $app->direct_purchase_enabled && $app->effectivePriceCents() !== null)
+    <a href="{{ route('checkout.create', $app) }}" class="btn btn-primary">Buy Now</a>
+@endif
+
 @if ($app->google_play_url)
     <a href="{{ $app->google_play_url }}" class="btn btn-secondary" target="_blank" rel="noopener">Get it on Google Play</a>
 @endif
@@ -14,6 +17,6 @@
     <a href="{{ $app->apple_url }}" class="btn btn-secondary" target="_blank" rel="noopener">Get it on the App Store</a>
 @endif
 
-@if (! $app->is_free && ! $app->google_play_url && ! $app->microsoft_store_url && ! $app->apple_url)
+@if (! $app->is_free && ! $app->direct_purchase_enabled && ! $app->google_play_url && ! $app->microsoft_store_url && ! $app->apple_url)
     <a href="{{ route('contact', ['app' => $app->slug]) }}" class="btn btn-secondary">Contact to Purchase</a>
 @endif

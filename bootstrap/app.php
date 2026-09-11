@@ -29,6 +29,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // routed relative to /admin.
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
         $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
+
+        // Stripe signs its own webhook payloads (verified in
+        // StripeWebhookController) — it can't send a Laravel CSRF token.
+        $middleware->validateCsrfTokens(except: ['stripe/webhook']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

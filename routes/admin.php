@@ -5,9 +5,12 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PageContentController;
+use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SupportRequestController;
+use App\Http\Controllers\Admin\TaxRuleController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,9 +52,18 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('support', SupportRequestController::class)->only(['index', 'show', 'update']);
 
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+    Route::get('sales', [SalesController::class, 'index'])->name('sales.index');
+    Route::get('sales/export', [SalesController::class, 'export'])->name('sales.export');
+
     Route::middleware('role:owner')->group(function () {
+        Route::post('orders/{order}/refund', [OrderController::class, 'refund'])->name('orders.refund');
+
         Route::get('settings/{group}', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings/{group}', [SettingController::class, 'update'])->name('settings.update');
         Route::resource('users', UserController::class)->except(['show']);
+        Route::resource('tax-rules', TaxRuleController::class)->except(['show']);
     });
 });

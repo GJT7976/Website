@@ -7,11 +7,11 @@ business based in Niagara, Ontario.
 Built with Laravel, Blade, Tailwind CSS, and Alpine.js. No WordPress or
 page-builder involved — this is real source code.
 
-## Status: Phase 1 (Foundation + Core)
+## Status: Phase 1 + Phase 2 (Foundation, Core, and Checkout)
 
-This codebase implements the foundation and core of the full business
-platform described in
-`Niagara Inde Apps — Claude Website Build Prompt.md`. Delivered so far:
+This codebase implements the foundation/core of the full business platform
+described in `Niagara Inde Apps — Claude Website Build Prompt.md`, plus
+Stripe checkout and the Canadian tax engine. Delivered so far:
 
 - Public site: home, app catalogue, individual app pages, live demos,
   about/support/contact, legal page templates
@@ -19,15 +19,17 @@ platform described in
   calculator PWA) wired into the demo system
 - Admin backend: authentication, dashboard, full app CRUD, media library,
   content editor (pages/FAQs), settings, support inbox, user management
+- **Real purchasing**: Stripe Checkout, a configurable/admin-editable
+  Canadian tax engine, Orders, Payments, Refunds, and a Sales view with
+  CSV export (`STRIPE_SETUP.md`)
 - Database schema, migrations, seeders, and automated tests for all of
   the above
 
-**Not yet implemented** (planned for Phase 2 — see each doc for what's
-already scaffolded vs. still to build):
+**Not yet implemented** (a further phase — see each doc for what's already
+scaffolded vs. still to build):
 
-- Stripe checkout and webhooks (`STRIPE_SETUP.md`)
-- The configurable Canadian tax engine
-- Orders, Sales, and Accounting/export reporting
+- Full Accounting (fiscal-year exports, by-province/by-country breakdowns,
+  Stripe processing fees)
 - Expense tracking and the profit overview
 - Audit log, two-factor authentication, and backup tooling
   (`BACKUP_RESTORE.md`)
@@ -39,14 +41,13 @@ doesn't exist yet.
 ## Documentation
 
 - **`LOCAL_SETUP.md`** — get this running on a Windows dev machine, start here
-- **`ARCHITECTURE.md`** — full database schema (including planned Phase 2
-  tables), folder layout, and design decisions
+- **`ARCHITECTURE.md`** — full database schema, folder layout, and design decisions
 - **`ADMIN_GUIDE.md`** — how to use the admin backend day to day
 - **`DEMO_DEPLOYMENT.md`** — how the live demo system works, and how to add
   another app's web build
 - **`HOSTINGER_DEPLOYMENT.md`** — deploying what exists today to Hostinger
-- **`STRIPE_SETUP.md`** — Phase 2 plan (not yet implemented)
-- **`BACKUP_RESTORE.md`** — Phase 2 plan (not yet implemented)
+- **`STRIPE_SETUP.md`** — Stripe Checkout + webhook setup (implemented — add your keys)
+- **`BACKUP_RESTORE.md`** — manual backup steps today; an admin UI is a further phase
 - **`SECURITY.md`** — what's implemented today and what's planned
 
 ## Quick start

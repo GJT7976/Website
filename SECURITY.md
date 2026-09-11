@@ -37,22 +37,29 @@
 - **Secrets excluded from Git** — `.env`, `database/*.sqlite`, and
   `composer.phar` are all git-ignored; `.env.example` contains placeholders
   only.
+- **Stripe webhook signature verification** — `StripeWebhookController`
+  verifies every request via `Stripe\Webhook::constructEvent` with
+  `STRIPE_WEBHOOK_SECRET` before any order is touched; an invalid/missing
+  signature is rejected with 400 and never reaches the handler. The route
+  is CSRF-exempt (Stripe can't send a Laravel CSRF token) but nothing else
+  is — see `bootstrap/app.php`.
+- **Payment confirmation never trusted from the browser** — only the
+  signature-verified webhook marks an order paid, refunded, or failed; the
+  checkout success page just displays current status.
+- **Refunds are owner-only** — a financial action, gated the same way as
+  Settings/Users (`role:owner`).
+- **Checkout rate limiting** — `throttle:10,1` on the checkout POST route,
+  the same pattern as login/contact.
 
-## Known gaps — planned for Phase 2
+## Known gaps — a further phase
 
 - **Two-factor authentication** for admin accounts.
 - **Audit log** of administrator actions (app/price/content changes,
-  refunds once they exist, permission changes).
+  refunds, permission changes).
 - **Security headers** (CSP, `X-Frame-Options`, etc.) beyond Laravel's
   framework defaults — to be reviewed once the demo iframe/embed strategy
-  and any third-party script needs (Stripe.js) are finalized, since a
+  and Stripe.js/Checkout's own script needs are both finalized, since a
   strict CSP has to explicitly allow those.
-- **Stripe webhook signature verification** — not applicable yet; no
-  webhook endpoint exists until Phase 2's checkout is built (see
-  `STRIPE_SETUP.md`). It will be implemented from day one of that work,
-  not added after the fact.
-- **Rate limiting beyond login/contact** — worth revisiting once public
-  write-endpoints (e.g. checkout) exist.
 
 ## Reporting a concern
 

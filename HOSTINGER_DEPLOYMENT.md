@@ -1,9 +1,15 @@
-# Hostinger Deployment (Phase 1 scope)
+# Hostinger Deployment
 
 This covers deploying **what exists today** — the public site, app
-catalogue, live demos, and admin backend — to a conventional Hostinger
-PHP/MySQL hosting plan. Stripe/tax/accounting-specific deployment steps
-will be added to this document in Phase 2 once those systems exist.
+catalogue, live demos, admin backend, and Stripe checkout/tax engine — to
+a conventional Hostinger PHP/MySQL hosting plan. Full Accounting/Expenses/
+Audit log/2FA/Backups deployment notes will be added once those systems
+exist.
+
+For Stripe specifically (live keys, the production webhook endpoint, and
+verifying tax obligations before taking real payments), see
+`STRIPE_SETUP.md` — steps 2, 3, and "Switching to live mode" there apply
+directly to this environment once it's live.
 
 ## Requirements
 
@@ -51,6 +57,10 @@ Never expose the project's `app/`, `.env`, `database/`, `routes/`, or
      `DB_USERNAME`/`DB_PASSWORD` from hPanel
    - `MAIL_*` set to Hostinger's (or another) real SMTP provider
    - `SESSION_DOMAIN` set appropriately for the real domain
+   - `STRIPE_KEY`/`STRIPE_SECRET`/`STRIPE_WEBHOOK_SECRET` — live-mode
+     keys only once ready for real charges (see `STRIPE_SETUP.md`); leave
+     blank until then and "Buy Now" will show a friendly error instead of
+     breaking
 5. `php artisan key:generate --force` (only if `.env` doesn't already have
    a key — never regenerate a key on a site with existing encrypted data).
 6. `php artisan migrate --force`
