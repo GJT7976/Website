@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Login — Niagara Inde Apps</title>
-    <link rel="icon" href="data:,">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen items-center justify-center bg-offwhite px-4 antialiased">
