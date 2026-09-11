@@ -63,8 +63,11 @@ secret into the production `.env` as `STRIPE_WEBHOOK_SECRET`.
 ## 4. Try a full test purchase locally
 
 1. Make sure `stripe listen` (above) is running.
-2. Visit `/apps/seed-test-purchase-app` (a $4.99 CAD seed app that exists
-   only for this — see `AppSeeder`) and click **Buy Now**.
+2. Visit any real published app with purchasing enabled (e.g.
+   `/apps/hummus-house`) and click **Buy Now**. To test without touching a
+   real product, there's also `[SEED] Test Purchase App` ($4.99 CAD) — it's
+   kept as a **draft** so it never appears on the public catalogue; publish
+   it temporarily from Admin → Apps first, then unpublish it again after.
 3. Fill in the billing form (any name/address; use an Ontario postal code
    to see HST applied from the seeded tax rule) and continue.
 4. On Stripe's hosted checkout, use a

@@ -1,0 +1,183 @@
+{
+ "schema": 1,
+ "language": "fr",
+ "sections": [
+  {
+   "title": "Ce qui rend le houmous onctueux",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Un bon houmous, c'est autant une question de texture que de goût. Quatre éléments font l'essentiel : une base tendre et tiède ; un ordre de mixage correct ; l'ajout lent d'eau glacée ; et un mixage assez long pour aérer."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Utilisez la base tiède si possible — des pois chiches tièdes ou une purée de sésame fraîchement torréfiée se mixent bien plus lisses que froids.",
+      "Mixez d'abord la base avec le tahini, le citron, l'ail, le sel et les épices jusqu'à ce que ce soit parfaitement lisse, avant d'ajouter la moindre eau.",
+      "Moteur en marche, incorporez l'eau glacée petit à petit jusqu'à ce que le mélange pâlisse, devienne brillant et forme des sillons souples.",
+      "Continuez à mixer une à deux minutes complètes après la dernière eau — c'est ce qui transforme la pâte en un nuage léger et fouetté."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Laissez reposer le houmous fini dix minutes avant de servir, puis revérifiez le sel et l'acidité — les deux s'atténuent au repos."
+    }
+   ]
+  },
+  {
+   "title": "Choisir une base",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Les recettes utilisent trois familles de base, au comportement différent."
+    },
+    {
+     "type": "heading",
+     "text": "Pois chiche (la base maison)"
+    },
+    {
+     "type": "paragraph",
+     "text": "Le classique. Crémeuse, avec un goût de noisette et neutre, conçue pour porter des saveurs marquées. Des pois chiches tièdes et un mixage complet donnent le résultat le plus soyeux."
+    },
+    {
+     "type": "heading",
+     "text": "Sésame"
+    },
+    {
+     "type": "paragraph",
+     "text": "Le houmous de graines de sésame se passe entièrement de légumineuses et repose sur des graines torréfiées et crues mixées en un beurre fluide. Très marqué en sésame et très facile à fouetter."
+    },
+    {
+     "type": "heading",
+     "text": "Bases alternatives"
+    },
+    {
+     "type": "paragraph",
+     "text": "Haricots, lentilles, petits pois, edamame, avocat et légumes rôtis, de la betterave au potiron. Les bases de légumes rôtis exigent une vraie coloration et un égouttage soigneux, puis un passage au frais avant de servir pour une saveur nette."
+    }
+   ]
+  },
+  {
+   "title": "Tahini et sésame",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Le tahini est l'ossature de la plupart des houmous. Choisissez-le fluide et versable, remuez-le bien avant de le doser et goûtez-le — un bon tahini a un goût de noisette et n'est que légèrement amer."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Pour le houmous de sésame, ne torréfiez que la moitié des graines. La moitié crue garde la saveur fraîche et évite l'amertume.",
+      "Laissez les graines tourner jusqu'à ce qu'elles coulent comme un beurre fluide avant d'ajouter autre chose ; une pâte sèche ne se fouette jamais lisse.",
+      "Un filet d'eau glacée ou quelques glaçons mixés d'abord avec le tahini l'allègent et le pâlissent avant l'ajout de la base."
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Aromatiser sans casser la texture",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "N'ajoutez les arômes qu'une fois la base parfaitement lisse, puis mixez juste assez pour incorporer afin que l'ajout reste vif."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Les ingrédients humides — poivrons rôtis, oignon caramélisé, tomates séchées — doivent être bien égouttés et assez secs, sans quoi ils diluent le houmous et le rendent gras.",
+      "Les pâtes de piment comme la harissa et le chipotle montent en puissance au repos ; ajoutez-en peu à la fois et goûtez.",
+      "Quand une recette indique « 1 dose » d'une autre recette, préparez d'abord cette recette (ou retenez un peu de son eau pour une base plus épaisse), puis incorporez l'arôme."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Salez en dernier avec du fromage, des olives, du bacon ou un assaisonnement everything bagel — ils apportent déjà beaucoup."
+    }
+   ]
+  },
+  {
+   "title": "Dépannage",
+   "blocks": [
+    {
+     "type": "heading",
+     "text": "Trop épais"
+    },
+    {
+     "type": "paragraph",
+     "text": "Incorporez de l'eau glacée cuillère à café par cuillère à café. Cela se détend vite, allez-y doucement."
+    },
+    {
+     "type": "heading",
+     "text": "Trop liquide"
+    },
+    {
+     "type": "paragraph",
+     "text": "En général des légumes humides ou de l'eau ajoutée trop vite. Mixez une cuillère de tahini, ou mettez au frais — le houmous de légumes rôtis raffermit au froid."
+    },
+    {
+     "type": "heading",
+     "text": "Amer"
+    },
+    {
+     "type": "paragraph",
+     "text": "Sésame trop torréfié, trop d'ail cru ou tahini agressif. Mixez d'abord l'ail avec le jus de citron pour que l'acide l'adoucisse, et équilibrez avec une pincée de sel en plus."
+    },
+    {
+     "type": "heading",
+     "text": "Granuleux"
+    },
+    {
+     "type": "paragraph",
+     "text": "Pas assez mixé. Continuez, en raclant le bol, jusqu'à disparition de tout grain — puis mixez encore une minute pour la légèreté."
+    },
+    {
+     "type": "heading",
+     "text": "Fade"
+    },
+    {
+     "type": "paragraph",
+     "text": "Le houmous demande plus de sel et d'acide qu'on ne le croit. Ajoutez du sel, puis du citron, peu à peu, en laissant reposer entre chaque."
+    }
+   ]
+  },
+  {
+   "title": "Conservation et service",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "La plupart des houmous se conservent dans un récipient hermétique au réfrigérateur environ cinq jours. Appliquez un film plastique au contact de la surface et ajoutez une fine pellicule d'huile d'olive pour éviter le dessèchement."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Congelez le houmous nature jusqu'à un mois ; décongelez une nuit et refouettez avec un peu d'eau glacée et d'huile.",
+      "Le houmous d'avocat est meilleur le jour même et ne se congèle pas.",
+      "Les garnitures de laitage, de bacon ou d'herbes fraîches s'ajoutent après décongélation, pas avant congélation.",
+      "Servez à température ambiante fraîche — sorti du frigo, la saveur est atténuée."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Terminez le bol avec un filet d'huile d'olive, une pincée de l'épice principale de la recette et un élément croquant : pois chiches tièdes, fruits secs torréfiés ou herbes ciselées."
+    }
+   ]
+  },
+  {
+   "title": "À propos de ces recettes",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Les recettes sont écrites au poids en grammes pour la régularité et donnent environ 500 g — soit environ seize portions de 30 g. Utilisez le sélecteur de portions d'une recette pour ajuster les quantités."
+    },
+    {
+     "type": "paragraph",
+     "text": "Les valeurs nutritionnelles sont des estimations calculées à partir des ingrédients indiqués et signalées comme telles. Vérifiez toujours les ingrédients au regard de vos allergies et besoins alimentaires."
+    },
+    {
+     "type": "paragraph",
+     "text": "Une petite quantité de MSG figure dans la méthode maison comme exhausteur savoureux ; elle est facultative et peut être omise avec un peu plus de sel."
+    }
+   ]
+  }
+ ]
+}

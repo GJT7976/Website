@@ -1,0 +1,183 @@
+{
+ "schema": 1,
+ "language": "en",
+ "sections": [
+  {
+   "title": "What makes hummus smooth",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Great hummus is about texture as much as flavour. Four things do most of the work: a soft, warm base; blending in the right order; adding ice water slowly; and blending long enough to aerate."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Use the base warm where you can — warm chickpeas or freshly toasted sesame purée far smoother than cold.",
+      "Blend the base with tahini, lemon, garlic, salt and spices first, until completely smooth, before any water goes in.",
+      "With the motor running, stream in ice water a little at a time until the mix turns pale, glossy and holds soft ridges.",
+      "Keep blending for a full one to two minutes after the last water — that is what turns paste into a light, whipped cloud."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Rest the finished hummus for ten minutes before serving, and again check the salt and acidity — both mute as it sits."
+    }
+   ]
+  },
+  {
+   "title": "Choosing a base",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "The recipes use three families of base, and they behave differently."
+    },
+    {
+     "type": "heading",
+     "text": "Chickpea (the house base)"
+    },
+    {
+     "type": "paragraph",
+     "text": "The classic. Creamy, nutty and neutral, built to carry bold flavours. Warm chickpeas and a full blend give the silkiest result."
+    },
+    {
+     "type": "heading",
+     "text": "Sesame"
+    },
+    {
+     "type": "paragraph",
+     "text": "Sesame-seed hummus skips the beans entirely and leans on toasted and raw seeds blended to a loose butter. Intensely sesame-forward and very whippable."
+    },
+    {
+     "type": "heading",
+     "text": "Alternative bases"
+    },
+    {
+     "type": "paragraph",
+     "text": "Beans, lentils, peas, edamame, avocado and roasted vegetables from beet to butternut. Roasted-vegetable bases need real browning and thorough draining, then a chill before serving for the cleanest flavour."
+    }
+   ]
+  },
+  {
+   "title": "Tahini and sesame",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Tahini is the backbone of most hummus. Buy it runny and pourable, stir it well before measuring, and taste it — good tahini is nutty and only lightly bitter."
+    },
+    {
+     "type": "list",
+     "items": [
+      "For sesame hummus, toast only half the seeds. The raw half keeps the flavour fresh and stops the batch turning bitter.",
+      "Let seeds run in the processor until they flow like loose butter before adding anything else; a dry paste never whips smooth.",
+      "A splash of ice water or a few ice cubes blended into tahini first lightens and pales it before the base goes in."
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Flavouring without wrecking the texture",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Add flavourings only once the base is completely smooth, then blend just long enough to combine so the addition stays vivid."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Wet ingredients — roasted peppers, caramelised onion, sun-dried tomato — must be well drained and fairly dry, or they thin the hummus and make it greasy.",
+      "Chilli pastes like harissa and chipotle build heat as the hummus rests; add a little at a time and taste.",
+      "When a recipe says \"1 batch\" of another recipe, make that recipe first (or hold back a little of its water so the base starts thicker), then fold the flavouring in."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Season salt last when adding cheese, olives, bacon or bagel seasoning — they already bring plenty."
+    }
+   ]
+  },
+  {
+   "title": "Troubleshooting",
+   "blocks": [
+    {
+     "type": "heading",
+     "text": "Too thick"
+    },
+    {
+     "type": "paragraph",
+     "text": "Blend in ice water a teaspoon at a time. It loosens quickly, so go slowly."
+    },
+    {
+     "type": "heading",
+     "text": "Too thin"
+    },
+    {
+     "type": "paragraph",
+     "text": "Usually wet vegetables or water added too fast. Blend in a spoonful of tahini, or chill it — roasted-vegetable hummus firms up cold."
+    },
+    {
+     "type": "heading",
+     "text": "Bitter"
+    },
+    {
+     "type": "paragraph",
+     "text": "Over-toasted sesame, too much raw garlic, or harsh tahini. Blend garlic with the lemon juice first so the acid tames it, and balance with a pinch more salt."
+    },
+    {
+     "type": "heading",
+     "text": "Grainy"
+    },
+    {
+     "type": "paragraph",
+     "text": "Under-blended. Keep going, scraping the bowl, until there is no grittiness — then blend another minute for lightness."
+    },
+    {
+     "type": "heading",
+     "text": "Bland"
+    },
+    {
+     "type": "paragraph",
+     "text": "Hummus needs more salt and acid than you expect. Add salt, then lemon, a little at a time, resting between."
+    }
+   ]
+  },
+  {
+   "title": "Storing and serving",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Most hummus keeps in an airtight container in the fridge for about five days. Press plastic wrap onto the surface and add a thin film of olive oil to stop it drying."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Freeze plain hummus up to a month; thaw overnight and re-whip with a little ice water and oil.",
+      "Avocado hummus is best the day it is made and does not freeze.",
+      "Dairy, bacon or fresh-herb toppings are best added after thawing, not before freezing.",
+      "Serve at cool room temperature — straight from the fridge the flavour is muted."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Finish the bowl with a swirl of olive oil, a dusting of the recipe's main spice, and something with texture: warm chickpeas, toasted nuts, or chopped herbs."
+    }
+   ]
+  },
+  {
+   "title": "About these recipes",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "The recipes are written by weight in grams for consistency, and yield roughly 500 g — about sixteen 30 g servings. Use the serving selector on a recipe to scale the quantities."
+    },
+    {
+     "type": "paragraph",
+     "text": "Nutrition figures are estimates calculated from the listed ingredients and are labelled as such. Always check ingredients against your own allergies and dietary needs."
+    },
+    {
+     "type": "paragraph",
+     "text": "A small amount of MSG appears in the house method as a savoury booster; it is optional and can be left out with a little extra salt."
+    }
+   ]
+  }
+ ]
+}

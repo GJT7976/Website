@@ -1,0 +1,183 @@
+{
+ "schema": 1,
+ "language": "de",
+ "sections": [
+  {
+   "title": "Was Hummus cremig macht",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Guter Hummus ist ebenso eine Frage der Textur wie des Geschmacks. Vier Dinge erledigen den Großteil der Arbeit: eine weiche, warme Basis; die richtige Mixreihenfolge; Eiswasser langsam zugeben; und lange genug mixen, um Luft einzuarbeiten."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Verwende die Basis möglichst warm — warme Kichererbsen oder frisch geröstetes Sesammus lassen sich viel glatter mixen als kalt.",
+      "Mixe die Basis zuerst mit Tahini, Zitrone, Knoblauch, Salz und Gewürzen komplett glatt, bevor Wasser dazukommt.",
+      "Gieße bei laufendem Motor das Eiswasser nach und nach ein, bis die Masse heller wird, glänzt und weiche Rillen hält.",
+      "Mixe nach dem letzten Wasser noch ein bis zwei volle Minuten weiter — das macht aus der Paste eine leichte, aufgeschlagene Wolke."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Lass den fertigen Hummus vor dem Servieren zehn Minuten ruhen und prüfe Salz und Säure erneut — beides lässt beim Stehen nach."
+    }
+   ]
+  },
+  {
+   "title": "Die Basis wählen",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Die Rezepte nutzen drei Basisfamilien, die sich unterschiedlich verhalten."
+    },
+    {
+     "type": "heading",
+     "text": "Kichererbse (die Hausbasis)"
+    },
+    {
+     "type": "paragraph",
+     "text": "Der Klassiker. Cremig, nussig und neutral, gebaut, um kräftige Aromen zu tragen. Warme Kichererbsen und vollständiges Mixen ergeben das seidigste Ergebnis."
+    },
+    {
+     "type": "heading",
+     "text": "Sesam"
+    },
+    {
+     "type": "paragraph",
+     "text": "Sesamsamen-Hummus verzichtet ganz auf Hülsenfrüchte und setzt auf geröstete und rohe Samen, zu einem fließenden Mus gemixt. Sehr sesambetont und sehr gut aufschlagbar."
+    },
+    {
+     "type": "heading",
+     "text": "Alternative Basen"
+    },
+    {
+     "type": "paragraph",
+     "text": "Bohnen, Linsen, Erbsen, Edamame, Avocado und Röstgemüse von Roter Bete bis Butternusskürbis. Röstgemüse-Basen brauchen echte Bräunung und gründliches Abtropfen, dann vor dem Servieren eine Kühlzeit für den reinsten Geschmack."
+    }
+   ]
+  },
+  {
+   "title": "Tahini und Sesam",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Tahini ist das Rückgrat der meisten Hummus-Sorten. Kaufe es dünnflüssig und gießbar, rühre es vor dem Abmessen gut durch und probiere es — gutes Tahini ist nussig und nur leicht bitter."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Für Sesam-Hummus nur die Hälfte der Samen rösten. Die rohe Hälfte hält den Geschmack frisch und verhindert Bitterkeit.",
+      "Lass die Samen laufen, bis sie wie weiches Mus fließen, bevor du etwas anderes zugibst; eine trockene Paste wird nie glatt aufgeschlagen.",
+      "Ein Schuss Eiswasser oder ein paar Eiswürfel, zuerst ins Tahini gemixt, machen es leichter und heller, bevor die Basis dazukommt."
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Aromatisieren, ohne die Textur zu ruinieren",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Gib Aromen erst zu, wenn die Basis komplett glatt ist, und mixe dann nur so lange, bis alles verbunden ist, damit die Zugabe lebendig bleibt."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Feuchte Zutaten — Röstpaprika, karamellisierte Zwiebeln, getrocknete Tomaten — müssen gut abgetropft und recht trocken sein, sonst verdünnen sie den Hummus und machen ihn fettig.",
+      "Chilipasten wie Harissa und Chipotle werden beim Ruhen schärfer; nach und nach zugeben und abschmecken.",
+      "Wenn ein Rezept „1 Ansatz“ eines anderen Rezepts nennt, mach zuerst dieses Rezept (oder halte etwas von seinem Wasser zurück, damit die Basis dicker startet) und arbeite dann das Aroma ein."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Salze zuletzt, wenn du Käse, Oliven, Speck oder Everything-Bagel-Gewürz zugibst — sie bringen schon reichlich mit."
+    }
+   ]
+  },
+  {
+   "title": "Fehlerbehebung",
+   "blocks": [
+    {
+     "type": "heading",
+     "text": "Zu dick"
+    },
+    {
+     "type": "paragraph",
+     "text": "Eiswasser teelöffelweise einmixen. Es wird schnell weicher, also langsam vorgehen."
+    },
+    {
+     "type": "heading",
+     "text": "Zu dünn"
+    },
+    {
+     "type": "paragraph",
+     "text": "Meist feuchtes Gemüse oder zu schnell zugegebenes Wasser. Einen Löffel Tahini einmixen oder kühlen — Röstgemüse-Hummus wird kalt fester."
+    },
+    {
+     "type": "heading",
+     "text": "Bitter"
+    },
+    {
+     "type": "paragraph",
+     "text": "Zu stark gerösteter Sesam, zu viel roher Knoblauch oder scharfes Tahini. Knoblauch zuerst mit dem Zitronensaft mixen, damit die Säure ihn zähmt, und mit einer Prise mehr Salz ausgleichen."
+    },
+    {
+     "type": "heading",
+     "text": "Körnig"
+    },
+    {
+     "type": "paragraph",
+     "text": "Zu wenig gemixt. Weitermixen, die Schüssel abkratzen, bis nichts mehr grieselt — dann noch eine Minute für Leichtigkeit mixen."
+    },
+    {
+     "type": "heading",
+     "text": "Fad"
+    },
+    {
+     "type": "paragraph",
+     "text": "Hummus braucht mehr Salz und Säure, als man denkt. Salz, dann Zitrone nach und nach zugeben und dazwischen ruhen lassen."
+    }
+   ]
+  },
+  {
+   "title": "Aufbewahren und servieren",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Die meisten Hummus-Sorten halten sich in einem luftdichten Behälter im Kühlschrank etwa fünf Tage. Frischhaltefolie direkt auf die Oberfläche drücken und einen dünnen Ölfilm darauf, damit nichts austrocknet."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Reinen Hummus bis zu einem Monat einfrieren; über Nacht auftauen und mit etwas Eiswasser und Öl neu aufschlagen.",
+      "Avocado-Hummus ist am Tag der Zubereitung am besten und lässt sich nicht einfrieren.",
+      "Toppings aus Milchprodukten, Speck oder frischen Kräutern nach dem Auftauen zugeben, nicht vor dem Einfrieren.",
+      "Bei kühler Zimmertemperatur servieren — direkt aus dem Kühlschrank ist der Geschmack gedämpft."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Die Schale mit einem Schuss Olivenöl, einer Prise des Hauptgewürzes des Rezepts und etwas mit Biss abschließen: warme Kichererbsen, geröstete Nüsse oder gehackte Kräuter."
+    }
+   ]
+  },
+  {
+   "title": "Über diese Rezepte",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Die Rezepte sind für Gleichmäßigkeit nach Gewicht in Gramm geschrieben und ergeben rund 500 g — etwa sechzehn Portionen zu 30 g. Nutze den Portionsregler eines Rezepts, um die Mengen zu skalieren."
+    },
+    {
+     "type": "paragraph",
+     "text": "Nährwertangaben sind aus den angegebenen Zutaten berechnete Schätzungen und als solche gekennzeichnet. Prüfe die Zutaten stets mit Blick auf deine Allergien und Ernährungsbedürfnisse."
+    },
+    {
+     "type": "paragraph",
+     "text": "In der Hausmethode erscheint eine kleine Menge MSG als herzhafter Verstärker; sie ist optional und kann mit etwas mehr Salz weggelassen werden."
+    }
+   ]
+  }
+ ]
+}

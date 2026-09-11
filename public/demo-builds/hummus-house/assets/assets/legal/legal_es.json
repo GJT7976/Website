@@ -1,0 +1,528 @@
+{
+ "schema": 1,
+ "language": "es",
+ "documents": [
+  {
+   "id": "terms-of-use",
+   "title": "Condiciones de uso",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "Estas Condiciones de uso rigen el uso de la aplicación Hummus House (la «Aplicación»), publicada por G. Thompson («nosotros»). Al instalar o usar la Aplicación aceptas estas Condiciones. Si no las aceptas, no uses la Aplicación."
+    },
+    {
+     "type": "heading",
+     "text": "Licencia de uso"
+    },
+    {
+     "type": "paragraph",
+     "text": "Te concedemos una licencia personal, no exclusiva, intransferible y revocable para instalar y usar la Aplicación en dispositivos de tu propiedad o bajo tu control, para uso privado y no comercial, con sujeción a estas Condiciones y al Contrato de licencia de usuario final."
+    },
+    {
+     "type": "heading",
+     "text": "Uso aceptable"
+    },
+    {
+     "type": "paragraph",
+     "text": "Te comprometes a usar la Aplicación únicamente con fines lícitos y conforme a la Política de uso aceptable. No debes hacer un uso indebido, interrumpir, aplicar ingeniería inversa (salvo cuando la ley lo permita) ni intentar acceder sin autorización a la Aplicación o sus sistemas."
+    },
+    {
+     "type": "heading",
+     "text": "Contenido de las recetas e información nutricional"
+    },
+    {
+     "type": "paragraph",
+     "text": "Las recetas, los tiempos de cocción, las indicaciones de conservación y los valores nutricionales se ofrecen solo con fines informativos generales. Los valores nutricionales son estimaciones calculadas a partir de los ingredientes indicados y pueden no ser exactos para tu preparación. Eres responsable de la seguridad alimentaria, de comprobar los ingredientes según tus alergias y necesidades dietéticas, y de seguir prácticas de cocina seguras."
+    },
+    {
+     "type": "heading",
+     "text": "Compras"
+    },
+    {
+     "type": "paragraph",
+     "text": "La Aplicación es gratuita. Una compra única opcional, «Hummus House Pro», desbloquea funciones adicionales y se rige por la Política de compra y reembolso y las Condiciones de las funciones Premium."
+    },
+    {
+     "type": "heading",
+     "text": "Cambios"
+    },
+    {
+     "type": "paragraph",
+     "text": "Podemos actualizar la Aplicación y estas Condiciones. Los cambios importantes se comunicarán en la Aplicación o en nuestro sitio web. El uso continuado tras su entrada en vigor implica que aceptas las Condiciones actualizadas."
+    },
+    {
+     "type": "heading",
+     "text": "Terminación"
+    },
+    {
+     "type": "paragraph",
+     "text": "Puedes dejar de usar la Aplicación en cualquier momento. Podemos suspender o finalizar tu acceso si incumples gravemente estas Condiciones. Las cláusulas que por su naturaleza deban subsistir seguirán aplicándose."
+    },
+    {
+     "type": "heading",
+     "text": "Contacto"
+    },
+    {
+     "type": "paragraph",
+     "text": "Consultas sobre estas Condiciones: support@hummushouse.app."
+    }
+   ]
+  },
+  {
+   "id": "privacy-policy",
+   "title": "Política de privacidad",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "Esta Política de privacidad explica cómo trata la información la aplicación Hummus House. En resumen: la Aplicación está diseñada para funcionar sin conexión y no usa cuentas ni servidores propios."
+    },
+    {
+     "type": "heading",
+     "text": "Información que recopilamos"
+    },
+    {
+     "type": "paragraph",
+     "text": "No te pedimos crear una cuenta y no recopilamos tu nombre, correo electrónico ni contactos. El contenido que creas en la Aplicación — recetas guardadas, colecciones, listas de la compra, planes de comidas, valoraciones y notas — se almacena solo en tu dispositivo."
+    },
+    {
+     "type": "heading",
+     "text": "Compras"
+    },
+    {
+     "type": "paragraph",
+     "text": "Si compras Hummus House Pro, la compra la procesa la tienda de aplicaciones de la plataforma (por ejemplo, Google Play). Recibimos la confirmación de que la compra es válida para desbloquear la función. No recibimos los datos de tu tarjeta de pago. A esa transacción se le aplica la política de privacidad de la tienda."
+    },
+    {
+     "type": "heading",
+     "text": "Diagnósticos"
+    },
+    {
+     "type": "paragraph",
+     "text": "La Aplicación no incluye SDK de publicidad ni de seguimiento de terceros. Si en una versión futura se activan informes de errores o diagnósticos básicos, se limitarán a datos técnicos no identificativos, se indicarán aquí y serán coherentes con la declaración de seguridad de datos de la tienda."
+    },
+    {
+     "type": "heading",
+     "text": "Copias de seguridad que creas"
+    },
+    {
+     "type": "paragraph",
+     "text": "Cuando exportas un archivo de copia de seguridad, contiene tu contenido de la Aplicación en formato JSON legible. Tú eliges su destino (por ejemplo, otra aplicación o ubicación de almacenamiento). Cualquiera que tenga el archivo puede leerlo, así que guárdalo en un lugar de confianza."
+    },
+    {
+     "type": "heading",
+     "text": "Tus controles"
+    },
+    {
+     "type": "list",
+     "items": [
+      "Elimina elementos concretos en cualquier momento dentro de la Aplicación.",
+      "Usa Ajustes → Datos → Eliminar todos los datos para borrar todo lo guardado en el dispositivo.",
+      "Desinstalar la Aplicación elimina sus datos locales del dispositivo."
+     ]
+    },
+    {
+     "type": "heading",
+     "text": "Menores"
+    },
+    {
+     "type": "paragraph",
+     "text": "La Aplicación no se dirige a menores y no recopila datos de nadie de forma consciente."
+    },
+    {
+     "type": "heading",
+     "text": "Contacto"
+    },
+    {
+     "type": "paragraph",
+     "text": "Consultas de privacidad: support@hummushouse.app."
+    }
+   ]
+  },
+  {
+   "id": "eula",
+   "title": "Contrato de licencia de usuario final",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "Este Contrato de licencia de usuario final («CLUF») se celebra entre tú y G. Thompson respecto del software Hummus House, incluidas las actualizaciones y el contenido incluido (el «Software»)."
+    },
+    {
+     "type": "heading",
+     "text": "Concesión de licencia"
+    },
+    {
+     "type": "paragraph",
+     "text": "Te concedemos una licencia limitada, no exclusiva, intransferible y revocable para usar el Software con fines personales y no comerciales, en dispositivos de tu propiedad o bajo tu control."
+    },
+    {
+     "type": "heading",
+     "text": "Restricciones"
+    },
+    {
+     "type": "list",
+     "items": [
+      "No copies, vendas, alquiles, sublicencies ni distribuyas el Software.",
+      "No modifiques, descompiles ni apliques ingeniería inversa al Software, salvo en la medida en que esta restricción esté prohibida por la ley aplicable.",
+      "No elimines ni ocultes los avisos de propiedad.",
+      "No uses el Software para crear un producto competidor a partir de su contenido o estructura."
+     ]
+    },
+    {
+     "type": "heading",
+     "text": "Propiedad"
+    },
+    {
+     "type": "paragraph",
+     "text": "El Software se licencia, no se vende. G. Thompson y sus licenciantes conservan todos los derechos, títulos e intereses sobre el Software, incluidos el código de la aplicación, el diseño y el conjunto de datos de recetas compilado."
+    },
+    {
+     "type": "heading",
+     "text": "Componentes de terceros"
+    },
+    {
+     "type": "paragraph",
+     "text": "El Software incluye componentes de código abierto sujetos a sus propias licencias, enumerados en los Avisos de software de código abierto y en la pantalla de licencias de la aplicación."
+    },
+    {
+     "type": "heading",
+     "text": "Actualizaciones"
+    },
+    {
+     "type": "paragraph",
+     "text": "Las actualizaciones pueden proporcionarse automáticamente a través de la tienda de aplicaciones. Este CLUF rige las actualizaciones salvo que las acompañe un nuevo contrato."
+    },
+    {
+     "type": "heading",
+     "text": "Terminación"
+    },
+    {
+     "type": "paragraph",
+     "text": "Este CLUF finaliza automáticamente si lo incumples. Al finalizar, debes dejar de usar el Software y eliminarlo. Las secciones de Propiedad, Exención de garantías y Limitación de responsabilidad subsisten."
+    }
+   ]
+  },
+  {
+   "id": "ip-copyright",
+   "title": "Aviso de propiedad intelectual y derechos de autor",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "© G. Thompson, año en curso. Todos los derechos reservados. La línea de derechos de autor de la aplicación muestra el año en curso automáticamente."
+    },
+    {
+     "type": "paragraph",
+     "text": "El nombre Hummus House, el diseño de la aplicación, la interfaz de usuario, los textos de ayuda y de la guía, y el conjunto de datos de recetas compilado son propiedad intelectual de G. Thompson o se usan con permiso."
+    },
+    {
+     "type": "paragraph",
+     "text": "Las recetas y la fotografía gastronómica fueron proporcionadas por el titular del proyecto para su uso en esta Aplicación. Puedes cocinar las recetas para tu uso personal y compartir un enlace a la Aplicación. No puedes volver a publicar la colección de recetas, la fotografía ni los textos de la guía como propios, ni en un producto competidor, sin permiso por escrito."
+    },
+    {
+     "type": "paragraph",
+     "text": "Las marcas, nombres de productos y logotipos de terceros mencionados en las recetas (por ejemplo, condimentos de marca) pertenecen a sus respectivos titulares y se usan solo con fines descriptivos."
+    },
+    {
+     "type": "paragraph",
+     "text": "Para solicitar permiso o denunciar una presunta infracción, escribe a support@hummushouse.app."
+    }
+   ]
+  },
+  {
+   "id": "third-party-content",
+   "title": "Aviso sobre contenido de terceros",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "La Aplicación incluye un pequeño número de materiales de terceros, cada uno sujeto a sus propias condiciones:"
+    },
+    {
+     "type": "list",
+     "items": [
+      "Bibliotecas de software de código abierto — consulta los Avisos de software de código abierto y la pantalla de licencias de la aplicación para ver la lista completa y los textos de licencia.",
+      "Tipografías — «Fraunces» e «Inter» se usan bajo la licencia SIL Open Font License 1.1.",
+      "Glifos de iconos — Material Symbols, usados bajo la licencia Apache 2.0."
+     ]
+    },
+    {
+     "type": "paragraph",
+     "text": "Las referencias en los ingredientes a productos de marca (por ejemplo, «pasta de harissa» o «condimento everything bagel») son solo descriptivas y no implican asociación, patrocinio ni respaldo."
+    },
+    {
+     "type": "paragraph",
+     "text": "Si crees que se incluye contenido de terceros sin los derechos adecuados, escríbenos a support@hummushouse.app y lo revisaremos con prontitud."
+    }
+   ]
+  },
+  {
+   "id": "data-loss-disclaimer",
+   "title": "Aviso sobre copias de seguridad y pérdida de datos",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "Tus recetas guardadas, colecciones, listas de la compra, planes de comidas, valoraciones y notas se almacenan solo en tu dispositivo. Nosotros no los sincronizamos con ningún servidor."
+    },
+    {
+     "type": "paragraph",
+     "text": "Esto significa que se pueden perder datos si desinstalas la Aplicación, restableces o pierdes el dispositivo, borras el almacenamiento de la Aplicación, o si el dispositivo o su almacenamiento fallan."
+    },
+    {
+     "type": "heading",
+     "text": "Tu responsabilidad"
+    },
+    {
+     "type": "paragraph",
+     "text": "Usa Ajustes → Copia de seguridad y restauración para crear un archivo de copia de seguridad con regularidad y guárdalo en un lugar seguro. Restaurar una copia reemplaza o combina los datos del dispositivo actual: lee primero el resumen en pantalla."
+    },
+    {
+     "type": "heading",
+     "text": "Sin responsabilidad por pérdidas"
+    },
+    {
+     "type": "paragraph",
+     "text": "En la máxima medida permitida por la ley, no somos responsables de ninguna pérdida de datos y no garantizamos que un archivo de copia de seguridad pueda restaurarse siempre, por ejemplo si el archivo se edita, se trunca o lo crea una versión incompatible."
+    }
+   ]
+  },
+  {
+   "id": "purchase-refund",
+   "title": "Política de compra y reembolso",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "La Aplicación es gratuita. Ofrece una compra dentro de la aplicación opcional: «Hummus House Pro» (ID de producto premium_lifetime_unlock), un desbloqueo único no consumible con un precio aproximado de 2,99 USD (la tienda muestra el precio local exacto y los impuestos)."
+    },
+    {
+     "type": "heading",
+     "text": "Cómo funciona la compra"
+    },
+    {
+     "type": "paragraph",
+     "text": "La compra es un pago único sin suscripción, sin renovación automática y sin prueba gratuita. Una vez comprado, Pro permanece desbloqueado para la cuenta de la tienda utilizada, con sujeción a las reglas de esa tienda. Usa «Restaurar compras» tras reinstalar o en un dispositivo nuevo con la misma cuenta."
+    },
+    {
+     "type": "heading",
+     "text": "Reembolsos"
+    },
+    {
+     "type": "paragraph",
+     "text": "Las compras las procesa la tienda de aplicaciones y los reembolsos se rigen por la política de esa tienda, por ejemplo el plazo y el proceso de reembolso de Google Play. No podemos emitir reembolsos directamente porque no procesamos el pago. Si una compra falló pero se te cobró, o Pro no se desbloqueó, escribe a support@hummushouse.app y te ayudaremos a investigarlo."
+    },
+    {
+     "type": "heading",
+     "text": "Derechos del consumidor"
+    },
+    {
+     "type": "paragraph",
+     "text": "Nada de esta política limita los derechos legales de reembolso o desistimiento que te correspondan según la legislación de consumo que te sea aplicable."
+    }
+   ]
+  },
+  {
+   "id": "premium-terms",
+   "title": "Condiciones de las funciones Premium",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "«Hummus House Pro» es la única mejora de pago. Comprarla desbloquea las siguientes funciones de la Aplicación:"
+    },
+    {
+     "type": "list",
+     "items": [
+      "Modo cocina con manos libres, con temporizadores por paso y pantalla siempre encendida.",
+      "Planificador de tandas y comidas, y generación de una lista de la compra a partir de un plan.",
+      "Listas de la compra combinadas de más de una receta, con cantidades unificadas.",
+      "Colecciones ilimitadas (la versión gratuita mantiene una).",
+      "Exportación a PDF e impresión de fichas de recetas y listas de la compra.",
+      "Fotos de recetas en alta definición sin conexión."
+     ]
+    },
+    {
+     "type": "paragraph",
+     "text": "La versión gratuita sigue siendo plenamente utilizable: explorar todas las recetas, la búsqueda y los filtros, los favoritos, una colección, una lista de la compra de una sola receta, la copia de seguridad y la restauración, todos los ajustes y toda la información legal no están bloqueados."
+    },
+    {
+     "type": "paragraph",
+     "text": "Podemos ampliar lo que incluye Pro. No trasladaremos a Pro una función esencial antes gratuita de forma que rompa tu uso actual. El derecho de acceso se comprueba a través de la tienda de aplicaciones y se almacena en el dispositivo para que Pro siga funcionando sin conexión."
+    }
+   ]
+  },
+  {
+   "id": "data-deletion",
+   "title": "Política de eliminación de datos del usuario",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "Como la Aplicación almacena tu contenido solo en tu dispositivo, tú controlas por completo su eliminación."
+    },
+    {
+     "type": "heading",
+     "text": "Eliminar elementos concretos"
+    },
+    {
+     "type": "paragraph",
+     "text": "Elimina una receta guardada, una colección, un artículo de la lista de la compra, una entrada del planificador, una valoración o una nota directamente en la pantalla correspondiente."
+    },
+    {
+     "type": "heading",
+     "text": "Eliminar todo"
+    },
+    {
+     "type": "paragraph",
+     "text": "Ajustes → Datos → Eliminar todos los datos borra todas las recetas guardadas, todas las colecciones, listas, planes, valoraciones y notas almacenadas por la Aplicación en ese dispositivo. Esto no se puede deshacer; exporta primero una copia de seguridad si podrías querer los datos más adelante."
+    },
+    {
+     "type": "heading",
+     "text": "Desinstalación"
+    },
+    {
+     "type": "paragraph",
+     "text": "Quitar la Aplicación de un dispositivo elimina sus datos locales en ese dispositivo."
+    },
+    {
+     "type": "heading",
+     "text": "Compras"
+    },
+    {
+     "type": "paragraph",
+     "text": "Eliminar los datos de la aplicación no cancela tu compra de Hummus House Pro, que está vinculada a tu cuenta de la tienda. Las solicitudes de reembolso o de retirada de compra las gestiona la tienda de aplicaciones."
+    }
+   ]
+  },
+  {
+   "id": "acceptable-use",
+   "title": "Política de uso aceptable",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "Al usar la Aplicación te comprometes a no:"
+    },
+    {
+     "type": "list",
+     "items": [
+      "Infringir ninguna ley ni los derechos de propiedad intelectual o de privacidad de nadie.",
+      "Aplicar ingeniería inversa, descompilar o extraer el conjunto de datos de recetas, el código o los recursos, salvo cuando la ley lo permita expresamente.",
+      "Redistribuir, revender o publicar la colección de recetas, la fotografía o los textos de la guía.",
+      "Interferir con las funciones de seguridad de la Aplicación o las comprobaciones de derechos, ni usar clientes modificados para desbloquear funciones de pago.",
+      "Usar la Aplicación para desarrollar un producto competidor."
+     ]
+    },
+    {
+     "type": "paragraph",
+     "text": "El campo de notas es un espacio privado en tu dispositivo para tus propias palabras. Eres responsable de lo que escribas ahí."
+    },
+    {
+     "type": "paragraph",
+     "text": "Podemos actualizar esta política cuando sea necesario. Los incumplimientos graves o reiterados pueden poner fin a tu licencia de uso de la Aplicación."
+    }
+   ]
+  },
+  {
+   "id": "liability",
+   "title": "Limitación de responsabilidad",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "En la máxima medida permitida por la ley:"
+    },
+    {
+     "type": "list",
+     "items": [
+      "G. Thompson no es responsable de daños indirectos, incidentales, especiales, consecuentes o punitivos, ni de la pérdida de datos, beneficios o fondo de comercio, derivados del uso o de la imposibilidad de usar la Aplicación.",
+      "Nuestra responsabilidad total por cualquier reclamación relacionada con la Aplicación se limita al importe que pagaste por la Aplicación en los 12 meses anteriores a la reclamación (que puede ser cero en la versión gratuita).",
+      "No somos responsables de los resultados de cocinar, de la seguridad alimentaria ni de las reacciones a los ingredientes: eres responsable de una preparación segura y de comprobar los ingredientes según alergias y necesidades dietéticas."
+     ]
+    },
+    {
+     "type": "paragraph",
+     "text": "Algunas jurisdicciones no permiten ciertas limitaciones, por lo que parte de lo anterior podría no aplicarse a ti. Nada de esto limita la responsabilidad que no puede limitarse por ley, como por muerte o lesiones personales causadas por negligencia, o por fraude."
+    }
+   ]
+  },
+  {
+   "id": "warranty-disclaimer",
+   "title": "Exención de garantías",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "La Aplicación se ofrece «tal cual» y «según disponibilidad», sin garantías de ningún tipo, ya sean expresas, implícitas o legales, en la máxima medida permitida por la ley."
+    },
+    {
+     "type": "paragraph",
+     "text": "No garantizamos que la Aplicación funcione sin interrupciones ni errores, que se corrijan los defectos, que esté libre de componentes dañinos, ni que la información de recetas, tiempos, conservación o nutrición sea exacta, completa o adecuada para tus circunstancias."
+    },
+    {
+     "type": "paragraph",
+     "text": "Se rechazan las garantías implícitas de comerciabilidad, idoneidad para un fin concreto y no infracción, en la medida permitida por la ley. Puedes tener derechos legales de consumidor que esta sección no afecta."
+    }
+   ]
+  },
+  {
+   "id": "platform-disclaimer",
+   "title": "Aviso sobre tiendas de aplicaciones / plataformas",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "La Aplicación se distribuye a través de plataformas de terceros como Google Play y, cuando proceda, la App Store de Apple y la Microsoft Store. Esas plataformas no son parte de estos acuerdos ni son responsables de la Aplicación."
+    },
+    {
+     "type": "paragraph",
+     "text": "Tu descarga y uso de la Aplicación también están sujetos a las reglas de la tienda de la que la obtuviste. Cuando las condiciones de una tienda exijan disposiciones específicas (por ejemplo, el «Licensed Application End User License Agreement» de Apple), esas disposiciones se aplican a esa versión y, en caso de conflicto para esa plataforma, prevalecen sobre las cláusulas contrarias de este documento."
+    },
+    {
+     "type": "paragraph",
+     "text": "Las obligaciones de mantenimiento, soporte y garantía son nuestras, no de la plataforma, salvo que las reglas propias de la plataforma indiquen otra cosa. Las compras y reembolsos los gestiona la plataforma conforme a sus políticas."
+    }
+   ]
+  },
+  {
+   "id": "open-source",
+   "title": "Avisos de software de código abierto",
+   "updated": "Fecha de entrada en vigor: 27 de agosto de 2026",
+   "body": [
+    {
+     "type": "paragraph",
+     "text": "La Aplicación está creada con Flutter y Dart e incluye paquetes de código abierto, cada uno bajo su propia licencia (principalmente BSD-3-Clause, MIT o Apache-2.0). La lista completa y generada, con los textos íntegros de las licencias, está disponible en la Aplicación en Ajustes → Acerca de → Licencias de código abierto."
+    },
+    {
+     "type": "heading",
+     "text": "Componentes principales"
+    },
+    {
+     "type": "list",
+     "items": [
+      "SDK de Flutter — BSD-3-Clause.",
+      "flutter_riverpod, go_router, shared_preferences, path_provider, url_launcher, share_plus, package_info_plus, wakelock_plus — BSD-3-Clause / MIT.",
+      "hive_ce — Apache-2.0.",
+      "pdf, printing — Apache-2.0.",
+      "in_app_purchase — BSD-3-Clause."
+     ]
+    },
+    {
+     "type": "heading",
+     "text": "Tipografías"
+    },
+    {
+     "type": "paragraph",
+     "text": "«Fraunces» e «Inter» se licencian bajo la SIL Open Font License, versión 1.1."
+    },
+    {
+     "type": "paragraph",
+     "text": "Consultas sobre atribución de código abierto: support@hummushouse.app."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,183 @@
+{
+ "schema": 1,
+ "language": "it",
+ "sections": [
+  {
+   "title": "Cosa rende l'hummus cremoso",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Un buon hummus è questione di consistenza tanto quanto di sapore. Quattro cose fanno gran parte del lavoro: una base morbida e tiepida; frullare nell'ordine giusto; aggiungere acqua ghiacciata lentamente; e frullare abbastanza a lungo da incorporare aria."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Usa la base tiepida quando puoi: ceci tiepidi o purea di sesamo appena tostata si frullano molto più lisci che da freddi.",
+      "Frulla prima la base con tahini, limone, aglio, sale e spezie fino a renderla perfettamente liscia, prima di aggiungere qualsiasi acqua.",
+      "Con il motore acceso, versa a filo l'acqua ghiacciata poco per volta finché il composto schiarisce, diventa lucido e forma solchi morbidi.",
+      "Continua a frullare uno o due minuti pieni dopo l'ultima acqua: è ciò che trasforma la pasta in una nuvola leggera e montata."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Fai riposare l'hummus finito dieci minuti prima di servire e ricontrolla sale e acidità: entrambi si attenuano con il riposo."
+    }
+   ]
+  },
+  {
+   "title": "Scegliere una base",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Le ricette usano tre famiglie di base, che si comportano in modo diverso."
+    },
+    {
+     "type": "heading",
+     "text": "Cece (la base della casa)"
+    },
+    {
+     "type": "paragraph",
+     "text": "Il classico. Cremosa, con note di frutta secca e neutra, pensata per portare sapori decisi. Ceci tiepidi e una frullata completa danno il risultato più vellutato."
+    },
+    {
+     "type": "heading",
+     "text": "Sesamo"
+    },
+    {
+     "type": "paragraph",
+     "text": "L'hummus di semi di sesamo rinuncia del tutto ai legumi e si basa su semi tostati e crudi frullati fino a un burro fluido. Molto marcato di sesamo e facilissimo da montare."
+    },
+    {
+     "type": "heading",
+     "text": "Basi alternative"
+    },
+    {
+     "type": "paragraph",
+     "text": "Fagioli, lenticchie, piselli, edamame, avocado e verdure arrostite, dalla barbabietola alla zucca. Le basi di verdura arrostita richiedono una vera doratura e un accurato sgocciolamento, poi un passaggio in frigo prima di servire per un sapore pulito."
+    }
+   ]
+  },
+  {
+   "title": "Tahini e sesamo",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Il tahini è l'ossatura della maggior parte degli hummus. Compralo fluido e versabile, mescolalo bene prima di dosarlo e assaggialo: un buon tahini sa di frutta secca ed è solo leggermente amaro."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Per l'hummus di sesamo, tosta solo metà dei semi. La metà cruda mantiene il sapore fresco ed evita l'amaro.",
+      "Lascia girare i semi finché non scorrono come un burro morbido prima di aggiungere altro; una pasta secca non si monta mai liscia.",
+      "Un goccio di acqua ghiacciata o qualche cubetto frullati prima con il tahini lo alleggeriscono e lo schiariscono prima della base."
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Aromatizzare senza rovinare la consistenza",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Aggiungi gli aromi solo quando la base è perfettamente liscia, poi frulla giusto il tempo di amalgamare così l'aggiunta resta viva."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Gli ingredienti umidi — peperoni arrostiti, cipolla caramellata, pomodori secchi — devono essere ben sgocciolati e piuttosto asciutti, altrimenti diluiscono l'hummus e lo rendono unto.",
+      "Le paste di peperoncino come harissa e chipotle aumentano di piccantezza con il riposo; aggiungi poco per volta e assaggia.",
+      "Quando una ricetta indica « 1 dose » di un'altra ricetta, prepara prima quella ricetta (o trattieni un po' della sua acqua per una base più densa), poi incorpora l'aroma."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Sala per ultimo quando aggiungi formaggio, olive, bacon o condimento everything bagel: portano già molto."
+    }
+   ]
+  },
+  {
+   "title": "Risoluzione dei problemi",
+   "blocks": [
+    {
+     "type": "heading",
+     "text": "Troppo denso"
+    },
+    {
+     "type": "paragraph",
+     "text": "Incorpora acqua ghiacciata un cucchiaino alla volta. Si allenta in fretta, procedi con calma."
+    },
+    {
+     "type": "heading",
+     "text": "Troppo liquido"
+    },
+    {
+     "type": "paragraph",
+     "text": "Di solito verdure umide o acqua aggiunta troppo in fretta. Frulla un cucchiaio di tahini, oppure raffredda: l'hummus di verdure arrostite si rassoda da freddo."
+    },
+    {
+     "type": "heading",
+     "text": "Amaro"
+    },
+    {
+     "type": "paragraph",
+     "text": "Sesamo troppo tostato, troppo aglio crudo o tahini aggressivo. Frulla prima l'aglio con il succo di limone così l'acido lo addolcisce, ed equilibra con un pizzico di sale in più."
+    },
+    {
+     "type": "heading",
+     "text": "Granuloso"
+    },
+    {
+     "type": "paragraph",
+     "text": "Frullato poco. Continua, raschiando il boccale, finché non resta alcun granello, poi frulla un altro minuto per la leggerezza."
+    },
+    {
+     "type": "heading",
+     "text": "Insipido"
+    },
+    {
+     "type": "paragraph",
+     "text": "L'hummus richiede più sale e acidità di quanto si pensi. Aggiungi sale, poi limone, poco per volta, lasciando riposare tra un'aggiunta e l'altra."
+    }
+   ]
+  },
+  {
+   "title": "Conservazione e servizio",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "La maggior parte degli hummus si conserva in un contenitore ermetico in frigorifero per circa cinque giorni. Fai aderire la pellicola alla superficie e aggiungi un velo di olio d'oliva per evitare che si asciughi."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Congela l'hummus semplice fino a un mese; scongela una notte e rimonta con un po' di acqua ghiacciata e olio.",
+      "L'hummus di avocado è migliore in giornata e non si congela.",
+      "Le guarnizioni di latticini, bacon o erbe fresche si aggiungono dopo lo scongelamento, non prima della congelazione.",
+      "Servi a temperatura ambiente fresca: appena tolto dal frigo il sapore è spento."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Rifinisci la ciotola con un filo d'olio d'oliva, una spolverata della spezia principale della ricetta e qualcosa di croccante: ceci tiepidi, frutta secca tostata o erbe tritate."
+    }
+   ]
+  },
+  {
+   "title": "Su queste ricette",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Le ricette sono scritte a peso in grammi per costanza e rendono circa 500 g, all'incirca sedici porzioni da 30 g. Usa il selettore delle porzioni di una ricetta per scalare le quantità."
+    },
+    {
+     "type": "paragraph",
+     "text": "I valori nutrizionali sono stime calcolate dagli ingredienti elencati e sono indicati come tali. Verifica sempre gli ingredienti in base ad allergie ed esigenze alimentari."
+    },
+    {
+     "type": "paragraph",
+     "text": "Nel metodo della casa compare una piccola quantità di glutammato (MSG) come esaltatore sapido; è facoltativo e si può omettere con un po' di sale in più."
+    }
+   ]
+  }
+ ]
+}

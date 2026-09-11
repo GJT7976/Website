@@ -1,0 +1,183 @@
+{
+ "schema": 1,
+ "language": "es",
+ "sections": [
+  {
+   "title": "Qué hace que el hummus sea suave",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Un buen hummus tiene tanto de textura como de sabor. Cuatro cosas hacen casi todo el trabajo: una base blanda y templada; batir en el orden correcto; añadir agua helada poco a poco; y batir lo suficiente para airear."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Usa la base templada siempre que puedas: los garbanzos templados o el puré de sésamo recién tostado quedan mucho más suaves que en frío.",
+      "Bate primero la base con tahini, limón, ajo, sal y especias hasta que esté totalmente lisa, antes de añadir nada de agua.",
+      "Con el motor en marcha, incorpora el agua helada poco a poco hasta que la mezcla palidezca, brille y forme surcos suaves.",
+      "Sigue batiendo uno o dos minutos completos tras la última agua: eso convierte la pasta en una nube ligera y montada."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Deja reposar el hummus terminado diez minutos antes de servir y vuelve a comprobar la sal y la acidez: ambas se apagan con el reposo."
+    }
+   ]
+  },
+  {
+   "title": "Elegir una base",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Las recetas usan tres familias de base, y se comportan de forma distinta."
+    },
+    {
+     "type": "heading",
+     "text": "Garbanzo (la base de la casa)"
+    },
+    {
+     "type": "paragraph",
+     "text": "El clásico. Cremosa, con sabor a fruto seco y neutra, pensada para llevar sabores intensos. Garbanzos templados y un batido completo dan el resultado más sedoso."
+    },
+    {
+     "type": "heading",
+     "text": "Sésamo"
+    },
+    {
+     "type": "paragraph",
+     "text": "El hummus de semillas de sésamo prescinde por completo de las legumbres y se apoya en semillas tostadas y crudas batidas hasta una mantequilla fluida. Muy marcado en sésamo y muy fácil de montar."
+    },
+    {
+     "type": "heading",
+     "text": "Bases alternativas"
+    },
+    {
+     "type": "paragraph",
+     "text": "Alubias, lentejas, guisantes, edamame, aguacate y verduras asadas, de la remolacha a la calabaza. Las bases de verdura asada necesitan un dorado real y un escurrido a fondo, y luego un rato en frío antes de servir para un sabor limpio."
+    }
+   ]
+  },
+  {
+   "title": "Tahini y sésamo",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "El tahini es la columna vertebral de la mayoría de los hummus. Cómpralo fluido y que se pueda verter, remuévelo bien antes de medir y pruébalo: un buen tahini sabe a fruto seco y solo amarga ligeramente."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Para el hummus de sésamo, tuesta solo la mitad de las semillas. La mitad cruda mantiene el sabor fresco y evita que amargue.",
+      "Deja que las semillas giren hasta que fluyan como una mantequilla suelta antes de añadir nada más; una pasta seca nunca se monta lisa.",
+      "Un chorrito de agua helada o unos cubitos batidos primero con el tahini lo aligeran y aclaran antes de añadir la base."
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Dar sabor sin arruinar la textura",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Añade los saborizantes solo cuando la base esté totalmente lisa y luego bate lo justo para integrar, para que el añadido siga vivo."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Los ingredientes húmedos —pimientos asados, cebolla caramelizada, tomate seco— deben estar bien escurridos y bastante secos, o aligeran el hummus y lo dejan grasiento.",
+      "Las pastas de chile como la harissa y el chipotle suben de picante con el reposo; añade poco a poco y prueba.",
+      "Cuando una receta dice «1 tanda» de otra receta, prepara antes esa receta (o reserva algo de su agua para una base más espesa) y luego incorpora el saborizante."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Sala al final cuando añadas queso, aceitunas, bacon o condimento everything bagel: ya aportan bastante."
+    }
+   ]
+  },
+  {
+   "title": "Solución de problemas",
+   "blocks": [
+    {
+     "type": "heading",
+     "text": "Demasiado espeso"
+    },
+    {
+     "type": "paragraph",
+     "text": "Incorpora agua helada de cucharadita en cucharadita. Se afloja rápido, ve despacio."
+    },
+    {
+     "type": "heading",
+     "text": "Demasiado líquido"
+    },
+    {
+     "type": "paragraph",
+     "text": "Suele ser verdura húmeda o agua añadida demasiado rápido. Bate una cucharada de tahini, o enfría: el hummus de verdura asada cuaja en frío."
+    },
+    {
+     "type": "heading",
+     "text": "Amargo"
+    },
+    {
+     "type": "paragraph",
+     "text": "Sésamo demasiado tostado, exceso de ajo crudo o tahini áspero. Bate el ajo primero con el zumo de limón para que el ácido lo suavice, y equilibra con una pizca más de sal."
+    },
+    {
+     "type": "heading",
+     "text": "Granuloso"
+    },
+    {
+     "type": "paragraph",
+     "text": "Poco batido. Sigue, rebañando el vaso, hasta que no quede grano, y luego bate otro minuto para dar ligereza."
+    },
+    {
+     "type": "heading",
+     "text": "Soso"
+    },
+    {
+     "type": "paragraph",
+     "text": "El hummus necesita más sal y ácido de lo que crees. Añade sal, luego limón, poco a poco, reposando entre medias."
+    }
+   ]
+  },
+  {
+   "title": "Conservar y servir",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "La mayoría de los hummus se conservan en un recipiente hermético en el frigorífico unos cinco días. Pon film pegado a la superficie y una fina capa de aceite de oliva para que no se reseque."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Congela el hummus natural hasta un mes; descongela toda la noche y vuelve a montar con un poco de agua helada y aceite.",
+      "El hummus de aguacate está mejor el mismo día y no se congela.",
+      "Los toppings de lácteo, bacon o hierbas frescas se añaden después de descongelar, no antes de congelar.",
+      "Sírvelo a temperatura ambiente fresca: recién sacado del frigorífico el sabor queda apagado."
+     ]
+    },
+    {
+     "type": "tip",
+     "text": "Remata el cuenco con un hilo de aceite de oliva, un espolvoreo de la especia principal de la receta y algo con textura: garbanzos templados, frutos secos tostados o hierbas picadas."
+    }
+   ]
+  },
+  {
+   "title": "Sobre estas recetas",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Las recetas están escritas por peso en gramos para mayor regularidad y rinden unos 500 g, alrededor de dieciséis raciones de 30 g. Usa el selector de raciones de una receta para escalar las cantidades."
+    },
+    {
+     "type": "paragraph",
+     "text": "Los valores nutricionales son estimaciones calculadas a partir de los ingredientes indicados y se señalan como tales. Comprueba siempre los ingredientes según tus alergias y necesidades dietéticas."
+    },
+    {
+     "type": "paragraph",
+     "text": "En el método de la casa aparece una pequeña cantidad de glutamato (MSG) como potenciador sabroso; es opcional y puede omitirse con un poco más de sal."
+    }
+   ]
+  }
+ ]
+}
