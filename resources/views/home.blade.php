@@ -17,23 +17,14 @@
                 </div>
             </div>
 
-            <div class="relative mx-auto w-full max-w-md">
-                {{-- Abstract device-mockup composition (no stock photography) --}}
-                <div class="card relative aspect-[4/3] overflow-hidden p-0">
-                    <div class="absolute inset-0 bg-gradient-to-br from-niagara-500 via-niagara-600 to-water-600"></div>
-                    <svg class="absolute inset-x-0 bottom-0 h-2/3 w-full text-white/10" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
-                        <path fill="currentColor" d="M0,60 C100,120 200,0 400,60 L400,200 L0,200 Z" />
-                    </svg>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="w-40 rounded-2xl border border-white/30 bg-white/95 p-3 shadow-lift">
-                            <div class="h-2 w-10 rounded-full bg-niagara-200"></div>
-                            <div class="mt-3 space-y-2">
-                                <div class="h-3 w-full rounded bg-mist"></div>
-                                <div class="h-3 w-4/5 rounded bg-mist"></div>
-                                <div class="h-8 w-full rounded-lg bg-cta-500/90"></div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="relative mx-auto w-full max-w-lg">
+                <div class="card overflow-hidden p-0 shadow-lift">
+                    <img
+                        src="/images/hero-niagara.jpg"
+                        alt="Niagara Falls with a laptop, tablet, and phone showing example business app screens"
+                        class="h-full w-full object-cover"
+                        width="1050" height="660"
+                    >
                 </div>
                 <p class="text-small mt-3 text-center">Practical tools, built for real work &mdash; on desktop, tablet, and phone.</p>
             </div>

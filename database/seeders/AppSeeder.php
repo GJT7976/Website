@@ -86,11 +86,13 @@ MD,
         $app->platforms()->sync(array_filter([$webPlatform?->id, $pwaPlatform?->id]));
 
         $icon = $this->seedMedia('bread-maker-icon.png', 'image/png', 1024, 1024, 'Bread Maker app icon');
+        $feature = $this->seedMedia('bread-maker-feature.png', 'image/png', 1024, 500, 'Bread Maker feature graphic');
         $shot1 = $this->seedMedia('bread-maker-shot-1.png', 'image/png', 390, 844, 'Bread Maker — quick start presets and dough amount');
         $shot2 = $this->seedMedia('bread-maker-shot-2.png', 'image/png', 390, 700, 'Bread Maker — flour blend selection');
 
         $app->media()->sync([
             $icon->id => ['type' => 'icon', 'sort_order' => 0],
+            $feature->id => ['type' => 'feature_graphic', 'sort_order' => 0],
             $shot1->id => ['type' => 'screenshot', 'sort_order' => 0],
             $shot2->id => ['type' => 'screenshot', 'sort_order' => 1],
         ]);
