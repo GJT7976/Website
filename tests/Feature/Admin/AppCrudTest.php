@@ -50,6 +50,30 @@ class AppCrudTest extends TestCase
         $this->assertDatabaseHas('apps', ['id' => $app->id, 'name' => 'Updated Name']);
     }
 
+    public function test_unchecking_is_free_and_setting_a_price_actually_sets_the_price(): void
+    {
+        // Regression test: an app created as free, then edited to add a
+        // real price without "is_free" also being unchecked, must not
+        // silently keep price_cents null (this happened to a real app —
+        // the form now disables price fields while "is_free" is checked,
+        // but the server-side logic must independently be correct too).
+        $admin = User::factory()->owner()->create();
+        $app = App::factory()->create(['is_free' => true, 'price_cents' => null, 'status' => 'published']);
+
+        $this->actingAs($admin)->put(route('admin.apps.update', $app), [
+            'name' => $app->name,
+            'status' => 'published',
+            'price' => '2.99',
+            'currency' => 'USD',
+            // no 'is_free' key at all — an unchecked checkbox is omitted
+        ]);
+
+        $app->refresh();
+        $this->assertFalse($app->is_free);
+        $this->assertSame(299, $app->price_cents);
+        $this->assertSame('USD', $app->currency);
+    }
+
     public function test_admin_can_publish_and_unpublish_an_app(): void
     {
         $admin = User::factory()->owner()->create();

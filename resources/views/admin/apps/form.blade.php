@@ -75,19 +75,24 @@
         {{-- PRICING --}}
         <section class="card p-6">
             <h2 class="text-h3">Pricing</h2>
-            <div class="mt-4 grid gap-5 sm:grid-cols-3">
+            <div class="mt-4 grid gap-5 sm:grid-cols-3" x-data="{ isFree: {{ old('is_free', $app->is_free) ? 'true' : 'false' }} }">
                 <label class="flex items-center gap-2 text-nav sm:col-span-3">
-                    <input type="checkbox" name="is_free" value="1" @checked(old('is_free', $app->is_free)) class="rounded border-border-strong">
+                    <input type="checkbox" name="is_free" value="1" x-model="isFree" class="rounded border-border-strong">
                     This app is free
                 </label>
+                <template x-if="isFree">
+                    <p class="text-small sm:col-span-3" style="margin-top:-0.5rem;">
+                        Price fields below are disabled and won't be saved while this is checked — uncheck it to set a price.
+                    </p>
+                </template>
                 <x-admin.form-field name="price" label="Price">
-                    <input type="number" step="0.01" min="0" id="price" name="price" value="{{ old('price', $app->price_cents !== null ? $app->price_cents / 100 : '') }}" class="{{ $inputClass }}">
+                    <input type="number" step="0.01" min="0" id="price" name="price" :disabled="isFree" :class="{ 'opacity-50': isFree }" value="{{ old('price', $app->price_cents !== null ? $app->price_cents / 100 : '') }}" class="{{ $inputClass }}">
                 </x-admin.form-field>
                 <x-admin.form-field name="sale_price" label="Sale price (optional)">
-                    <input type="number" step="0.01" min="0" id="sale_price" name="sale_price" value="{{ old('sale_price', $app->sale_price_cents !== null ? $app->sale_price_cents / 100 : '') }}" class="{{ $inputClass }}">
+                    <input type="number" step="0.01" min="0" id="sale_price" name="sale_price" :disabled="isFree" :class="{ 'opacity-50': isFree }" value="{{ old('sale_price', $app->sale_price_cents !== null ? $app->sale_price_cents / 100 : '') }}" class="{{ $inputClass }}">
                 </x-admin.form-field>
                 <x-admin.form-field name="currency" label="Currency">
-                    <input id="currency" name="currency" maxlength="3" value="{{ old('currency', $app->currency ?? 'CAD') }}" class="{{ $inputClass }}">
+                    <input id="currency" name="currency" maxlength="3" :disabled="isFree" :class="{ 'opacity-50': isFree }" value="{{ old('currency', $app->currency ?? 'CAD') }}" class="{{ $inputClass }}">
                 </x-admin.form-field>
             </div>
             <label class="mt-4 flex items-center gap-2 text-nav">

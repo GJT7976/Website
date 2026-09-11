@@ -190,9 +190,12 @@ class AppController extends Controller
         return [
             ...$data,
             'is_free' => $isFree,
-            'price_cents' => $isFree || $data['price'] === null ? null : (int) round($data['price'] * 100),
-            'sale_price_cents' => empty($data['sale_price']) ? null : (int) round($data['sale_price'] * 100),
-            'currency' => $data['currency'] ?: 'CAD',
+            // Price fields are disabled (and so absent from the request)
+            // client-side whenever "is_free" is checked — ?? null keeps
+            // that safe even if a request omits them some other way.
+            'price_cents' => $isFree || ($data['price'] ?? null) === null ? null : (int) round($data['price'] * 100),
+            'sale_price_cents' => empty($data['sale_price'] ?? null) ? null : (int) round($data['sale_price'] * 100),
+            'currency' => ($data['currency'] ?? null) ?: 'CAD',
             'direct_purchase_enabled' => $request->boolean('direct_purchase_enabled'),
             'is_featured' => $request->boolean('is_featured'),
             'demo_enabled' => $request->boolean('demo_enabled'),
