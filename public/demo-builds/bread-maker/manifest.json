@@ -1,0 +1,21 @@
+{
+  "name": "Bread Maker",
+  "short_name": "Bread Maker",
+  "description": "Baker's Percentage Calculator for artisan bread recipes",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1e1609",
+  "theme_color": "#2a1c08",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": ["food", "utilities"],
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

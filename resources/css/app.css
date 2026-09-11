@@ -1,0 +1,309 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/* ==========================================================================
+   NIAGARA INDE APPS — DESIGN SYSTEM
+   Brand: "Smart Tools for Real People" — Canadian, independent, practical,
+   modern, light-oriented. See spec §4–6 for the full brand brief.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Fonts — self-hosted, no external CDN fetch required for local dev.
+
+   TOLA is the intended final brand typeface but has not been supplied yet
+   (owner action — see README.md / ARCHITECTURE.md). Lato (SIL Open Font
+   License, files in public/fonts/lato) is used as the real interim
+   typeface. Swapping in TOLA later is a matter of replacing the @font-face
+   src files below and, optionally, the --font-display/--font-body values.
+   -------------------------------------------------------------------------- */
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-SemiboldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src: url('/fonts/lato/Lato-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* TOLA infrastructure — ready to receive licensed files at
+   public/fonts/tola/*.woff2. Currently unused (falls back to Lato) until
+   those files exist; uncomment the @font-face blocks and flip
+   --font-display/--font-body to 'TOLA' once supplied. */
+/*
+@font-face {
+    font-family: 'TOLA';
+    src: url('/fonts/tola/TOLA-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+*/
+
+@theme {
+    /* Typography tokens */
+    --font-display: 'Lato', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Lato', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: var(--font-body);
+
+    /* Color tokens — light-oriented, restrained, Canadian/Niagara palette.
+       Never predominantly dark; no purple gradients, no neon. */
+    --color-paper: #ffffff;
+    --color-offwhite: #faf9f6;
+    --color-mist: #f2f4f3;
+    --color-border: #e3e7e5;
+    --color-border-strong: #cbd2cf;
+
+    --color-navy: #16232b;
+    --color-navy-soft: #3a4a52;
+    --color-ink-muted: #63737a;
+
+    --color-niagara-50: #eef6f1;
+    --color-niagara-100: #d7ebe0;
+    --color-niagara-300: #7fb89b;
+    --color-niagara-500: #2f7a5c;
+    --color-niagara-600: #235f47;
+    --color-niagara-700: #1b4a38;
+
+    --color-cta-50: #e9f8f0;
+    --color-cta-400: #21b36c;
+    --color-cta-500: #159457;
+    --color-cta-600: #0f7645;
+
+    --color-water-50: #eef5fa;
+    --color-water-100: #dbebf4;
+    --color-water-400: #5f95b8;
+    --color-water-600: #3d6e8f;
+
+    /* Radii & shadows */
+    --radius-card: 1rem;
+    --radius-control: 0.6rem;
+    --shadow-soft: 0 1px 2px rgba(22, 35, 43, 0.04), 0 8px 24px -12px rgba(22, 35, 43, 0.12);
+    --shadow-lift: 0 4px 10px rgba(22, 35, 43, 0.06), 0 16px 32px -16px rgba(22, 35, 43, 0.18);
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+@layer base {
+    html {
+        font-family: var(--font-body);
+        color: var(--color-navy);
+        background-color: var(--color-offwhite);
+    }
+
+    body {
+        background-color: var(--color-offwhite);
+        overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+        font-family: var(--font-display);
+        color: var(--color-navy);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-cta-500);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+@layer components {
+    /* Semantic typography scale — spec §5: display, H1, H2, H3, body, small,
+       buttons, labels, forms, navigation. Prefer these over ad-hoc Tailwind
+       text sizes when writing new templates, so the scale stays consistent. */
+    .text-display {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.5rem, 2rem + 2.2vw, 4rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+    }
+    .text-h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2rem, 1.7rem + 1.2vw, 2.75rem);
+        line-height: 1.12;
+    }
+    .text-h2 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(1.5rem, 1.35rem + 0.6vw, 2rem);
+        line-height: 1.18;
+    }
+    .text-h3 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.25rem;
+        line-height: 1.3;
+    }
+    .text-body {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--color-navy-soft);
+    }
+    .text-small {
+        font-family: var(--font-body);
+        font-weight: 400;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: var(--color-ink-muted);
+    }
+    .text-label {
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--color-ink-muted);
+    }
+    .text-nav {
+        font-family: var(--font-body);
+        font-weight: 500;
+        font-size: 0.9375rem;
+    }
+
+    /* Card */
+    .card {
+        background-color: var(--color-paper);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-soft);
+    }
+
+    /* Buttons — reusable CTA system, spec §52 */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 0.9375rem;
+        border-radius: var(--radius-control);
+        padding: 0.65rem 1.25rem;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+    }
+    .btn:active {
+        transform: translateY(1px);
+    }
+    .btn-primary {
+        background-color: var(--color-cta-500);
+        color: var(--color-paper);
+        box-shadow: var(--shadow-soft);
+    }
+    .btn-primary:hover {
+        background-color: var(--color-cta-600);
+    }
+    .btn-secondary {
+        background-color: var(--color-paper);
+        color: var(--color-navy);
+        border: 1px solid var(--color-border-strong);
+    }
+    .btn-secondary:hover {
+        border-color: var(--color-niagara-500);
+        color: var(--color-niagara-600);
+    }
+    .btn-ghost {
+        background-color: transparent;
+        color: var(--color-navy-soft);
+    }
+    .btn-ghost:hover {
+        color: var(--color-navy);
+        background-color: var(--color-mist);
+    }
+
+    /* Platform / status badges */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        background-color: var(--color-mist);
+        color: var(--color-navy-soft);
+        border: 1px solid var(--color-border);
+    }
+    .badge-brand {
+        background-color: var(--color-niagara-50);
+        color: var(--color-niagara-700);
+        border-color: var(--color-niagara-100);
+    }
+    .badge-water {
+        background-color: var(--color-water-50);
+        color: var(--color-water-600);
+        border-color: var(--color-water-100);
+    }
+}
