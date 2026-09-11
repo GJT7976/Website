@@ -114,7 +114,22 @@ MD,
     private function seedMedia(string $filename, string $mime, int $width, int $height, string $alt): Media
     {
         $sourcePath = "media/seed/{$filename}";
-        $size = filesize(storage_path("app/public/{$sourcePath}"));
+        $destination = storage_path("app/public/{$sourcePath}");
+
+        // storage/app/public/ is git-ignored (runtime uploads), so these
+        // seed images are tracked under database/seeders/assets/ instead
+        // and copied into place here — this makes `migrate --seed` work
+        // correctly on a fresh clone, not just on the machine that
+        // originally captured them.
+        if (! is_file($destination)) {
+            if (! is_dir(dirname($destination))) {
+                mkdir(dirname($destination), 0755, true);
+            }
+
+            copy(__DIR__."/assets/bread-maker/{$filename}", $destination);
+        }
+
+        $size = filesize($destination);
 
         return Media::updateOrCreate(
             ['path' => $sourcePath],
