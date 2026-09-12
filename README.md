@@ -22,6 +22,12 @@ Stripe checkout and the Canadian tax engine. Delivered so far:
 - **Real purchasing**: Stripe Checkout, a configurable/admin-editable
   Canadian tax engine, Orders, Payments, Refunds, and a Sales view with
   CSV export (`STRIPE_SETUP.md`)
+- **Platform/edition-aware selling**: per-app Editions (Android / Windows /
+  bundle / Web / Complete), protected per-platform downloads, a "My
+  Downloads" customer area reached by an emailed magic link (no customer
+  accounts), and admin tools for release uploads and entitlement overrides
+  — see "Claude Prompt — Niagara Inde Apps Platform Selection & Purchase
+  System.md" and the schema table in `ARCHITECTURE.md`
 - Database schema, migrations, seeders, and automated tests for all of
   the above
 

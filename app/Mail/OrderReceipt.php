@@ -8,12 +8,18 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class OrderReceipt extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Order $order) {}
+    public string $myDownloadsUrl;
+
+    public function __construct(public Order $order)
+    {
+        $this->myDownloadsUrl = URL::signedRoute('my-downloads.show', ['email' => $order->customer_email]);
+    }
 
     public function envelope(): Envelope
     {

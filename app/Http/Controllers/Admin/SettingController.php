@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -43,6 +44,8 @@ class SettingController extends Controller
         foreach ($data as $key => $value) {
             Setting::set($key, $value, $group);
         }
+
+        AuditLogger::record('settings.updated', null, null, $data, "{$group} settings");
 
         return redirect()->route('admin.settings.edit', $group)->with('status', 'Settings saved.');
     }

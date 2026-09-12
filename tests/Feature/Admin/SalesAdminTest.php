@@ -35,6 +35,28 @@ class SalesAdminTest extends TestCase
         $this->assertStringContainsString('NIA-TEST1', $response->getContent());
     }
 
+    public function test_sales_csv_export_includes_edition_and_platform_columns(): void
+    {
+        $admin = User::factory()->owner()->create();
+        $order = Order::factory()->create(['payment_status' => 'paid', 'order_number' => 'NIA-TEST2', 'billing_province' => 'ON', 'billing_country' => 'CA']);
+        $order->items()->create([
+            'app_name_snapshot' => 'Hummus House',
+            'edition_name_snapshot' => 'Android + Windows Bundle',
+            'included_platforms_snapshot' => [['platform' => 'android', 'platform_name' => 'Android', 'access_type' => 'download']],
+            'unit_price_cents' => 499,
+            'quantity' => 1,
+            'line_subtotal_cents' => 499,
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.sales.export', ['period' => 'month']));
+
+        $csv = $response->getContent();
+        $this->assertStringContainsString('Edition,Platforms Included', $csv);
+        $this->assertStringContainsString('Android + Windows Bundle', $csv);
+        $this->assertStringContainsString('Android', $csv);
+        $this->assertStringContainsString('ON', $csv);
+    }
+
     public function test_content_editor_can_view_sales(): void
     {
         $editor = User::factory()->contentEditor()->create();

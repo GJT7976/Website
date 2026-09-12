@@ -39,6 +39,19 @@ class AuthController extends Controller
             ]);
         }
 
+        if ($user->hasTwoFactorEnabled()) {
+            // Password was correct, but don't persist a real authenticated
+            // session yet — only a short-lived pending marker, resolved by
+            // TwoFactorChallengeController once a valid code is entered.
+            Auth::logout();
+
+            $request->session()->put('2fa.user_id', $user->id);
+            $request->session()->put('2fa.remember', $request->boolean('remember'));
+            $request->session()->put('2fa.expires_at', now()->addMinutes(5));
+
+            return redirect()->route('admin.two-factor.challenge');
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('admin.dashboard'));

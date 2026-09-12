@@ -64,6 +64,15 @@ class AppRequest extends FormRequest
 
             'platforms' => ['nullable', 'array'],
             'platforms.*' => ['exists:platforms,id'],
+
+            'android_delivery_mode' => ['nullable', Rule::in(['direct', 'play', 'both', 'none'])],
+            'windows_delivery_mode' => ['nullable', Rule::in(['direct', 'store', 'both', 'none'])],
+            'web_available' => ['sometimes', 'boolean'],
+            'web_app_url' => ['nullable', 'url', 'max:255'],
+            'web_login_required' => ['sometimes', 'boolean'],
+            'license_type' => ['nullable', Rule::in(['personal', 'single_business', 'other'])],
+            'license_label' => ['nullable', 'string', 'max:150'],
+            'update_policy' => ['nullable', Rule::in(['updates_included', 'major_upgrades_separate'])],
         ];
     }
 

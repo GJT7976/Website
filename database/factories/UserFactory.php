@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use PragmaRX\Google2FA\Google2FA;
 
 /**
  * @extends Factory<User>
@@ -33,9 +34,11 @@ class UserFactory extends Factory
             // Explicit rather than relying on the DB column default: Laravel's
             // attribute-based #[Fillable(...)] inserts NULL for any fillable
             // column omitted from create()'s attributes, which bypasses the
-            // migration's ->default(true) for is_active.
+            // migration's ->default(true) for is_active (and ->default(false)
+            // for two_factor_enabled).
             'role' => 'content_editor',
             'is_active' => true,
+            'two_factor_enabled' => false,
         ];
     }
 
@@ -62,5 +65,14 @@ class UserFactory extends Factory
     public function inactive(): static
     {
         return $this->state(fn (array $attributes) => ['is_active' => false]);
+    }
+
+    public function withTwoFactor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'two_factor_enabled' => true,
+            'two_factor_secret' => (new Google2FA)->generateSecretKey(),
+            'two_factor_confirmed_at' => now(),
+        ]);
     }
 }

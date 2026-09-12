@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TaxRule;
+use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -24,7 +25,9 @@ class TaxRuleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        TaxRule::create($this->validated($request));
+        $taxRule = TaxRule::create($this->validated($request));
+
+        AuditLogger::record('tax_rule.created', $taxRule, null, $taxRule->only(['country', 'province', 'percentage']));
 
         return redirect()->route('admin.tax-rules.index')->with('status', 'Tax rule created.');
     }
@@ -36,14 +39,20 @@ class TaxRuleController extends Controller
 
     public function update(Request $request, TaxRule $taxRule): RedirectResponse
     {
+        $before = $taxRule->only(['country', 'province', 'percentage', 'active']);
         $taxRule->update($this->validated($request));
+
+        AuditLogger::record('tax_rule.updated', $taxRule, $before, $taxRule->only(['country', 'province', 'percentage', 'active']));
 
         return redirect()->route('admin.tax-rules.index')->with('status', 'Tax rule updated.');
     }
 
     public function destroy(TaxRule $taxRule): RedirectResponse
     {
+        $before = $taxRule->only(['country', 'province', 'percentage']);
         $taxRule->delete();
+
+        AuditLogger::record('tax_rule.deleted', $taxRule, $before, null);
 
         return back()->with('status', 'Tax rule deleted.');
     }

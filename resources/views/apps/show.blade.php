@@ -48,6 +48,12 @@
         </div>
     </section>
 
+    @if ($app->hasEditions())
+        <section id="choose-version" class="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8">
+            <x-edition-picker :app="$app" />
+        </section>
+    @endif
+
     @if ($featureGraphic)
         <section class="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
             <img src="{{ $featureGraphic->url() }}" alt="{{ $featureGraphic->alt_text ?? $app->name.' feature graphic' }}" class="w-full rounded-2xl border border-border object-cover">

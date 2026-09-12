@@ -27,6 +27,16 @@ class PageController extends Controller
         return $this->renderBySlug('refunds');
     }
 
+    public function installAndroid(): View
+    {
+        return $this->renderBySlug('install-android');
+    }
+
+    public function installWindows(): View
+    {
+        return $this->renderBySlug('install-windows');
+    }
+
     private function renderBySlug(string $slug): View
     {
         $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();

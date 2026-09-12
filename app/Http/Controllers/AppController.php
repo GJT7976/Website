@@ -35,7 +35,7 @@ class AppController extends Controller
     {
         abort_unless($app->status === 'published', 404);
 
-        $app->load(['category', 'media', 'features', 'platforms', 'faqs']);
+        $app->load(['category', 'media', 'features', 'platforms', 'faqs', 'editions' => fn ($q) => $q->active(), 'editions.entitlements.platform']);
 
         return view('apps.show', [
             'app' => $app,

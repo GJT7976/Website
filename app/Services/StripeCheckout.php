@@ -27,10 +27,18 @@ class StripeCheckout
     /**
      * Create a Checkout Session for a single-item order and return its
      * hosted checkout URL. Uses inline price_data — no need to pre-create
-     * Stripe Price objects for every app.
+     * Stripe Price objects for every app. When an edition was purchased,
+     * $appEditionId is stamped into metadata (§14) so the webhook handler
+     * can look it up without trusting anything else from Stripe.
      */
-    public function createSessionUrl(Order $order, string $appName, int $amountCents, string $currency, string $successUrl, string $cancelUrl): string
+    public function createSessionUrl(Order $order, string $appName, int $amountCents, string $currency, string $successUrl, string $cancelUrl, ?int $appEditionId = null): string
     {
+        $metadata = [
+            'order_id' => (string) $order->id,
+            'order_number' => $order->order_number,
+            'app_edition_id' => $appEditionId !== null ? (string) $appEditionId : '',
+        ];
+
         $session = Session::create([
             'mode' => 'payment',
             'payment_method_types' => ['card'],
@@ -43,13 +51,13 @@ class StripeCheckout
                 ],
                 'quantity' => 1,
             ]],
-            'metadata' => ['order_id' => (string) $order->id, 'order_number' => $order->order_number],
+            'metadata' => $metadata,
             // Also stamped onto the PaymentIntent itself (not just the
             // Checkout Session) so a payment_intent.payment_failed event —
             // which can fire before checkout.session.completed ever would —
             // can still be matched back to this order.
             'payment_intent_data' => [
-                'metadata' => ['order_id' => (string) $order->id, 'order_number' => $order->order_number],
+                'metadata' => $metadata,
             ],
             'success_url' => $successUrl.'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $cancelUrl,

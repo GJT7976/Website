@@ -3,17 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderReceipt;
 use App\Models\Order;
+use App\Services\AuditLogger;
+use App\Services\EntitlementService;
 use App\Services\StripeCheckout;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Stripe\Exception\ApiErrorException;
 
 class OrderController extends Controller
 {
-    public function __construct(private StripeCheckout $stripeCheckout) {}
+    public function __construct(
+        private StripeCheckout $stripeCheckout,
+        private EntitlementService $entitlements,
+    ) {}
 
     public function index(Request $request): View
     {
@@ -38,9 +45,20 @@ class OrderController extends Controller
 
     public function show(Order $order): View
     {
-        $order->load(['items', 'taxLines', 'payments', 'refunds.administrator']);
+        $order->load(['items', 'taxLines', 'payments', 'refunds.administrator', 'entitlements.platform', 'entitlements.edition']);
 
         return view('admin.orders.show', ['order' => $order]);
+    }
+
+    public function resendReceipt(Order $order): RedirectResponse
+    {
+        try {
+            Mail::to($order->customer_email)->send(new OrderReceipt($order));
+        } catch (\Throwable $e) {
+            return back()->withErrors(['receipt' => 'Couldn\'t resend the receipt email: '.$e->getMessage()]);
+        }
+
+        return back()->with('status', "Receipt resent to {$order->customer_email}.");
     }
 
     public function refund(Request $request, Order $order): RedirectResponse
@@ -73,6 +91,15 @@ class OrderController extends Controller
 
         $fullyRefunded = $order->totalRefundedCents() >= $order->total_cents;
         $order->update(['payment_status' => $fullyRefunded ? 'refunded' : 'partially_refunded']);
+
+        if ($fullyRefunded) {
+            $this->entitlements->revokeForOrder($order, 'refund');
+        }
+
+        AuditLogger::record('order.refunded', $order, null, [
+            'amount_cents' => $amountCents ?? $order->total_cents,
+            'reason' => $data['reason'] ?? null,
+        ]);
 
         return back()->with('status', 'Refund issued.');
     }

@@ -115,6 +115,58 @@
             </div>
         </section>
 
+        {{-- PLATFORM SALES CONFIG — §22 --}}
+        <section class="card p-6">
+            <h2 class="text-h3">Platform Delivery, License &amp; Updates</h2>
+            <p class="text-small mt-1">Only matters once this app has Editions configured below — a single-price app ignores these.</p>
+            <div class="mt-4 grid gap-5 sm:grid-cols-2">
+                <x-admin.form-field name="android_delivery_mode" label="Android delivery">
+                    <select id="android_delivery_mode" name="android_delivery_mode" class="{{ $inputClass }}">
+                        @foreach (['none' => 'Not available', 'direct' => 'Direct Download only', 'play' => 'Google Play only', 'both' => 'Both'] as $value => $label)
+                            <option value="{{ $value }}" @selected(old('android_delivery_mode', $app->android_delivery_mode ?? 'none') === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </x-admin.form-field>
+                <x-admin.form-field name="windows_delivery_mode" label="Windows delivery">
+                    <select id="windows_delivery_mode" name="windows_delivery_mode" class="{{ $inputClass }}">
+                        @foreach (['none' => 'Not available', 'direct' => 'Direct Download only', 'store' => 'Microsoft Store only', 'both' => 'Both'] as $value => $label)
+                            <option value="{{ $value }}" @selected(old('windows_delivery_mode', $app->windows_delivery_mode ?? 'none') === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </x-admin.form-field>
+                <x-admin.form-field name="web_app_url" label="Paid Web App URL" hint="The hosted, purchased app — distinct from the Live Demo above.">
+                    <input id="web_app_url" name="web_app_url" value="{{ old('web_app_url', $app->web_app_url) }}" class="{{ $inputClass }}">
+                </x-admin.form-field>
+                <div class="flex flex-col justify-center gap-2">
+                    <label class="flex items-center gap-2 text-nav">
+                        <input type="checkbox" name="web_available" value="1" @checked(old('web_available', $app->web_available ?? false)) class="rounded border-border-strong">
+                        Paid Web App available
+                    </label>
+                    <label class="flex items-center gap-2 text-nav">
+                        <input type="checkbox" name="web_login_required" value="1" @checked(old('web_login_required', $app->web_login_required ?? false)) class="rounded border-border-strong">
+                        Web app requires login
+                    </label>
+                </div>
+                <x-admin.form-field name="license_type" label="License scope">
+                    <select id="license_type" name="license_type" class="{{ $inputClass }}">
+                        @foreach (['personal' => 'Personal License', 'single_business' => 'Single Business License', 'other' => 'Other (custom label)'] as $value => $label)
+                            <option value="{{ $value }}" @selected(old('license_type', $app->license_type ?? 'personal') === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </x-admin.form-field>
+                <x-admin.form-field name="license_label" label="Custom license label (used when License scope is Other)">
+                    <input id="license_label" name="license_label" value="{{ old('license_label', $app->license_label) }}" class="{{ $inputClass }}">
+                </x-admin.form-field>
+                <x-admin.form-field name="update_policy" label="Update policy">
+                    <select id="update_policy" name="update_policy" class="{{ $inputClass }}">
+                        @foreach (['updates_included' => 'Updates Included', 'major_upgrades_separate' => 'Major Upgrades Sold Separately'] as $value => $label)
+                            <option value="{{ $value }}" @selected(old('update_policy', $app->update_policy ?? 'updates_included') === $value)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </x-admin.form-field>
+            </div>
+        </section>
+
         {{-- DEMO --}}
         <section class="card p-6">
             <h2 class="text-h3">Demo</h2>
@@ -186,6 +238,18 @@
         <div class="mt-10 grid gap-6 lg:grid-cols-2">
             @include('admin.apps.partials.media', ['app' => $app])
             @include('admin.apps.partials.features', ['app' => $app])
+        </div>
+
+        <div class="mt-6">
+            @include('admin.apps.partials.editions', ['app' => $app, 'platforms' => $platforms])
+        </div>
+
+        <div class="mt-6">
+            @include('admin.apps.partials.releases', ['app' => $app, 'platforms' => $platforms])
+        </div>
+
+        <div class="mt-6">
+            @include('admin.apps.partials.entitlements', ['app' => $app])
         </div>
     @else
         <x-alert type="info" class="mt-8">Save this app first to add screenshots, icon, and feature bullets.</x-alert>

@@ -57,6 +57,7 @@ class MakeAdminCommand extends Command
             'password' => Hash::make($password),
             'role' => $role,
             'is_active' => true,
+            'two_factor_enabled' => false,
             'email_verified_at' => now(),
         ]);
 

@@ -50,12 +50,29 @@
   Settings/Users (`role:owner`).
 - **Checkout rate limiting** — `throttle:10,1` on the checkout POST route,
   the same pattern as login/contact.
+- **Two-factor authentication** — optional, self-service TOTP per admin
+  account (`App\Services\TwoFactorAuthService`, `pragmarx/google2fa`).
+  Recovery codes are bcrypt-hashed and one-time-use; the shared secret is
+  rendered as an inline SVG QR code server-side, never sent to a
+  third-party QR image API. `two_factor_secret`/`two_factor_recovery_codes`
+  are deliberately excluded from `User`'s `#[Fillable]` list — they're only
+  ever written via `forceFill()` from server-computed values, never from a
+  mass-assigned request field.
+- **Audit log** of administrator actions (`audit_logs` table, written via
+  `App\Services\AuditLogger`) — app/price/tax/content changes, refunds,
+  admin account changes. No delete/update route is ever registered for it
+  (`AuditLogController` exposes only `index()`).
+- **Backups never expose secrets or credentials** — archives are built
+  from `storage/app/public` and `storage/app/private` only; `.env` lives
+  outside `storage/app/` entirely and is never included, and the
+  `backups/` directory itself is excluded so a backup never nests inside
+  another. Archives are stored on the private `local` disk and served only
+  through `BackupController::download()` (owner-only, entitlement-checked
+  the same way `DownloadController` serves paid release files) — never a
+  public URL.
 
 ## Known gaps — a further phase
 
-- **Two-factor authentication** for admin accounts.
-- **Audit log** of administrator actions (app/price/content changes,
-  refunds, permission changes).
 - **Security headers** (CSP, `X-Frame-Options`, etc.) beyond Laravel's
   framework defaults — to be reviewed once the demo iframe/embed strategy
   and Stripe.js/Checkout's own script needs are both finalized, since a

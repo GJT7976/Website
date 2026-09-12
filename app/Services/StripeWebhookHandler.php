@@ -6,6 +6,7 @@ use App\Mail\OrderReceipt;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Refund;
+use App\Services\EntitlementService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Event;
@@ -17,10 +18,15 @@ use Stripe\Event;
  * with \Stripe\Event::constructFrom([...]) and never touch the network.
  *
  * Never trust a browser redirect back to a "success" URL by itself — an
- * order is only ever marked paid/refunded/failed from here.
+ * order is only ever marked paid/refunded/failed from here. Entitlements
+ * ride along with that same rule: EntitlementService only ever creates a
+ * download/web-access grant once this handler has confirmed payment, and
+ * only ever revokes one once it has confirmed a full refund.
  */
 class StripeWebhookHandler
 {
+    public function __construct(private EntitlementService $entitlements) {}
+
     public function handle(Event $event): void
     {
         match ($event->type) {
@@ -57,6 +63,8 @@ class StripeWebhookHandler
             'status' => 'succeeded',
             'raw_payload' => $event->toArray(),
         ]);
+
+        $this->entitlements->createFromOrder($order);
 
         try {
             Mail::to($order->customer_email)->send(new OrderReceipt($order));
@@ -105,6 +113,13 @@ class StripeWebhookHandler
 
         $fullyRefunded = ($charge->amount_refunded ?? 0) >= $order->total_cents;
         $order->update(['payment_status' => $fullyRefunded ? 'refunded' : 'partially_refunded']);
+
+        // §35: a fully refunded direct purchase no longer grants new
+        // downloads/access unless an admin overrides it afterward. A
+        // partial refund leaves entitlements untouched.
+        if ($fullyRefunded) {
+            $this->entitlements->revokeForOrder($order, 'refund');
+        }
     }
 
     private function findOrder(?string $orderId, ?string $sessionId = null, ?string $paymentIntentId = null): ?Order

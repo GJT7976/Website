@@ -8,7 +8,13 @@
 | Item | Amount |
 | :--- | :--- |
 @foreach ($order->items as $item)
-| {{ $item->app_name_snapshot }} | {{ $order->moneyLabel($item->line_subtotal_cents) }} |
+| {{ $item->app_name_snapshot }}@if ($item->edition_name_snapshot) — {{ $item->edition_name_snapshot }}@endif | {{ $order->moneyLabel($item->line_subtotal_cents) }} |
+@if ($item->license_label_snapshot)
+| &nbsp;&nbsp;{{ $item->license_label_snapshot }} | |
+@endif
+@if ($item->included_platforms_snapshot)
+| &nbsp;&nbsp;Includes: {{ collect($item->included_platforms_snapshot)->pluck('platform_name')->unique()->implode(', ') }} | |
+@endif
 @endforeach
 | Subtotal | {{ $order->moneyLabel($order->subtotal_cents) }} |
 @foreach ($order->taxLines as $line)
@@ -18,6 +24,12 @@
 @endcomponent
 
 **Payment status:** {{ ucfirst($order->payment_status) }}
+
+@if ($order->payment_status === 'paid')
+@component('mail::button', ['url' => $myDownloadsUrl])
+View My Downloads
+@endcomponent
+@endif
 
 If you have any questions about this order, just reply to this email or
 use the Contact page on our site.

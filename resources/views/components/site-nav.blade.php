@@ -10,10 +10,25 @@
     ];
 @endphp
 
-<header x-data="{ open: false }" class="sticky top-0 z-40 border-b border-border bg-paper/90 backdrop-blur">
+<header x-data="{ open: false, secretClicks: 0, secretTimer: null }" class="sticky top-0 z-40 border-b border-border bg-paper/90 backdrop-blur">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <a href="{{ route('home') }}" class="flex items-center gap-2 text-nav font-bold text-navy">
-            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-niagara-500 text-white">
+            {{-- Not a decoy: 5 clicks here (within ~1.5s of each other) opens
+                 the admin login — there is no visible "Admin" link in the
+                 public nav on purpose. --}}
+            <span
+                @click.stop.prevent="
+                    secretClicks++;
+                    clearTimeout(secretTimer);
+                    if (secretClicks >= 5) {
+                        secretClicks = 0;
+                        window.location.href = '{{ route('admin.login') }}';
+                    } else {
+                        secretTimer = setTimeout(() => secretClicks = 0, 1500);
+                    }
+                "
+                class="flex h-9 w-9 items-center justify-center rounded-lg bg-niagara-500 text-white"
+            >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="h-5 w-5" aria-hidden="true">
                     <path d="M4 15c2-4 4-6 8-6s6 2 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M4 19c2-3 4-4.5 8-4.5s6 1.5 8 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/>

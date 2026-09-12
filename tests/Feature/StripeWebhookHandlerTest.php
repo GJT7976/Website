@@ -31,7 +31,7 @@ class StripeWebhookHandlerTest extends TestCase
             ]],
         ]);
 
-        (new StripeWebhookHandler)->handle($event);
+        app(StripeWebhookHandler::class)->handle($event);
 
         $order->refresh();
         $this->assertSame('paid', $order->payment_status);
@@ -51,7 +51,7 @@ class StripeWebhookHandlerTest extends TestCase
             'data' => ['object' => ['id' => 'cs_does_not_exist', 'metadata' => []]],
         ]);
 
-        (new StripeWebhookHandler)->handle($event); // should not throw
+        app(StripeWebhookHandler::class)->handle($event); // should not throw
 
         $this->assertDatabaseCount('payments', 0);
     }
@@ -68,7 +68,7 @@ class StripeWebhookHandlerTest extends TestCase
             ]],
         ]);
 
-        (new StripeWebhookHandler)->handle($event);
+        app(StripeWebhookHandler::class)->handle($event);
 
         $this->assertSame('failed', $order->refresh()->payment_status);
     }
@@ -90,7 +90,7 @@ class StripeWebhookHandlerTest extends TestCase
             ]],
         ]);
 
-        (new StripeWebhookHandler)->handle($event);
+        app(StripeWebhookHandler::class)->handle($event);
 
         $order->refresh();
         $this->assertSame('refunded', $order->payment_status);
@@ -117,7 +117,7 @@ class StripeWebhookHandlerTest extends TestCase
             ]],
         ]);
 
-        (new StripeWebhookHandler)->handle($event);
+        app(StripeWebhookHandler::class)->handle($event);
 
         $this->assertSame('partially_refunded', $order->refresh()->payment_status);
     }

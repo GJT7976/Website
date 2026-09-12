@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AppRequest;
 use App\Models\App;
 use App\Models\AppCategory;
+use App\Models\AppFeature;
 use App\Models\Media;
 use App\Models\Platform;
+use App\Services\AuditLogger;
 use App\Services\MediaLibrary;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,12 +50,23 @@ class AppController extends Controller
         $app = App::create($this->mapData($request));
         $app->platforms()->sync($request->input('platforms', []));
 
+        AuditLogger::record('app.created', $app, null, $app->only(['name', 'slug', 'status', 'price_cents']));
+
         return redirect()->route('admin.apps.edit', $app)->with('status', 'App created.');
     }
 
     public function edit(App $app): View
     {
-        $app->load(['media', 'features', 'platforms']);
+        $app->load([
+            'media', 'features', 'platforms',
+            'editions' => fn ($q) => $q->orderBy('sort_order'),
+            'editions.entitlements.platform',
+            'releases' => fn ($q) => $q->orderByDesc('released_at'),
+            'releases.platform',
+            'entitlements' => fn ($q) => $q->orderByDesc('created_at'),
+            'entitlements.platform',
+            'entitlements.edition',
+        ]);
 
         return view('admin.apps.form', [
             'app' => $app,
@@ -64,36 +77,51 @@ class AppController extends Controller
 
     public function update(AppRequest $request, App $app): RedirectResponse
     {
+        $before = $app->only(['name', 'slug', 'status', 'price_cents']);
         $app->update($this->mapData($request));
         $app->platforms()->sync($request->input('platforms', []));
+
+        AuditLogger::record('app.updated', $app, $before, $app->only(['name', 'slug', 'status', 'price_cents']));
 
         return redirect()->route('admin.apps.edit', $app)->with('status', 'App updated.');
     }
 
     public function destroy(App $app): RedirectResponse
     {
+        $before = $app->only(['name', 'slug', 'status']);
         $app->delete();
+
+        AuditLogger::record('app.deleted', $app, $before, null);
 
         return redirect()->route('admin.apps.index')->with('status', 'App archived (soft-deleted).');
     }
 
     public function publish(App $app): RedirectResponse
     {
+        $before = $app->status;
         $app->update(['status' => 'published']);
+
+        AuditLogger::record('app.status_changed', $app, ['status' => $before], ['status' => 'published']);
 
         return back()->with('status', "{$app->name} published.");
     }
 
     public function unpublish(App $app): RedirectResponse
     {
+        $before = $app->status;
         $app->update(['status' => 'draft']);
+
+        AuditLogger::record('app.status_changed', $app, ['status' => $before], ['status' => 'draft']);
 
         return back()->with('status', "{$app->name} unpublished.");
     }
 
     public function archive(App $app): RedirectResponse
     {
+        $before = $app->status;
         $app->update(['status' => 'archived']);
+
+        AuditLogger::record('app.status_changed', $app, ['status' => $before], ['status' => 'archived']);
 
         return back()->with('status', "{$app->name} archived.");
     }
@@ -173,7 +201,7 @@ class AppController extends Controller
         return back()->with('status', 'Feature added.');
     }
 
-    public function removeFeature(App $app, \App\Models\AppFeature $feature): RedirectResponse
+    public function removeFeature(App $app, AppFeature $feature): RedirectResponse
     {
         abort_unless($feature->app_id === $app->id, 404);
         $feature->delete();
@@ -199,6 +227,12 @@ class AppController extends Controller
             'direct_purchase_enabled' => $request->boolean('direct_purchase_enabled'),
             'is_featured' => $request->boolean('is_featured'),
             'demo_enabled' => $request->boolean('demo_enabled'),
+            'android_delivery_mode' => $data['android_delivery_mode'] ?? 'none',
+            'windows_delivery_mode' => $data['windows_delivery_mode'] ?? 'none',
+            'web_available' => $request->boolean('web_available'),
+            'web_login_required' => $request->boolean('web_login_required'),
+            'license_type' => $data['license_type'] ?? 'personal',
+            'update_policy' => $data['update_policy'] ?? 'updates_included',
             // Laravel's attribute-based #[Fillable] inserts an explicit NULL
             // for any fillable column left out of the attributes array,
             // which bypasses the migration's ->default(0) — so it's set

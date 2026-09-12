@@ -14,9 +14,23 @@
         <h1 class="text-h1 mt-1">{{ $app->name }}</h1>
         <p class="text-body mt-2">{{ $app->tagline }}</p>
 
-        <div class="card mt-6 flex items-center justify-between p-5">
-            <span class="text-nav font-semibold">{{ $app->name }}</span>
-            <x-price :app="$app" />
+        <div class="card mt-6 p-5">
+            <div class="flex items-center justify-between">
+                <span class="text-nav font-semibold">{{ $app->name }}@if ($edition) — {{ $edition->name }}@endif</span>
+                @if ($edition)
+                    <span class="text-h3">{{ $edition->priceLabel() }}</span>
+                @else
+                    <x-price :app="$app" />
+                @endif
+            </div>
+            @if ($edition)
+                <p class="text-small mt-2">{{ $app->licenseLabel() }}</p>
+                <ul class="text-small mt-2 space-y-0.5">
+                    @foreach (collect($edition->includedPlatforms())->pluck('platform_name')->unique() as $platformName)
+                        <li>✓ {{ $platformName }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
         @if ($errors->any())
@@ -27,7 +41,7 @@
             </x-alert>
         @endif
 
-        <form method="post" action="{{ route('checkout.store', $app) }}" class="mt-6 space-y-5" x-data="{ country: '{{ old('billing_country', 'CA') }}' }">
+        <form method="post" action="{{ $edition ? route('checkout.store.edition', [$app, $edition]) : route('checkout.store', $app) }}" class="mt-6 space-y-5" x-data="{ country: '{{ old('billing_country', 'CA') }}' }">
             @csrf
 
             <div class="grid gap-5 sm:grid-cols-2">

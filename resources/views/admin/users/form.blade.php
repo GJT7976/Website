@@ -28,6 +28,23 @@
                 <input type="checkbox" name="is_active" value="1" @checked(old('is_active', $user->is_active)) class="rounded border-border-strong">
                 Active (can sign in)
             </label>
+
+            <div>
+                <p class="text-label">Two-factor authentication</p>
+                <div class="mt-1.5 flex items-center gap-3">
+                    @if ($user->hasTwoFactorEnabled())
+                        <span class="badge badge-brand">Enabled</span>
+                        @if ($user->id !== auth()->id())
+                            <form method="post" action="{{ route('admin.users.two-factor.disable', $user) }}" onsubmit="return confirm('Disable two-factor authentication for {{ $user->name }}? They will need to re-enroll.');">
+                                @csrf
+                                <button type="submit" class="text-small text-red-600 hover:underline">Disable</button>
+                            </form>
+                        @endif
+                    @else
+                        <span class="badge">Disabled</span>
+                    @endif
+                </div>
+            </div>
         @endif
 
         <x-admin.form-field name="password" :label="$isEdit ? 'New password (leave blank to keep current)' : 'Password'" hint="Minimum 12 characters.">

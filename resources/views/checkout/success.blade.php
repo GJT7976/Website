@@ -17,8 +17,11 @@
         @endif
 
         <div class="mt-8 flex flex-wrap justify-center gap-3">
+            @if ($myDownloadsUrl)
+                <a href="{{ $myDownloadsUrl }}" class="btn btn-primary">Go to My Downloads</a>
+            @endif
             <a href="{{ route('apps.show', $app) }}" class="btn btn-secondary">Back to {{ $app->name }}</a>
-            <a href="{{ route('home') }}" class="btn btn-primary">Return Home</a>
+            <a href="{{ route('home') }}" class="btn {{ $myDownloadsUrl ? 'btn-secondary' : 'btn-primary' }}">Return Home</a>
         </div>
     </section>
 </x-app-layout>

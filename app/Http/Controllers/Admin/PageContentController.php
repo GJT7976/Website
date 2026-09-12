@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Media;
 use App\Models\Page;
+use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -43,12 +44,16 @@ class PageContentController extends Controller
             'sections.*.sort_order' => ['nullable', 'integer'],
         ]);
 
+        $before = $page->only(['title', 'meta_title', 'meta_description', 'published']);
+
         $page->update([
             'title' => $data['title'],
             'meta_title' => $data['meta_title'] ?? null,
             'meta_description' => $data['meta_description'] ?? null,
             'published' => $request->boolean('published'),
         ]);
+
+        AuditLogger::record('content.updated', $page, $before, $page->only(['title', 'meta_title', 'meta_description', 'published']));
 
         foreach ($data['sections'] ?? [] as $index => $section) {
             $page->sections()->updateOrCreate(

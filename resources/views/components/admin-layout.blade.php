@@ -2,6 +2,7 @@
     $navGroups = [
         'Overview' => [
             ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => '🏠'],
+            ['label' => 'Two-Factor Auth', 'route' => 'admin.two-factor.edit', 'icon' => '🔒'],
         ],
         'Catalogue' => [
             ['label' => 'Apps', 'route' => 'admin.apps.index', 'icon' => '📦'],
@@ -26,10 +27,12 @@
             ['label' => 'Site Settings', 'route' => 'admin.settings.edit', 'params' => ['group' => 'site'], 'icon' => '🎨'],
             ['label' => 'Store Settings', 'route' => 'admin.settings.edit', 'params' => ['group' => 'store'], 'icon' => '🛒'],
             ['label' => 'Payments', 'route' => 'admin.settings.edit', 'params' => ['group' => 'payments'], 'icon' => '💳'],
+            ['label' => 'Audit Log', 'route' => 'admin.audit-log.index', 'icon' => '📜'],
+            ['label' => 'Backups', 'route' => 'admin.backups.index', 'icon' => '💾'],
         ],
     ];
 
-    $comingInPhase2 = ['Accounting', 'Expenses', 'Backups', 'Audit Log'];
+    $notYetImplemented = ['Accounting', 'Expenses'];
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -81,9 +84,9 @@
                 @endauth
 
                 <div>
-                    <p class="text-label px-3">Phase 2</p>
+                    <p class="text-label px-3">Not Yet Implemented</p>
                     <div class="mt-1 space-y-0.5">
-                        @foreach ($comingInPhase2 as $label)
+                        @foreach ($notYetImplemented as $label)
                             <span class="flex cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 text-nav text-ink-muted">
                                 <span aria-hidden="true">🔒</span> {{ $label }} <span class="text-small ms-auto">Soon</span>
                             </span>

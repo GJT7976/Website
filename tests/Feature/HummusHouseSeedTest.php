@@ -45,6 +45,14 @@ class HummusHouseSeedTest extends TestCase
 
         $this->get(route('apps.show', $app))->assertOk()->assertSee('Hummus House');
         $this->get(route('demos.show', $app))->assertOk();
-        $this->get(route('checkout.create', $app))->assertOk()->assertSee('$2.99');
+
+        // Sold as separate editions (Platform Selection & Purchase System)
+        // rather than the single flat price above — the edition-less
+        // checkout route now 404s so customers can't bypass edition
+        // selection, and each edition has its own checkout route instead.
+        $this->get(route('checkout.create', $app))->assertNotFound();
+
+        $androidEdition = $app->editions()->where('slug', 'android')->firstOrFail();
+        $this->get(route('checkout.create.edition', [$app, $androidEdition]))->assertOk()->assertSee('$2.99');
     }
 }

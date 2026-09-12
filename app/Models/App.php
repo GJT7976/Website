@@ -22,6 +22,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'status', 'is_featured', 'featured_order', 'seo_title', 'seo_description',
     'demo_enabled', 'demo_type', 'demo_url', 'demo_version', 'demo_instructions',
     'demo_warning', 'demo_reset_mode',
+    'android_delivery_mode', 'windows_delivery_mode',
+    'web_available', 'web_app_url', 'web_login_required',
+    'license_type', 'license_label', 'update_policy',
 ])]
 class App extends Model
 {
@@ -37,6 +40,8 @@ class App extends Model
             'direct_purchase_enabled' => 'boolean',
             'is_featured' => 'boolean',
             'demo_enabled' => 'boolean',
+            'web_available' => 'boolean',
+            'web_login_required' => 'boolean',
         ];
     }
 
@@ -75,6 +80,57 @@ class App extends Model
     public function supportRequests(): HasMany
     {
         return $this->hasMany(SupportRequest::class);
+    }
+
+    public function editions(): HasMany
+    {
+        return $this->hasMany(AppEdition::class)->orderBy('sort_order');
+    }
+
+    public function activeEditions()
+    {
+        return $this->editions()->active()->get();
+    }
+
+    public function hasEditions(): bool
+    {
+        return $this->editions()->active()->exists();
+    }
+
+    public function releases(): HasMany
+    {
+        return $this->hasMany(AppRelease::class);
+    }
+
+    public function currentRelease(Platform $platform): ?AppRelease
+    {
+        return $this->releases()
+            ->where('platform_id', $platform->id)
+            ->where('customer_downloadable', true)
+            ->current()
+            ->latest('released_at')
+            ->first();
+    }
+
+    public function entitlements(): HasMany
+    {
+        return $this->hasMany(CustomerEntitlement::class);
+    }
+
+    /**
+     * Display label for the configured license scope — §26.
+     */
+    public function licenseLabel(): string
+    {
+        if ($this->license_type === 'other' && filled($this->license_label)) {
+            return $this->license_label;
+        }
+
+        return match ($this->license_type) {
+            'single_business' => 'Single Business License',
+            'other' => 'Software License',
+            default => 'Personal License',
+        };
     }
 
     public function icon(): ?Media
@@ -135,6 +191,16 @@ class App extends Model
         }
 
         return sprintf('$%s %s', number_format($cents / 100, 2), $this->currency ?? 'CAD');
+    }
+
+    /**
+     * Lowest active edition price, for a "From $X.XX" catalogue label.
+     * Null when the app has no active editions (single-price apps are
+     * unaffected — see x-price).
+     */
+    public function lowestEditionPriceCents(): ?int
+    {
+        return $this->editions()->active()->min('price_cents');
     }
 
     public function onSale(): bool

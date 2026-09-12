@@ -41,6 +41,11 @@ class Order extends Model
         return $this->hasMany(Refund::class);
     }
 
+    public function entitlements(): HasMany
+    {
+        return $this->hasMany(CustomerEntitlement::class);
+    }
+
     public function scopeBetween(Builder $query, \DateTimeInterface $from, \DateTimeInterface $to): Builder
     {
         return $query->whereBetween('created_at', [$from, $to]);

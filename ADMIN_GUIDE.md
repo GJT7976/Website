@@ -83,6 +83,39 @@ Business), a notification email is also sent there.
    keys) — see `STRIPE_SETUP.md` if they aren't set up yet.
 3. A real **Buy Now** button now appears on the app's public page.
 
+## Selling an app by platform (Android / Windows / Bundle / Web / Complete)
+
+For an app sold on more than one platform, add **Editions** instead of (or
+alongside) the single flat price above:
+
+1. Open the app (must already be saved) and scroll to **Platform
+   Delivery, License & Updates** — set Android/Windows delivery (Direct,
+   store, or both), the paid Web App URL if one exists (this is separate
+   from the Live Demo), and the license scope shown to customers.
+2. Under **Editions**, add one per thing a customer can buy — e.g.
+   "Android" at $2.99, "Windows" at $2.99, "Android + Windows Bundle" at
+   $4.99. Each edition needs its **Includes** checkboxes set (which
+   platform(s)/download-or-web-access it grants) — an edition with nothing
+   checked won't give a buyer any access.
+3. Under **Releases**, upload the actual file per platform — a real signed
+   `.apk` for Android, an `.exe`/`.msix`/`.msixbundle` for Windows — and
+   mark one **Current** per platform. Customers always get whichever
+   release is current, not the one that happened to exist when they
+   bought. An `.aab` can be logged here for your own Play Store record,
+   but it's always forced non-customer-downloadable — there's no way to
+   accidentally hand a customer a `.aab`.
+4. Once an app has any active edition, its public page shows the
+   platform-selection panel instead of a single Buy Now button, and the
+   old flat-price checkout link stops working for that app (so a customer
+   can't skip picking a platform).
+
+Paid customers get access via **My Downloads** — a link mailed with every
+receipt (and re-requestable at `/my-downloads` with just their order
+email; there's no customer login). **Customer Access** on the app's edit
+page and on an individual order lets you manually grant a comped copy or
+revoke/restore access — every override records who did it and why on that
+access record itself.
+
 ## Orders & Sales
 
 - **Orders** lists every checkout attempt with its status (pending, paid,

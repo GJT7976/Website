@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,14 +36,17 @@ class UserController extends Controller
             'password' => ['required', 'confirmed', Password::min(12)],
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'role' => $data['role'],
             'is_active' => true,
+            'two_factor_enabled' => false,
             'password' => Hash::make($data['password']),
             'email_verified_at' => now(),
         ]);
+
+        AuditLogger::record('admin.created', $user, null, ['email' => $user->email, 'role' => $user->role]);
 
         return redirect()->route('admin.users.index')->with('status', 'Administrator created.');
     }
@@ -66,6 +70,9 @@ class UserController extends Controller
             return back()->withErrors(['role' => 'You cannot remove your own owner role.']);
         }
 
+        $roleChanged = $data['role'] !== $user->role;
+        $before = $user->only(['name', 'email', 'role', 'is_active']);
+
         $user->update([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -73,6 +80,13 @@ class UserController extends Controller
             'is_active' => $request->boolean('is_active', true),
             ...(! empty($data['password']) ? ['password' => Hash::make($data['password'])] : []),
         ]);
+
+        AuditLogger::record(
+            $roleChanged ? 'admin.role_changed' : 'admin.updated',
+            $user,
+            $before,
+            $user->only(['name', 'email', 'role', 'is_active'])
+        );
 
         return redirect()->route('admin.users.index')->with('status', 'Administrator updated.');
     }
@@ -83,8 +97,31 @@ class UserController extends Controller
             return back()->withErrors(['user' => 'You cannot delete your own account.']);
         }
 
+        $before = $user->only(['name', 'email', 'role']);
         $user->delete();
 
+        AuditLogger::record('admin.deleted', null, $before, null, $before['email']);
+
         return back()->with('status', 'Administrator removed.');
+    }
+
+    /**
+     * Owner override for the "lost phone, no recovery codes" case — clears
+     * another admin's 2FA so they can log in and re-enroll. Enrollment
+     * itself stays self-service (TwoFactorSettingsController); the owner
+     * can only see/force-disable, never enable-on-behalf-of.
+     */
+    public function disableTwoFactor(User $user): RedirectResponse
+    {
+        $user->forceFill([
+            'two_factor_enabled' => false,
+            'two_factor_secret' => null,
+            'two_factor_confirmed_at' => null,
+            'two_factor_recovery_codes' => null,
+        ])->save();
+
+        AuditLogger::record('admin.2fa_disabled_by_owner', $user);
+
+        return back()->with('status', "Two-factor authentication disabled for {$user->name}.");
     }
 }

@@ -10,6 +10,11 @@
                 </div>
                 <p class="text-small mt-1">{{ $order->created_at->format('F j, Y, g:ia') }}</p>
 
+                <form method="post" action="{{ route('admin.orders.resend-receipt', $order) }}" class="mt-3">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary text-xs">Resend Receipt Email</button>
+                </form>
+
                 <table class="mt-5 w-full text-sm">
                     <thead>
                         <tr class="text-label border-b border-border text-left">
@@ -20,7 +25,12 @@
                     <tbody>
                         @foreach ($order->items as $item)
                             <tr class="border-b border-border">
-                                <td class="py-2">{{ $item->app_name_snapshot }} &times; {{ $item->quantity }}</td>
+                                <td class="py-2">
+                                    {{ $item->app_name_snapshot }}@if ($item->edition_name_snapshot) — {{ $item->edition_name_snapshot }}@endif &times; {{ $item->quantity }}
+                                    @if ($item->included_platforms_snapshot)
+                                        <br><span class="text-small">Includes: {{ collect($item->included_platforms_snapshot)->pluck('platform_name')->unique()->implode(', ') }}</span>
+                                    @endif
+                                </td>
                                 <td class="py-2 text-right">{{ $order->moneyLabel($item->line_subtotal_cents) }}</td>
                             </tr>
                         @endforeach
@@ -78,6 +88,36 @@
                         <button type="submit" class="btn btn-secondary" onclick="return confirm('Issue this refund via Stripe?');">Issue Refund</button>
                     </form>
                 @endif
+            </div>
+            <div class="card p-6">
+                <h2 class="text-h3">Customer Access</h2>
+                <ul class="mt-3 divide-y divide-border">
+                    @forelse ($order->entitlements as $entitlement)
+                        <li class="flex items-center justify-between gap-3 py-2 text-small">
+                            <span>
+                                {{ $entitlement->platform->name }} ({{ $entitlement->access_type === 'download' ? 'download' : 'web access' }})
+                                @if ($entitlement->status === 'revoked')
+                                    <span class="badge bg-red-50 text-red-700">Revoked</span>
+                                @else
+                                    <span class="badge bg-cta-50 text-cta-600">Active</span>
+                                @endif
+                            </span>
+                            @if ($entitlement->status === 'active')
+                                <form method="post" action="{{ route('admin.entitlements.revoke', $entitlement) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-ghost text-xs text-red-600">Revoke</button>
+                                </form>
+                            @else
+                                <form method="post" action="{{ route('admin.entitlements.restore', $entitlement) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-secondary text-xs">Restore</button>
+                                </form>
+                            @endif
+                        </li>
+                    @empty
+                        <li class="text-small py-2">No download/web-access entitlements for this order yet — created automatically once payment is confirmed.</li>
+                    @endforelse
+                </ul>
             </div>
         </div>
 

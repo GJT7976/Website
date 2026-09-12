@@ -32,20 +32,35 @@ class SalesController extends Controller
 
         $orders = Order::with('items')->between($from, $to)->orderBy('created_at')->get();
 
-        $csv = "Date,Order Number,Customer,App,Subtotal,Tax,Total,Refunded,Status\n";
+        // "Stripe Fees" is included per spec §30 but always left blank —
+        // this codebase doesn't fetch Stripe's balance-transaction fee data
+        // anywhere yet; that's part of the deferred Accounting phase
+        // (see CLAUDE.md), not something to fake here.
+        $csv = "Date,Order Number,Customer,App,Edition,Platforms Included,Subtotal,Tax,Total,Stripe Fees,Refunded,Status,Customer Province,Customer Country\n";
 
         foreach ($orders as $order) {
             $appNames = $order->items->pluck('app_name_snapshot')->implode('; ');
+            $editionNames = $order->items->pluck('edition_name_snapshot')->filter()->implode('; ');
+            $platformNames = $order->items
+                ->flatMap(fn ($item) => collect($item->included_platforms_snapshot)->pluck('platform_name'))
+                ->unique()
+                ->implode('; ');
+
             $csv .= implode(',', [
                 $order->created_at->toDateString(),
                 $order->order_number,
                 '"'.str_replace('"', '""', $order->customer_name).'"',
                 '"'.str_replace('"', '""', $appNames).'"',
+                '"'.str_replace('"', '""', $editionNames).'"',
+                '"'.str_replace('"', '""', $platformNames).'"',
                 number_format($order->subtotal_cents / 100, 2),
                 number_format($order->tax_cents / 100, 2),
                 number_format($order->total_cents / 100, 2),
+                '',
                 number_format($order->totalRefundedCents() / 100, 2),
                 $order->payment_status,
+                $order->billing_province,
+                $order->billing_country,
             ])."\n";
         }
 
