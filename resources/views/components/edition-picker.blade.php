@@ -7,7 +7,7 @@
         'android' => 'For Android phones and tablets.',
         'windows' => 'For compatible Windows PCs and tablets.',
         'android-windows' => "One purchase. Install the app on your compatible Android and Windows devices, subject to the app's license terms.",
-        'web' => 'Use the app from a compatible web browser. No installation required.',
+        'web' => 'Works on iPhone, iPad, Mac, Windows, Android & Chromebook — right from a browser, no installation required.',
         'complete' => 'Get all customer platforms included with this app.',
     ];
 
