@@ -674,14 +674,16 @@ MD,
      * to bypass (see `docs/DECISIONS.md` in the app's own repository, the
      * `FORCE_PRO` entry).
      *
-     * Only an Android edition is sold here today. A Windows build exists
-     * in the source project but only as a loose exe + DLL folder — not a
-     * real installer (.exe/.msix), which is the only thing
-     * `App\Services\ReleaseLibrary` will accept as a customer-downloadable
-     * Windows release. Rather than sell a "Windows" edition with nothing to
-     * actually deliver, no Windows or Bundle edition is seeded until a real
-     * installer exists — `windows_delivery_mode` stays at its default
-     * `'none'`.
+     * Android, Windows, and an Android+Windows Bundle are all sold here —
+     * see seedMarginPosEditions(). The Windows edition is now a real Inno
+     * Setup installer (`windows_installer/margin_pos.iss` in the source
+     * project; the earlier loose exe + DLL folder was not a real,
+     * customer-downloadable artifact under `App\Services\ReleaseLibrary`'s
+     * rules). Both platforms' actual release files were uploaded through
+     * `ReleaseLibrary::storeUploadedFile` (real checksummed files on the
+     * private release disk, marked current) — not seeded, since release
+     * uploads are an intentionally manual/owner-controlled step in this
+     * codebase (see `ADMIN_GUIDE.md`); done once, directly, for this launch.
      */
     private function seedMarginPos(): void
     {
@@ -731,6 +733,7 @@ MD,
                 'is_featured' => false,
                 'direct_purchase_enabled' => true,
                 'android_delivery_mode' => 'direct',
+                'windows_delivery_mode' => 'direct',
                 'license_type' => 'personal',
                 'update_policy' => 'updates_included',
                 'demo_enabled' => true,
@@ -742,13 +745,13 @@ MD,
                 'demo_warning' => 'This demo is a full Flutter web build (~44 MB) — first load can take a few seconds on a slower connection.',
                 'demo_reset_mode' => 'Everything you set up (business, products, sales, employees…) is saved in this browser only. Clearing this site\'s data in your browser resets the demo.',
                 'support_info' => 'For questions about Margin POS, use the Contact page and select this app.',
-                'system_requirements' => 'Android 8.0+, or any modern web browser for this demo. A Windows edition is planned.',
+                'system_requirements' => 'Android 8.0+, or Windows 10/11 (64-bit). Any modern web browser for the demo.',
                 'seo_title' => 'Margin POS — Offline POS & Real Margin Tracking',
                 'seo_description' => 'Offline-first point of sale, ingredient costing, inventory, and Canadian payroll for food trucks, cafés, and small food businesses. Free for one register; Pro adds multi-register mode, payroll, accounting, and reports.',
             ]
         );
 
-        $platformCodes = ['android', 'web', 'pwa'];
+        $platformCodes = ['android', 'windows', 'web', 'pwa'];
         $platformIds = Platform::whereIn('code', $platformCodes)->pluck('id');
         $app->platforms()->sync($platformIds);
 
@@ -795,32 +798,44 @@ MD,
 
     /**
      * Real, owner-set edition pricing (owner-directed 2026-09-13: Android
-     * $2.99 USD). Android only — see the class-level doc comment above for
-     * why no Windows or Bundle edition is seeded yet.
+     * $2.99 USD, Windows $2.00 USD, Bundle $4.99 USD).
      */
     private function seedMarginPosEditions(App $app): void
     {
         $android = Platform::where('code', 'android')->first();
+        $windows = Platform::where('code', 'windows')->first();
 
-        $edition = AppEdition::updateOrCreate(
-            ['app_id' => $app->id, 'slug' => 'android'],
-            [
-                'name' => 'Android',
-                'description' => 'For Android phones and tablets.',
-                'price_cents' => 299,
-                'currency' => $app->currency ?? 'USD',
-                'active' => true,
-                'featured' => false,
-                'sort_order' => 0,
-            ]
-        );
+        $editions = [
+            ['slug' => 'android', 'name' => 'Android', 'description' => 'For Android phones and tablets.', 'price_cents' => 299, 'sort_order' => 0, 'grants' => [[$android, 'download']]],
+            ['slug' => 'windows', 'name' => 'Windows', 'description' => 'For compatible Windows PCs and tablets.', 'price_cents' => 200, 'sort_order' => 1, 'grants' => [[$windows, 'download']]],
+            ['slug' => 'android-windows', 'name' => 'Android + Windows Bundle', 'description' => "One purchase. Install the app on your compatible Android and Windows devices, subject to the app's license terms.", 'price_cents' => 499, 'sort_order' => 2, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+        ];
 
-        if ($android) {
-            EditionEntitlement::updateOrCreate([
-                'app_edition_id' => $edition->id,
-                'platform_id' => $android->id,
-                'access_type' => 'download',
-            ]);
+        foreach ($editions as $data) {
+            $edition = AppEdition::updateOrCreate(
+                ['app_id' => $app->id, 'slug' => $data['slug']],
+                [
+                    'name' => $data['name'],
+                    'description' => $data['description'],
+                    'price_cents' => $data['price_cents'],
+                    'currency' => $app->currency ?? 'USD',
+                    'active' => true,
+                    'featured' => $data['featured'] ?? false,
+                    'sort_order' => $data['sort_order'],
+                ]
+            );
+
+            foreach ($data['grants'] as [$platform, $accessType]) {
+                if (! $platform) {
+                    continue;
+                }
+
+                EditionEntitlement::updateOrCreate([
+                    'app_edition_id' => $edition->id,
+                    'platform_id' => $platform->id,
+                    'access_type' => $accessType,
+                ]);
+            }
         }
     }
 
