@@ -17,8 +17,30 @@ class AppSeeder extends Seeder
         $this->seedBreadMaker();
         $this->seedHummusHouse();
         $this->seedLaCucinaItaliana();
+        $this->seedCelestialGrimoire();
         $this->seedPlaceholderApps();
         $this->seedTestPurchaseApp();
+    }
+
+    /**
+     * Plain `App::updateOrCreate()` isn't actually safe to re-run once a
+     * seeded app has ever been soft-deleted (Admin → Apps → Delete):
+     * Eloquent's default query excludes trashed rows, so the lookup
+     * finds nothing and falls through to an INSERT, which then collides
+     * with the unique `slug` constraint the trashed row still occupies.
+     * `withTrashed()` on the lookup finds it either way, and an explicit
+     * `restore()` brings a previously-deleted seed app back — this
+     * method exists purely to be re-run without ever failing.
+     */
+    private function updateOrCreateApp(array $attributes, array $values): App
+    {
+        $app = App::withTrashed()->updateOrCreate($attributes, $values);
+
+        if ($app->trashed()) {
+            $app->restore();
+        }
+
+        return $app;
     }
 
     /**
@@ -42,7 +64,7 @@ class AppSeeder extends Seeder
     {
         $category = AppCategory::where('slug', 'food-recipes')->first();
 
-        $app = App::updateOrCreate(
+        $app = $this->updateOrCreateApp(
             ['slug' => 'bread-maker'],
             [
                 'name' => 'Bread Maker',
@@ -194,7 +216,7 @@ MD,
     {
         $category = AppCategory::where('slug', 'food-recipes')->first();
 
-        $app = App::updateOrCreate(
+        $app = $this->updateOrCreateApp(
             ['slug' => 'hummus-house'],
             [
                 'name' => 'Hummus House',
@@ -364,7 +386,7 @@ MD,
     {
         $category = AppCategory::where('slug', 'food-recipes')->first();
 
-        $app = App::updateOrCreate(
+        $app = $this->updateOrCreateApp(
             ['slug' => 'la-cucina-italiana'],
             [
                 'name' => 'La Cucina Italiana',
@@ -521,6 +543,112 @@ MD,
         }
     }
 
+    /**
+     * Celestial Grimoire — a real, feature-complete astrology app (natal
+     * charts, Pluto included; Whole Sign and Placidus houses; a daily
+     * deterministic "celestial card"; real synastry; a searchable
+     * Grimoire reference library covering every sign/planet/house/
+     * aspect). Published with a working demo so it's visible on the
+     * site, but deliberately **not yet purchasable**:
+     * `direct_purchase_enabled` stays false and no price/edition is set
+     * because `PROJECT_SPEC.md`'s `PRICE_OR_PRODUCT_IDS` is still an
+     * owner-provided placeholder in the app's own repository — never
+     * invent a price here. Flip `direct_purchase_enabled` to true and add
+     * pricing/editions (see seedHummusHouseEditions for the pattern) once
+     * the owner supplies real numbers.
+     */
+    private function seedCelestialGrimoire(): void
+    {
+        $category = AppCategory::where('slug', 'lifestyle')->first();
+
+        $app = $this->updateOrCreateApp(
+            ['slug' => 'celestial-grimoire'],
+            [
+                'name' => 'Celestial Grimoire',
+                'tagline' => 'A Personal Astrology Companion',
+                'short_description' => 'Natal charts, daily celestial cards, transits & lunar guidance — a serious astrology companion, not a generic horoscope app.',
+                'long_description' => <<<'MD'
+Celestial Grimoire is built around one idea: a genuine, personalized
+celestial card for every day of the year, generated from real planetary
+positions rather than a generic horoscope template.
+
+Your natal chart is calculated from a real, independently-verified
+ephemeris engine — Sun through Pluto, Whole Sign or Placidus houses, your
+Ascendant and Midheaven — never a fabricated placement. Sky Now and Moon
+Center show the current sky live: today's planetary positions, Moon phase,
+illumination, and the next New and Full Moon. Year of Stars collects your
+daily cards across the full 365 (366 in a leap year) day cycle.
+
+Compatibility goes beyond a single unexplained percentage: real inter-chart
+aspects are calculated and scored across seven areas — emotional,
+communication, attraction, long-term tendencies, friendship, conflict, and
+growth — each shown alongside the specific aspects behind it. The Grimoire
+itself is a searchable reference library covering all 12 zodiac signs, all
+10 classical and modern planets, all 12 houses, and all 5 major aspects,
+each with substantial, real content rather than a two-line summary.
+
+A private Celestial Journal ties reflections to dates, cards, transits, and
+Moon phases — stored locally on your device by default, with no account
+required.
+MD,
+                'category_id' => $category?->id,
+                'version' => '1.0.0',
+                'is_free' => false,
+                'currency' => 'USD',
+                'status' => 'published',
+                'is_featured' => false,
+                // Not yet configured for sale — see the class-level doc
+                // comment above. Left unset rather than guessed.
+                'direct_purchase_enabled' => false,
+                'android_delivery_mode' => 'direct',
+                'windows_delivery_mode' => 'direct',
+                'license_type' => 'personal',
+                'update_policy' => 'updates_included',
+                'demo_enabled' => true,
+                'demo_type' => 'flutter_web',
+                'demo_url' => '/demo-builds/celestial-grimoire/index.html',
+                'demo_version' => '1.0.0',
+                'demo_instructions' => 'This is the real app, running in your browser. Complete onboarding with any birth date/time/place to see your own natal chart and today\'s Daily Card — nothing you enter here leaves this browser.',
+                'demo_warning' => 'This demo is a full Flutter web build (~45 MB) — first load can take a few seconds on a slower connection.',
+                'demo_reset_mode' => 'Your profile, chart, and journal are saved in this browser only. Clearing this site\'s data in your browser resets the demo.',
+                'support_info' => 'For questions about Celestial Grimoire, use the Contact page and select this app.',
+                'system_requirements' => 'Android 8+, Windows 10/11 (64-bit), or any modern web browser.',
+                'seo_title' => 'Celestial Grimoire — Natal Charts, Daily Cards & Astrology Reference',
+                'seo_description' => 'A personal astrology companion with real calculated natal charts (including Pluto), a daily deterministic celestial card, synastry, and a searchable sign/planet/house/aspect reference library.',
+            ]
+        );
+
+        $platformCodes = ['android', 'windows', 'web', 'pwa'];
+        $platformIds = Platform::whereIn('code', $platformCodes)->pluck('id');
+        $app->platforms()->sync($platformIds);
+
+        $icon = $this->seedMedia('celestial-grimoire-icon.png', 'image/png', 1254, 1254, 'Celestial Grimoire app icon', 'celestial-grimoire');
+        $feature = $this->seedMedia('celestial-grimoire-feature.png', 'image/png', 1774, 887, 'Celestial Grimoire feature graphic', 'celestial-grimoire');
+        $shot1 = $this->seedMedia('celestial-grimoire-shot-1.png', 'image/png', 1080, 2400, 'Celestial Grimoire — Home screen with current sky, Moon, and today\'s Daily Card', 'celestial-grimoire');
+        $shot2 = $this->seedMedia('celestial-grimoire-shot-2.png', 'image/png', 1080, 2400, 'Celestial Grimoire — searchable Grimoire reference library', 'celestial-grimoire');
+
+        $app->media()->sync([
+            $icon->id => ['type' => 'icon', 'sort_order' => 0],
+            $feature->id => ['type' => 'feature_graphic', 'sort_order' => 0],
+            $shot1->id => ['type' => 'screenshot', 'sort_order' => 0],
+            $shot2->id => ['type' => 'screenshot', 'sort_order' => 1],
+        ]);
+
+        $features = [
+            ['title' => 'Daily Celestial Card', 'description' => 'A deterministic, collectible card generated from real planetary positions, your natal chart, and the day\'s Moon phase — the same day always reveals the same card.', 'icon' => '✨', 'sort_order' => 0],
+            ['title' => 'Real natal chart, Pluto included', 'description' => 'Sun through Pluto, Whole Sign or Placidus houses, Ascendant and Midheaven — independently verified against reference astronomical data, never fabricated.', 'icon' => '🪐', 'sort_order' => 1],
+            ['title' => 'Sky Now & Moon Center', 'description' => 'Live current planetary positions, Moon phase, illumination, and the next New and Full Moon.', 'icon' => '🌙', 'sort_order' => 2],
+            ['title' => 'Year of Stars', 'description' => 'Your full collection of 365 (366 in a leap year) Daily Cards, revealed one day at a time.', 'icon' => '📅', 'sort_order' => 3],
+            ['title' => 'Real synastry & compatibility', 'description' => 'Inter-chart aspects scored across seven areas, always shown with the specific aspects behind the score — never an unexplained percentage.', 'icon' => '💞', 'sort_order' => 4],
+            ['title' => 'Searchable Grimoire', 'description' => 'All 12 signs, all 10 planets, all 12 houses, and all 5 aspects, with substantial reference content and one search box.', 'icon' => '📖', 'sort_order' => 5],
+            ['title' => 'Private Celestial Journal', 'description' => 'Reflections tied to dates, cards, transits, and Moon phases — stored on your device by default, no account required.', 'icon' => '📓', 'sort_order' => 6],
+        ];
+
+        foreach ($features as $feature) {
+            $app->features()->updateOrCreate(['title' => $feature['title']], $feature);
+        }
+    }
+
     private function seedMedia(string $filename, string $mime, int $width, int $height, string $alt, string $sourceDir = 'bread-maker'): Media
     {
         // Bread Maker's original assets keep their historical flat path
@@ -591,7 +719,7 @@ MD,
         ];
 
         foreach ($placeholders as $placeholder) {
-            App::updateOrCreate(
+            $this->updateOrCreateApp(
                 ['slug' => $placeholder['slug']],
                 $placeholder + [
                     'status' => 'draft',
@@ -614,7 +742,7 @@ MD,
      */
     private function seedTestPurchaseApp(): void
     {
-        App::updateOrCreate(
+        $this->updateOrCreateApp(
             ['slug' => 'seed-test-purchase-app'],
             [
                 'name' => '[SEED] Test Purchase App',
