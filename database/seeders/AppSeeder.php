@@ -18,6 +18,7 @@ class AppSeeder extends Seeder
         $this->seedHummusHouse();
         $this->seedLaCucinaItaliana();
         $this->seedCelestialGrimoire();
+        $this->seedMarginPos();
         $this->seedPlaceholderApps();
         $this->seedTestPurchaseApp();
     }
@@ -646,6 +647,180 @@ MD,
 
         foreach ($features as $feature) {
             $app->features()->updateOrCreate(['title' => $feature['title']], $feature);
+        }
+    }
+
+    /**
+     * Margin POS — a real Flutter app (Android APK/AAB, real-signed with an
+     * upload keystore generated 2026-09-13; Web/PWA demo build). Source:
+     * C:\Users\User\Documents\APKs\POV. Description, feature list, and
+     * pricing below are read from that project's own PROJECT_SPEC.md,
+     * docs/play_store/store_listing.md, and docs/PROJECT_STATUS.md, not
+     * invented.
+     *
+     * The base app is free for a single-register, owner-operator business —
+     * point of sale, product catalogue, inventory, recipe costing, tax
+     * configuration, and full/selective encrypted backup are all
+     * unrestricted. **Margin POS Pro** (employees & Canadian payroll, the
+     * accounting dashboard, reports, and multi-register LAN mode) is a
+     * separate one-time Google Play Billing in-app purchase inside the
+     * Android app itself — unrelated to, and not unlocked by, buying
+     * anything on this website, exactly the same relationship Android's
+     * separate Play Billing "Premium" purchase has to La Cucina Italiana's
+     * website listing (see that method's doc comment above). The Web demo
+     * below is instead built with Margin POS's own `FORCE_PRO` compile flag
+     * (`--dart-define=FORCE_PRO=true`) so visitors can try every feature —
+     * safe only because the demo has no backend and no real purchase flow
+     * to bypass (see `docs/DECISIONS.md` in the app's own repository, the
+     * `FORCE_PRO` entry).
+     *
+     * Only an Android edition is sold here today. A Windows build exists
+     * in the source project but only as a loose exe + DLL folder — not a
+     * real installer (.exe/.msix), which is the only thing
+     * `App\Services\ReleaseLibrary` will accept as a customer-downloadable
+     * Windows release. Rather than sell a "Windows" edition with nothing to
+     * actually deliver, no Windows or Bundle edition is seeded until a real
+     * installer exists — `windows_delivery_mode` stays at its default
+     * `'none'`.
+     */
+    private function seedMarginPos(): void
+    {
+        $category = AppCategory::where('slug', 'business')->first();
+
+        $app = $this->updateOrCreateApp(
+            ['slug' => 'margin-pos'],
+            [
+                'name' => 'Margin POS',
+                'tagline' => 'Real Margin Tracking for Food Businesses',
+                'short_description' => 'Offline-first point of sale, ingredient costing, inventory, and Canadian payroll for food trucks, cafés, and small food businesses — ring a sale without the internet.',
+                'long_description' => <<<'MD'
+Margin POS is an offline-first point-of-sale and small-business management
+app built for owner-operated food businesses — food trucks, concession
+stands, cafés, bakeries, delis, and market vendors. Ringing a sale never
+requires an internet connection: your product catalogue, inventory, sales
+history, and accounting data all live on your device.
+
+Beyond checkout, Margin POS converts bulk purchases into a precise cost per
+gram, millilitre, or unit, and rolls ingredient and packaging costs up
+through recipes automatically — so every product shows real gross margin,
+markup, and food-cost percentage, not a guess. Historical costs are locked
+in at sale time, so a later price change never rewrites yesterday's profit.
+Inventory tracks stock with supplier and purchase history, low-stock
+alerts, and a mandatory reason on every adjustment.
+
+The core app — point of sale, product catalogue, inventory, recipe
+costing, tax configuration, and full/selective encrypted backup — is free
+for a single-register, owner-operator business, full stop. Margin POS Pro
+is a single one-time purchase (inside the Android app, via Google Play
+Billing) that adds what a growing business needs next: multi-register mode
+(turn one device into a Host and pair additional registers over Wi-Fi or a
+phone hotspot, no cloud service involved), employee timekeeping and
+CRA-oriented Canadian payroll, a real double-entry accounting dashboard,
+and traceable sales/profitability/tax reports.
+
+Available in English, French, Spanish, German, Italian, Portuguese,
+Polish, Ukrainian, Simplified Chinese, and Arabic with full
+right-to-left support.
+MD,
+                'category_id' => $category?->id,
+                'version' => '1.0.0',
+                'is_free' => false,
+                'price_cents' => null,
+                'currency' => 'USD',
+                'status' => 'published',
+                'is_featured' => false,
+                'direct_purchase_enabled' => true,
+                'android_delivery_mode' => 'direct',
+                'license_type' => 'personal',
+                'update_policy' => 'updates_included',
+                'demo_enabled' => true,
+                'demo_type' => 'flutter_web',
+                // Deliberately NOT public/demos/{slug}/ — see DEMO_DEPLOYMENT.md.
+                'demo_url' => '/demo-builds/margin-pos/index.html',
+                'demo_version' => '1.0.0',
+                'demo_instructions' => "This is the real app, running in your browser, with Margin POS Pro unlocked so you can try everything — point of sale, inventory & recipe costing, employees & payroll, accounting, reports, and backup/restore. Complete the short setup wizard with any business details to get started. Nothing you enter here leaves this browser. (Multi-register LAN pairing needs a second real device on the same network, so it won't do much solo in a demo.)",
+                'demo_warning' => 'This demo is a full Flutter web build (~44 MB) — first load can take a few seconds on a slower connection.',
+                'demo_reset_mode' => 'Everything you set up (business, products, sales, employees…) is saved in this browser only. Clearing this site\'s data in your browser resets the demo.',
+                'support_info' => 'For questions about Margin POS, use the Contact page and select this app.',
+                'system_requirements' => 'Android 8.0+, or any modern web browser for this demo. A Windows edition is planned.',
+                'seo_title' => 'Margin POS — Offline POS & Real Margin Tracking',
+                'seo_description' => 'Offline-first point of sale, ingredient costing, inventory, and Canadian payroll for food trucks, cafés, and small food businesses. Free for one register; Pro adds multi-register mode, payroll, accounting, and reports.',
+            ]
+        );
+
+        $platformCodes = ['android', 'web', 'pwa'];
+        $platformIds = Platform::whereIn('code', $platformCodes)->pluck('id');
+        $app->platforms()->sync($platformIds);
+
+        $this->seedMarginPosEditions($app);
+
+        $icon = $this->seedMedia('icon.png', 'image/png', 512, 512, 'Margin POS app icon', 'margin-pos');
+        $feature = $this->seedMedia('feature.png', 'image/png', 1024, 500, 'Margin POS feature graphic', 'margin-pos');
+
+        $screenshots = [
+            ['file' => 'shot-1-pos.png', 'alt' => 'Margin POS — point of sale grid with cart'],
+            ['file' => 'shot-2-dashboard.png', 'alt' => 'Margin POS — dashboard with register status and today\'s metrics'],
+            ['file' => 'shot-3-accounting.png', 'alt' => 'Margin POS — accounting dashboard with revenue, COGS, and gross profit'],
+            ['file' => 'shot-4-products.png', 'alt' => 'Margin POS — product list with live cost and margin'],
+        ];
+
+        $mediaSync = [
+            $icon->id => ['type' => 'icon', 'sort_order' => 0],
+            $feature->id => ['type' => 'feature_graphic', 'sort_order' => 0],
+        ];
+
+        foreach ($screenshots as $index => $shot) {
+            $media = $this->seedMedia($shot['file'], 'image/png', 1080, 1920, $shot['alt'], 'margin-pos');
+            $mediaSync[$media->id] = ['type' => 'screenshot', 'sort_order' => $index];
+        }
+
+        $app->media()->sync($mediaSync);
+
+        $features = [
+            ['title' => 'Works completely offline', 'description' => 'Ring a cash, debit, or credit sale without an internet connection — ever.', 'icon' => '📡', 'sort_order' => 0],
+            ['title' => 'Real per-item margin', 'description' => 'Every product shows real gross margin, markup, and food-cost percentage — computed from actual ingredient costs, not guessed.', 'icon' => '📊', 'sort_order' => 1],
+            ['title' => 'Bulk-purchase & portion costing', 'description' => 'Convert a 50 lb bag of flour into a precise cost per gram, millilitre, or unit, and cost recipes down to the portion.', 'icon' => '⚖️', 'sort_order' => 2],
+            ['title' => 'Full point of sale', 'description' => 'Product grid with images and search, +/− quantity tiles, line & order discounts, split tenders, held orders, and a persistent cart panel on tablets.', 'icon' => '🛒', 'sort_order' => 3],
+            ['title' => 'Inventory with an audit trail', 'description' => 'Low-stock alerts and full stock-movement history — every adjustment requires a reason and records a before/after count.', 'icon' => '📦', 'sort_order' => 4],
+            ['title' => 'Validated backup & restore', 'description' => 'Full or selective backup, optional passphrase encryption, and an automatic safety copy taken before every restore.', 'icon' => '💾', 'sort_order' => 5],
+            ['title' => 'Multi-register LAN mode (Pro)', 'description' => 'Turn one device into a Host and pair additional registers over Wi-Fi or a phone hotspot — no cloud service involved.', 'icon' => '📶', 'sort_order' => 6],
+            ['title' => 'Payroll & accounting (Pro)', 'description' => 'Employee timekeeping, CRA-oriented Canadian payroll (CPP/CPP2/EI), and a real double-entry accounting dashboard with traceable reports.', 'icon' => '🧮', 'sort_order' => 7],
+            ['title' => '10 languages', 'description' => 'English, French, Spanish, German, Italian, Portuguese, Polish, Ukrainian, Simplified Chinese, and Arabic with full right-to-left support.', 'icon' => '🌐', 'sort_order' => 8],
+        ];
+
+        foreach ($features as $feature) {
+            $app->features()->updateOrCreate(['title' => $feature['title']], $feature);
+        }
+    }
+
+    /**
+     * Real, owner-set edition pricing (owner-directed 2026-09-13: Android
+     * $2.99 USD). Android only — see the class-level doc comment above for
+     * why no Windows or Bundle edition is seeded yet.
+     */
+    private function seedMarginPosEditions(App $app): void
+    {
+        $android = Platform::where('code', 'android')->first();
+
+        $edition = AppEdition::updateOrCreate(
+            ['app_id' => $app->id, 'slug' => 'android'],
+            [
+                'name' => 'Android',
+                'description' => 'For Android phones and tablets.',
+                'price_cents' => 299,
+                'currency' => $app->currency ?? 'USD',
+                'active' => true,
+                'featured' => false,
+                'sort_order' => 0,
+            ]
+        );
+
+        if ($android) {
+            EditionEntitlement::updateOrCreate([
+                'app_edition_id' => $edition->id,
+                'platform_id' => $android->id,
+                'access_type' => 'download',
+            ]);
         }
     }
 
