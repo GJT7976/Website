@@ -41,20 +41,27 @@ $app = Application::configure(basePath: dirname(__DIR__))
         );
     })->create();
 
-// Hostinger's Git-based deploy for this project clones into a project
-// folder (e.g. .../domains/niagaraindieapps.com/niagara_app) and then
-// physically relocates the contents of this project's public/ folder
-// (including the built Vite assets and the storage:link symlink) into
-// the domain's public_html sibling folder on every deploy, leaving this
-// project's own public/ empty. Laravel's default public_path() still
-// resolves to the now-empty public/ folder, so anything that reads from
-// disk there (the Vite manifest, the storage symlink) 404s/500s even
-// though the real files exist one level up in public_html. Point
-// public_path() at that sibling public_html when it exists; this never
-// triggers locally or on a host where public/ is the real doc root.
+// Some deployments of this project (a leftover from an earlier, manual
+// Hostinger setup — see HOSTINGER_DEPLOYMENT.md) clone into a project
+// folder (e.g. .../domains/niagaraindieapps.com/niagara_app) sitting
+// *next to* the domain's public_html, with only this project's public/
+// contents relocated into that public_html sibling and this project's
+// own public/ left empty. Laravel's default public_path() still
+// resolves to that now-empty public/, so anything reading from disk
+// there (the Vite manifest, the storage symlink) 404s/500s even though
+// the real files exist one level up in public_html.
+//
+// Guard on basename(): when this project's own root already *is*
+// public_html (the standard "git clone straight into public_html"
+// layout Hostinger's Git deploy tool actually uses), the sibling lookup
+// below would otherwise resolve to public_html itself and wrongly
+// override public_path() to the project root instead of its real
+// public/ subfolder — this must stay a no-op there, and everywhere
+// else (local dev, a host where public/ is the real doc root) that has
+// no public_html sibling at all.
 $publicHtml = dirname($app->basePath()).'/public_html';
 
-if (is_dir($publicHtml)) {
+if (basename($app->basePath()) !== 'public_html' && is_dir($publicHtml)) {
     $app->usePublicPath($publicHtml);
 }
 
