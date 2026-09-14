@@ -7,7 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
@@ -40,3 +40,22 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
+
+// Hostinger's Git-based deploy for this project clones into a project
+// folder (e.g. .../domains/niagaraindieapps.com/niagara_app) and then
+// physically relocates the contents of this project's public/ folder
+// (including the built Vite assets and the storage:link symlink) into
+// the domain's public_html sibling folder on every deploy, leaving this
+// project's own public/ empty. Laravel's default public_path() still
+// resolves to the now-empty public/ folder, so anything that reads from
+// disk there (the Vite manifest, the storage symlink) 404s/500s even
+// though the real files exist one level up in public_html. Point
+// public_path() at that sibling public_html when it exists; this never
+// triggers locally or on a host where public/ is the real doc root.
+$publicHtml = dirname($app->basePath()).'/public_html';
+
+if (is_dir($publicHtml)) {
+    $app->usePublicPath($publicHtml);
+}
+
+return $app;
