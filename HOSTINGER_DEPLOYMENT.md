@@ -23,6 +23,18 @@ directly to this environment once it's live.
   (Hostinger's shared plans typically provide Composer via SSH; if not,
   run `composer install --no-dev --optimize-autoloader` locally and upload
   the resulting `vendor/` directory).
+- **`proc_open` is disabled on this Hostinger plan's PHP** (along with
+  `exec`/`symlink` — see step 7 below), which breaks any Composer script
+  written as `@php ...` (Composer needs `proc_open` to spawn that
+  subprocess) — `composer install` fails outright with "The Process class
+  relies on proc_open, which is not available on your PHP installation."
+  `composer.json`'s `post-autoload-dump`/`post-update-cmd` scripts have
+  been trimmed to only the plain-PHP-callback form
+  (`Illuminate\Foundation\ComposerScripts::postAutoloadDump`) for this
+  reason — Laravel rebuilds its package-discovery manifest automatically
+  at runtime the first time it's missing, so skipping the `@php artisan
+  package:discover` step here is safe, not a workaround that skips
+  something load-bearing.
 
 ## Document root
 
@@ -65,9 +77,15 @@ Never expose the project's `app/`, `.env`, `database/`, `routes/`, or
    a key — never regenerate a key on a site with existing encrypted data).
 6. `php artisan migrate --force`
 7. `php artisan storage:link` — creates the `public/storage` symlink the
-   media library depends on. If symlinks aren't available on the plan,
-   this needs a different approach (e.g. Hostinger's supported alternative,
-   or serving media through a dedicated route) — verify before launch.
+   media library depends on. **Confirmed broken on this Hostinger plan**:
+   both PHP's `symlink()` function and `exec()` are disabled on their
+   shared stack (security hardening), so this command fails every time
+   with "Call to undefined function Illuminate\Filesystem\exec()" — it's
+   not a one-off, it cannot succeed here by any method Laravel has. A
+   dedicated route that streams the file from `storage/app/public`
+   instead of relying on the symlink is the real fix; not yet
+   implemented as of this writing — media library images are broken in
+   production until that lands.
 8. Create the first administrator: `php artisan make:admin` over SSH.
    Never seed a default admin account in production.
 9. `php artisan config:cache && php artisan route:cache && php artisan view:cache`
