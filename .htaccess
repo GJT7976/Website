@@ -1,0 +1,21 @@
+# Only used when the whole project is deployed as a literal git clone
+# directly into the web server's document root (e.g. Hostinger's hPanel
+# "GIT" deploy tool with Root Directory set to public_html — it does a
+# plain `git clone`, with no Laravel-aware handling of the public/
+# subfolder). In that layout this file sits next to app/, config/,
+# vendor/, composer.json, etc. at the doc root, so without this rewrite
+# every one of those would be directly downloadable/executable over
+# HTTP. This transparently routes every request into public/ (Laravel's
+# real front controller and its own .htaccess take it from there) and,
+# just as importantly, makes anything NOT under public/ 404 instead of
+# being served as a raw file.
+#
+# Harmless everywhere else: a normal deployment that points the document
+# root straight at public/ (the preferred setup — see
+# HOSTINGER_DEPLOYMENT.md) never has this file in its web root at all,
+# and local dev (php artisan serve / Vite) never goes through Apache.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
