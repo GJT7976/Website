@@ -1,0 +1,367 @@
+[
+  {
+    "id": "peanut-sauce",
+    "name": "Peanut Sauce",
+    "description": "Rich, creamy Vietnamese-style peanut dipping sauce with a savory-sweet balance and a garlicky kick — the classic partner for fresh rice paper rolls.",
+    "cuisine": "Vietnamese",
+    "ingredients": [
+      "1/3 cup smooth peanut butter",
+      "2 tbsp hoisin sauce",
+      "1 tbsp soy sauce",
+      "1 clove garlic, minced",
+      "1/4 cup warm water (more as needed)",
+      "1 tsp rice vinegar",
+      "1 tsp sriracha (optional)",
+      "1 tbsp crushed peanuts, for garnish"
+    ],
+    "instructions": [
+      "Whisk peanut butter, hoisin, soy sauce, and garlic together in a small bowl until combined.",
+      "Add warm water 1 tbsp at a time, whisking until the sauce reaches a smooth, pourable consistency.",
+      "Stir in rice vinegar and sriracha if using.",
+      "Taste and adjust — more water to thin, more hoisin for sweetness, more soy for saltiness.",
+      "Transfer to a serving bowl and top with crushed peanuts."
+    ],
+    "storage": "Store in an airtight container in the fridge for up to 1 week. It will thicken when chilled — stir in a splash of warm water before serving.",
+    "wrapPairings": ["Classic Vietnamese Shrimp Rolls", "Tofu Peanut Fresh Rolls", "Thai Peanut Tofu Rolls", "High Protein Tofu Edamame Rolls"]
+  },
+  {
+    "id": "sweet-chili",
+    "name": "Sweet Chili Sauce",
+    "description": "A sticky, tangy-sweet Thai-inspired sauce with gentle heat — equally at home as a dip or a glaze.",
+    "cuisine": "Thai",
+    "ingredients": [
+      "1/2 cup rice vinegar",
+      "1/2 cup granulated sugar",
+      "1/4 cup water",
+      "2 cloves garlic, minced",
+      "1 tbsp red chili flakes (or 1-2 finely minced red chilies)",
+      "1 tbsp fish sauce",
+      "1 tbsp cornstarch mixed with 2 tbsp water"
+    ],
+    "instructions": [
+      "Combine vinegar, sugar, water, garlic, and chili flakes in a small saucepan over medium heat.",
+      "Bring to a simmer, stirring until sugar dissolves, about 3 minutes.",
+      "Stir in fish sauce.",
+      "Add the cornstarch slurry and simmer, stirring constantly, until the sauce thickens and turns glossy, about 2 minutes.",
+      "Remove from heat and let cool — it will thicken further as it cools."
+    ],
+    "storage": "Keeps in a sealed jar in the fridge for up to 3 weeks.",
+    "wrapPairings": ["Air Fryer Pepperoni Pizza Rolls", "Mexican Street Corn Rolls", "Party Food Sweet and Spicy Sesame Rolls", "Deep-Fried Coconut Shrimp Rolls"]
+  },
+  {
+    "id": "hoisin",
+    "name": "Hoisin Dipping Sauce",
+    "description": "A thinned, brightened version of hoisin sauce with peanut crunch — deeply savory with a hint of five-spice warmth.",
+    "cuisine": "Chinese",
+    "ingredients": [
+      "1/3 cup hoisin sauce",
+      "1 tbsp rice vinegar",
+      "1 tsp sesame oil",
+      "1 tsp soy sauce",
+      "1/4 tsp five-spice powder",
+      "2 tbsp water",
+      "1 tbsp chopped roasted peanuts, for garnish"
+    ],
+    "instructions": [
+      "Whisk hoisin, rice vinegar, sesame oil, soy sauce, and five-spice powder in a bowl.",
+      "Add water gradually until the sauce is a smooth dipping consistency.",
+      "Taste and adjust vinegar for tang or water for thickness.",
+      "Garnish with chopped peanuts before serving."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 2 weeks.",
+    "wrapPairings": ["Pan-Fried Pork and Chive Rolls", "Deep-Fried Crispy Spring Wraps", "Filipino Adobo Pork Rolls"]
+  },
+  {
+    "id": "garlic-chili",
+    "name": "Garlic Chili Sauce",
+    "description": "A punchy, fiery condiment built on fresh garlic and red chili — great for anyone who wants heat with every bite.",
+    "cuisine": "Southeast Asian",
+    "ingredients": [
+      "4 red Thai chilies, roughly chopped",
+      "4 cloves garlic",
+      "2 tbsp rice vinegar",
+      "1 tbsp sugar",
+      "1 tbsp fish sauce",
+      "1 tbsp lime juice",
+      "2 tbsp water"
+    ],
+    "instructions": [
+      "Pulse chilies and garlic in a food processor until finely minced (or mince by hand).",
+      "Transfer to a bowl and stir in rice vinegar, sugar, fish sauce, lime juice, and water.",
+      "Stir until sugar fully dissolves.",
+      "Let sit for 10 minutes before serving to let the flavors meld."
+    ],
+    "storage": "Keeps refrigerated in a sealed jar for up to 2 weeks.",
+    "wrapPairings": ["Pan-Fried Kimchi Beef Rolls", "Deep-Fried Egg Roll Style Beef Wraps", "Party Food Mini Taco Rolls"]
+  },
+  {
+    "id": "vietnamese-fish-sauce",
+    "name": "Vietnamese Fish Sauce (Nước Chấm)",
+    "description": "The essential Vietnamese dipping sauce — a balanced blend of salty, sour, sweet, and spicy that brightens every fresh roll.",
+    "cuisine": "Vietnamese",
+    "ingredients": [
+      "3 tbsp fish sauce",
+      "3 tbsp warm water",
+      "2 tbsp sugar",
+      "2 tbsp lime juice",
+      "1 clove garlic, minced",
+      "1 Thai chili, thinly sliced",
+      "1 tbsp shredded carrot (optional)"
+    ],
+    "instructions": [
+      "Dissolve sugar in warm water in a small bowl.",
+      "Stir in fish sauce and lime juice.",
+      "Add minced garlic and sliced chili.",
+      "Stir in shredded carrot if using, and let sit 5 minutes before serving so flavors combine."
+    ],
+    "storage": "Refrigerate in a sealed jar for up to 1 week; add fresh garlic and chili if flavor fades.",
+    "wrapPairings": ["Classic Vietnamese Shrimp Rolls", "Beef and Mint Fresh Rolls", "Crab and Herb Salad Rolls", "Mexican Shrimp Ceviche Rolls"]
+  },
+  {
+    "id": "soy-ginger",
+    "name": "Soy Ginger Dipping Sauce",
+    "description": "A light, savory sauce with fresh ginger zip and a touch of sesame — pairs especially well with seafood and chicken fillings.",
+    "cuisine": "Chinese/Japanese",
+    "ingredients": [
+      "1/4 cup soy sauce",
+      "1 tbsp rice vinegar",
+      "1 tsp sesame oil",
+      "1 tsp fresh ginger, finely grated",
+      "1/2 tsp sugar",
+      "1 scallion, thinly sliced",
+      "1/2 tsp toasted sesame seeds"
+    ],
+    "instructions": [
+      "Whisk soy sauce, rice vinegar, sesame oil, grated ginger, and sugar together until sugar dissolves.",
+      "Stir in sliced scallion.",
+      "Sprinkle with sesame seeds just before serving."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 1 week (scallions are best added fresh each time).",
+    "wrapPairings": ["Pan-Fried Shrimp and Scallion Rolls", "Japanese Teriyaki Salmon Rolls", "Seafood Tuna Poke Rolls"]
+  },
+  {
+    "id": "teriyaki",
+    "name": "Teriyaki Glaze",
+    "description": "A glossy, sweet-savory Japanese glaze that thickens into a rich coating — brush it on or serve as a dip.",
+    "cuisine": "Japanese",
+    "ingredients": [
+      "1/2 cup soy sauce",
+      "1/4 cup mirin",
+      "1/4 cup brown sugar",
+      "2 tbsp water",
+      "1 clove garlic, minced",
+      "1/2 tsp fresh ginger, grated",
+      "1 tbsp cornstarch mixed with 2 tbsp water"
+    ],
+    "instructions": [
+      "Combine soy sauce, mirin, brown sugar, water, garlic, and ginger in a small saucepan over medium heat.",
+      "Bring to a gentle simmer, stirring until sugar dissolves.",
+      "Add the cornstarch slurry and cook, stirring, until glossy and thickened, about 2 minutes.",
+      "Remove from heat and cool before serving; it will thicken further."
+    ],
+    "storage": "Keeps in a sealed jar in the fridge for up to 3 weeks.",
+    "wrapPairings": ["Pan-Fried Teriyaki Chicken Rolls", "Japanese Teriyaki Salmon Rolls", "Party Food Sweet and Spicy Sesame Rolls"]
+  },
+  {
+    "id": "honey-garlic",
+    "name": "Honey Garlic Sauce",
+    "description": "A sticky-sweet sauce built on caramelized garlic and honey, mellowed with soy — a crowd-pleasing all-purpose glaze.",
+    "cuisine": "American-Asian fusion",
+    "ingredients": [
+      "1/3 cup honey",
+      "3 cloves garlic, minced",
+      "2 tbsp soy sauce",
+      "1 tbsp rice vinegar",
+      "1 tbsp butter",
+      "1 tbsp water",
+      "pinch of red pepper flakes (optional)"
+    ],
+    "instructions": [
+      "Melt butter in a small saucepan over medium heat and sauté garlic until fragrant, about 1 minute.",
+      "Add honey, soy sauce, rice vinegar, and water.",
+      "Simmer, stirring, until slightly thickened, about 3-4 minutes.",
+      "Stir in red pepper flakes if using, then cool slightly before serving."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 2 weeks; warm gently before serving to loosen.",
+    "wrapPairings": ["Air Fryer BBQ Pulled Pork Rolls", "Party Food Sweet and Spicy Sesame Rolls", "Filipino Adobo Pork Rolls"]
+  },
+  {
+    "id": "sriracha-mayo",
+    "name": "Sriracha Mayo",
+    "description": "Creamy mayonnaise spiked with sriracha and lime — an instant-classic dip that adds heat and richness to any wrap.",
+    "cuisine": "American-Asian fusion",
+    "ingredients": [
+      "1/2 cup mayonnaise",
+      "2-3 tbsp sriracha (to taste)",
+      "1 tsp lime juice",
+      "1/2 tsp garlic powder",
+      "1/2 tsp sesame oil (optional)"
+    ],
+    "instructions": [
+      "Whisk mayonnaise, sriracha, lime juice, and garlic powder together in a small bowl.",
+      "Stir in sesame oil if using.",
+      "Taste and adjust sriracha for desired heat level.",
+      "Chill for at least 10 minutes before serving for best flavor."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 2 weeks.",
+    "wrapPairings": ["Pan-Fried Spicy Tuna Rolls", "Deep-Fried Coconut Shrimp Rolls", "Seafood Crispy Fish Taco Rolls"]
+  },
+  {
+    "id": "yum-yum",
+    "name": "Yum Yum Sauce",
+    "description": "A hibachi-restaurant-style pink sauce — sweet, tangy, and subtly smoky, delicious with just about any filling.",
+    "cuisine": "Japanese-American",
+    "ingredients": [
+      "1/2 cup mayonnaise",
+      "1 tbsp tomato paste",
+      "1 tbsp rice vinegar",
+      "1 tsp sugar",
+      "1/4 tsp garlic powder",
+      "1/4 tsp smoked paprika",
+      "2-3 tbsp water, to thin"
+    ],
+    "instructions": [
+      "Whisk mayonnaise and tomato paste together until smooth and pink.",
+      "Add rice vinegar, sugar, garlic powder, and smoked paprika; whisk to combine.",
+      "Thin with water 1 tbsp at a time to desired consistency.",
+      "Chill for at least 30 minutes before serving to let flavors develop."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 2 weeks.",
+    "wrapPairings": ["Air Fryer Cheeseburger Wraps", "Air Fryer Philly Cheesesteak Rolls", "Seafood Garlic Butter Scallop Rolls"]
+  },
+  {
+    "id": "bang-bang",
+    "name": "Bang Bang Sauce",
+    "description": "A sweet, creamy, and spicy sauce built on chili sauce and mayo — bold enough to stand up to fried and air-fried wraps.",
+    "cuisine": "American-Asian fusion",
+    "ingredients": [
+      "1/2 cup mayonnaise",
+      "1/4 cup Thai sweet chili sauce",
+      "1-2 tbsp sriracha (to taste)",
+      "1 tsp rice vinegar",
+      "1/2 tsp honey"
+    ],
+    "instructions": [
+      "Whisk mayonnaise and sweet chili sauce together until smooth.",
+      "Add sriracha to taste, along with rice vinegar and honey.",
+      "Whisk until fully combined and glossy.",
+      "Chill for 15 minutes before serving."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 2 weeks.",
+    "wrapPairings": ["Deep-Fried Coconut Shrimp Rolls", "Low Carb Buffalo Shrimp Rolls", "Kid-Friendly Chicken Tender Ranch Rolls"]
+  },
+  {
+    "id": "ranch",
+    "name": "Homemade Ranch",
+    "description": "Cool, herby, buttermilk-based ranch — a kid-friendly favorite and a natural match for anything crispy.",
+    "cuisine": "American",
+    "ingredients": [
+      "1/2 cup mayonnaise",
+      "1/4 cup sour cream",
+      "1/4 cup buttermilk",
+      "1 tbsp fresh chives, minced",
+      "1 tsp fresh dill, minced (or 1/4 tsp dried)",
+      "1/2 tsp garlic powder",
+      "1/2 tsp onion powder",
+      "salt and pepper, to taste"
+    ],
+    "instructions": [
+      "Whisk mayonnaise, sour cream, and buttermilk together until smooth.",
+      "Stir in chives, dill, garlic powder, and onion powder.",
+      "Season with salt and pepper to taste.",
+      "Refrigerate at least 30 minutes before serving to let flavors meld."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 1 week.",
+    "wrapPairings": ["Air Fryer Buffalo Chicken Crisps", "Kid-Friendly Chicken Tender Ranch Rolls", "Low Carb Bacon Ranch Chicken Rolls", "High Protein Grilled Chicken Ranch Rolls"]
+  },
+  {
+    "id": "blue-cheese",
+    "name": "Blue Cheese Dip",
+    "description": "A chunky, tangy dip built on real blue cheese — the classic cooling counterpart to buffalo-spiced fillings.",
+    "cuisine": "American",
+    "ingredients": [
+      "1/2 cup mayonnaise",
+      "1/4 cup sour cream",
+      "1/3 cup blue cheese, crumbled",
+      "1 tbsp buttermilk (more to thin)",
+      "1/2 tsp garlic powder",
+      "1 tsp lemon juice",
+      "salt and pepper, to taste"
+    ],
+    "instructions": [
+      "Whisk mayonnaise, sour cream, and buttermilk together in a bowl.",
+      "Fold in crumbled blue cheese, mashing some of it into the base for texture and creaminess.",
+      "Stir in garlic powder and lemon juice.",
+      "Season with salt and pepper, then chill for at least 30 minutes before serving."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 1 week.",
+    "wrapPairings": ["Air Fryer Buffalo Chicken Crisps", "Baked Buffalo Cauliflower Rolls", "Party Food Crispy Cauliflower Wing Rolls"]
+  },
+  {
+    "id": "garlic-parmesan",
+    "name": "Garlic Parmesan Sauce",
+    "description": "A rich, buttery sauce loaded with roasted garlic and real parmesan — an Italian-leaning dip with serious depth.",
+    "cuisine": "Italian-American",
+    "ingredients": [
+      "4 tbsp butter, melted",
+      "3 cloves garlic, minced and lightly sautéed",
+      "1/3 cup grated parmesan",
+      "2 tbsp mayonnaise",
+      "1 tbsp fresh parsley, chopped",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Sauté minced garlic in melted butter over low heat until fragrant and just golden, about 2 minutes; cool slightly.",
+      "Whisk in parmesan and mayonnaise until smooth and creamy.",
+      "Stir in chopped parsley and a pinch of salt.",
+      "Serve warm or at room temperature."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 5 days; warm gently before serving.",
+    "wrapPairings": ["Italian Meatball Marinara Rolls", "Italian Sausage and Peppers Rolls", "Vegetarian Halloumi and Veggie Rolls"]
+  },
+  {
+    "id": "bbq",
+    "name": "Classic BBQ Sauce",
+    "description": "A smoky-sweet tomato-based barbecue sauce with a tangy backbone — the backbone of every pulled pork or brisket wrap.",
+    "cuisine": "American",
+    "ingredients": [
+      "1 cup ketchup",
+      "1/4 cup apple cider vinegar",
+      "1/4 cup brown sugar",
+      "1 tbsp Worcestershire sauce",
+      "1 tsp smoked paprika",
+      "1/2 tsp garlic powder",
+      "1/2 tsp onion powder",
+      "1/4 tsp cayenne (optional)"
+    ],
+    "instructions": [
+      "Combine all ingredients in a saucepan over medium heat.",
+      "Bring to a simmer, stirring occasionally.",
+      "Reduce heat to low and simmer 10-15 minutes until thickened and glossy.",
+      "Cool before serving or storing."
+    ],
+    "storage": "Refrigerate in a sealed jar for up to 1 month.",
+    "wrapPairings": ["Air Fryer BBQ Pulled Pork Rolls", "Mexican Barbacoa Rolls", "Party Food Buffalo Chicken Dip Rolls"]
+  },
+  {
+    "id": "honey-mustard",
+    "name": "Honey Mustard",
+    "description": "A simple, versatile sauce balancing sharp mustard with sweet honey — mild enough for kids, punchy enough for adults.",
+    "cuisine": "American",
+    "ingredients": [
+      "1/4 cup Dijon mustard",
+      "1/4 cup honey",
+      "2 tbsp mayonnaise",
+      "1 tsp apple cider vinegar",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Whisk Dijon mustard, honey, and mayonnaise together until smooth.",
+      "Stir in apple cider vinegar and a pinch of salt.",
+      "Taste and adjust — more honey for sweetness, more mustard for tang.",
+      "Chill before serving."
+    ],
+    "storage": "Refrigerate in a sealed container for up to 3 weeks.",
+    "wrapPairings": ["Baked Ham and Swiss Rolls", "Kid-Friendly Chicken Tender Ranch Rolls", "Breakfast Denver Omelet Rolls"]
+  }
+]

@@ -11,6 +11,9 @@
 <meta name="apple-mobile-web-app-title" content="Bread Maker">
 <meta name="description" content="Professional baker's percentage calculator for artisan bread recipes — hydration, fermentation, pan sizing and more.">
 <link rel="apple-touch-icon" href="icon.png">
+<script src="pro-config.js"></script>
+<script src="vendor/nacl-fast.min.js"></script>
+<script src="license-client.js"></script>
 <style>
 :root {
   --gold: #d4a030;
@@ -598,6 +601,30 @@ select option { background: #342811; }
   color: white;
 }
 .btn-red:hover { background: #d04535; }
+
+/* ── PRO/PREMIUM (see isProLocked() in the JS) ── */
+.pro-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #241a06;
+  vertical-align: middle;
+}
+/* Without this, the `hidden` attribute set by applyProLockUI() has no
+   effect — an author `display` rule always beats the UA [hidden] rule. */
+.pro-badge[hidden] {
+  display: none;
+}
+.pro-limit-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
 
 /* placeholder state */
 .out-placeholder {
@@ -1629,8 +1656,8 @@ img, .preset-icon, .enr-icon { max-width: 100%; }
           </div>
           <div class="action-bar">
             <button class="btn btn-gold" onclick="saveRecipe()" data-i18n="saveRecipe">💾 Save Recipe</button>
-            <button class="btn btn-outline" onclick="printRecipe()" data-i18n="btnPrint">🖨 Print</button>
-            <button class="btn btn-outline" onclick="shareCurrentRecipe()" data-i18n="recShare">🔗 Share</button>
+            <button class="btn btn-outline" onclick="printRecipe()" data-i18n="btnPrint">🖨 Print</button><span class="pro-badge" hidden data-i18n="proBadge">PRO</span>
+            <button class="btn btn-outline" onclick="shareCurrentRecipe()" data-i18n="recShare">🔗 Share</button><span class="pro-badge" hidden data-i18n="proBadge">PRO</span>
             <button class="btn btn-outline" onclick="openSavePresetModal()" title="Save as reusable preset">★ Preset</button>
             <button class="btn btn-outline btn-ghost" onclick="resetAll()" data-i18n="btnReset">↺ Reset</button>
           </div>
@@ -1726,7 +1753,7 @@ img, .preset-icon, .enr-icon { max-width: 100%; }
 
       <!-- Backup & Restore -->
       <div class="panel">
-        <div class="panel-head">💾 Backup &amp; Restore</div>
+        <div class="panel-head">💾 Backup &amp; Restore<span class="pro-badge" hidden data-i18n="proBadge">PRO</span></div>
         <div class="panel-body">
           <div class="settings-section-title">Backup</div>
           <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Download a backup file containing all your saved recipes and app settings.</p>
@@ -1739,6 +1766,25 @@ img, .preset-icon, .enr-icon { max-width: 100%; }
             <input type="file" id="restoreFileInput" accept=".json" onchange="restoreData(event)" style="display:none;">
           </label>
           <div id="restoreStatus" style="margin-top:10px;font-size:12px;color:var(--green);display:none;"></div>
+        </div>
+      </div>
+
+      <!-- License (Website Pro upgrade) -->
+      <div class="panel" id="licensePanel" hidden>
+        <div class="panel-head" data-i18n="licenseHead">🔑 Bread Maker Pro</div>
+        <div class="panel-body">
+          <div id="licenseUnlockedBox" hidden>
+            <p style="font-size:13px;color:var(--green);margin-bottom:12px;" data-i18n="licenseAlreadyUnlocked">Pro is unlocked on this device. Thank you for supporting Bread Maker.</p>
+            <button class="btn btn-outline" onclick="removeLicenseDevice()" id="licenseRemoveBtn" data-i18n="licenseRemoveDevice">Remove this device</button>
+          </div>
+          <div id="licenseLockedBox">
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;" data-i18n="licenseFindKey">Find your license key in your Niagara Indie Apps order confirmation email.</p>
+            <input type="text" class="field-input" id="licenseKeyInput" data-i18n-ph="licenseKeyHint" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" style="text-transform:uppercase;max-width:320px;">
+            <div>
+              <button class="btn btn-gold" onclick="activateLicense()" id="licenseActivateBtn" style="margin-top:10px;" data-i18n="licenseActivate">Activate</button>
+            </div>
+            <div id="licenseStatus" style="margin-top:10px;font-size:12px;"></div>
+          </div>
         </div>
       </div>
 
@@ -1854,9 +1900,9 @@ img, .preset-icon, .enr-icon { max-width: 100%; }
     </div>
     <div class="modal-footer" style="flex-wrap:wrap;">
       <button class="btn btn-red btn-ghost" onclick="deleteCurrentRecipe()" style="margin-right:auto;" data-i18n="delete">🗑 Delete</button>
-      <button class="btn btn-outline" onclick="printSavedRecipe()" data-i18n="recPrint">🖨 Print</button>
-      <button class="btn btn-outline" onclick="pdfSavedRecipe()" data-i18n="recPdf">📄 PDF</button>
-      <button class="btn btn-outline" onclick="shareSavedRecipe()" data-i18n="recShare">🔗 Share</button>
+      <button class="btn btn-outline" onclick="printSavedRecipe()" data-i18n="recPrint">🖨 Print</button><span class="pro-badge" hidden data-i18n="proBadge">PRO</span>
+      <button class="btn btn-outline" onclick="pdfSavedRecipe()" data-i18n="recPdf">📄 PDF</button><span class="pro-badge" hidden data-i18n="proBadge">PRO</span>
+      <button class="btn btn-outline" onclick="shareSavedRecipe()" data-i18n="recShare">🔗 Share</button><span class="pro-badge" hidden data-i18n="proBadge">PRO</span>
       <button class="btn btn-outline" onclick="closeViewModal()" data-i18n="close">Close</button>
       <button class="btn btn-gold" onclick="loadRecipeToCalc()" data-i18n="loadToCalc">↩ Load to Calculator</button>
     </div>
@@ -1877,6 +1923,180 @@ img, .preset-icon, .enr-icon { max-width: 100%; }
 
 <script>
 'use strict';
+
+// Keep in sync with package.json's "version" — sent as app_version on every
+// /api/license/* call so the admin's license device list shows which build
+// activated. No installed-app-version API is wired up (no @capacitor/app
+// plugin, no Electron IPC for app.getVersion()) — this is a plain constant,
+// same as the rest of this app's identity values.
+window.APP_VERSION = '1.1.3';
+
+// ── PRO/PREMIUM ENTITLEMENT ──────────────────────────────────
+// window.PRO_LOCKS_ENABLED / window.ENTITLEMENT_CHANNEL are build-time
+// values set by pro-config.js, regenerated per release channel by
+// scripts/set-release-channel.js (see BUILD.md, docs/06_RELEASE_CHANNEL_
+// CONTRACT.md). isProLocked() is the single place any feature checks
+// before gating itself behind a Pro/Premium unlock — Saved Recipes'
+// PRO_FREE_RECIPE_LIMIT and Print/PDF/Share/Backup/Restore already do
+// (see docs/DECISIONS.md, 2026-09-12 entry).
+//
+// Both channels ship with locks ON (PRO_LOCKS_ENABLED=true) — neither is
+// ever unlocked out of the box:
+//   - WEBSITE: locked until a real Niagara Indie Apps license activates on
+//     this device (websiteProUnlocked, set by initLicense() below).
+//   - GOOGLE_PLAY (default if ENTITLEMENT_CHANNEL is unset): permanently
+//     locked — no Play Billing integration exists yet, unchanged from
+//     before this fix. Do not silently treat an unset channel as unlocked.
+let websiteProUnlocked = false;
+
+function isProLocked() {
+  if (window.ENTITLEMENT_CHANNEL === 'WEBSITE') return !websiteProUnlocked;
+  return true; // Google Play channel (or channel unset): always locked.
+}
+
+const PRO_FREE_RECIPE_LIMIT = 5;
+
+// 'android' / 'windows' for the platforms the website license API covers;
+// null on a platform it doesn't (a plain web/PWA build has no Capacitor or
+// Electron runtime — see LICENSE_SYSTEM.md: "a Web/PWA-only edition never
+// gets a license").
+function websiteLicensePlatform() {
+  if (window.Capacitor && typeof Capacitor.getPlatform === 'function' && Capacitor.getPlatform() === 'android') {
+    return 'android';
+  }
+  if (typeof navigator !== 'undefined' && /Electron/i.test(navigator.userAgent || '')) {
+    return 'windows';
+  }
+  return null;
+}
+
+// On the website channel with a licensable platform, offers a real path to
+// unlock (confirm + jump to the License panel in Settings). On the Google
+// Play channel, or a platform the license API doesn't cover, falls back to
+// the original honest "not sold yet" notice — no fake purchase flow.
+function proUpsell(message) {
+  if (window.ENTITLEMENT_CHANNEL === 'WEBSITE' && websiteLicensePlatform() && !websiteProUnlocked) {
+    if (confirm('⭐ ' + T('proTitle') + '\n\n' + message + '\n\n' + T('proUpsellGoToLicense'))) {
+      switchTab('settings');
+      const panel = document.getElementById('licensePanel');
+      if (panel) panel.scrollIntoView({ behavior: 'smooth' });
+    }
+    return;
+  }
+  alert('⭐ ' + T('proTitle') + '\n\n' + message);
+}
+
+// Toggle the visibility of every "PRO" badge in the markup to match the
+// current lock state. Called at startup and again whenever
+// websiteProUnlocked changes (activate/deactivate/background revalidate).
+function applyProLockUI() {
+  const locked = isProLocked();
+  document.querySelectorAll('.pro-badge').forEach(el => { el.hidden = !locked; });
+}
+
+// ── WEBSITE LICENSE (Pro upgrade unlock) ─────────────────────
+// Locked until a real Niagara Indie Apps license activates on this device,
+// verified against /api/license/* with offline Ed25519 signature checking
+// (see license-client.js and LICENSE_SYSTEM.md in the website repo).
+function renderLicensePanel() {
+  const panel = document.getElementById('licensePanel');
+  if (!panel) return;
+  const platform = websiteLicensePlatform();
+  const show = window.ENTITLEMENT_CHANNEL === 'WEBSITE' && !!platform;
+  panel.hidden = !show;
+  if (!show) return;
+  document.getElementById('licenseUnlockedBox').hidden = !websiteProUnlocked;
+  document.getElementById('licenseLockedBox').hidden = websiteProUnlocked;
+}
+
+async function activateLicense() {
+  const input = document.getElementById('licenseKeyInput');
+  const status = document.getElementById('licenseStatus');
+  const btn = document.getElementById('licenseActivateBtn');
+  const key = (input.value || '').trim();
+  if (!key) return;
+  btn.disabled = true;
+  status.textContent = '';
+  const platform = websiteLicensePlatform();
+  const result = await LicenseClient.activate(
+    window.LICENSE_API_BASE_URL, window.LICENSE_APP_ID, window.LICENSE_SIGNING_PUBLIC_KEY,
+    key, platform, (window.APP_VERSION || ''),
+  );
+  btn.disabled = false;
+  if (result.unlocked) {
+    websiteProUnlocked = true;
+    input.value = '';
+    applyProLockUI();
+    renderLicensePanel();
+    alert('⭐ ' + T('licenseAlreadyUnlocked'));
+  } else {
+    status.style.color = '#e05a4e';
+    status.textContent = licenseErrorMessage(result);
+  }
+}
+
+async function removeLicenseDevice() {
+  if (!confirm(T('licenseRemoveDeviceConfirmBody'))) return;
+  const btn = document.getElementById('licenseRemoveBtn');
+  btn.disabled = true;
+  const ok = await LicenseClient.deactivate(window.LICENSE_API_BASE_URL);
+  btn.disabled = false;
+  if (ok) {
+    websiteProUnlocked = false;
+    applyProLockUI();
+    renderLicensePanel();
+    alert(T('licenseRemoveDeviceDone'));
+  } else {
+    alert(T('licenseRemoveDeviceFailed'));
+  }
+}
+
+function licenseErrorMessage(result) {
+  const map = {
+    invalid_license: 'licenseErrorInvalid',
+    wrong_product: 'licenseErrorWrongProduct',
+    platform_not_licensed: 'licenseErrorPlatformNotLicensed',
+    max_devices: 'licenseErrorMaxDevices',
+    revoked: 'licenseErrorRevoked',
+    refunded: 'licenseErrorRefunded',
+    chargeback: 'licenseErrorChargeback',
+    disabled: 'licenseErrorDisabled',
+    network_error: 'licenseErrorNetwork',
+  };
+  const key = map[result.reason];
+  return key ? T(key) : (result.message || T('licenseErrorGeneric'));
+}
+
+// Re-checks the cached signed token offline, then reconciles with the
+// server in the background so a revoked/refunded license — or one
+// deactivated from another device — stops working once this device is
+// online again. Never blocks the first frame; called from init().
+async function initLicense() {
+  renderLicensePanel();
+  if (window.ENTITLEMENT_CHANNEL !== 'WEBSITE') return;
+  const platform = websiteLicensePlatform();
+  if (!platform) return;
+
+  const cached = LicenseClient.cachedEntitlement(window.LICENSE_SIGNING_PUBLIC_KEY);
+  if (cached && cached.unlocked) {
+    websiteProUnlocked = true;
+    applyProLockUI();
+    renderLicensePanel();
+  }
+
+  const savedKey = LicenseClient.savedLicenseKey();
+  if (!savedKey) return;
+
+  const online = await LicenseClient.revalidate(window.LICENSE_API_BASE_URL, window.LICENSE_SIGNING_PUBLIC_KEY);
+  if (online.unlocked) {
+    websiteProUnlocked = true;
+  } else if (online.reason !== 'network_error') {
+    websiteProUnlocked = false;
+    LicenseClient.clear();
+  }
+  applyProLockUI();
+  renderLicensePanel();
+}
 
 // ── DATA TABLES ──────────────────────────────────────────────
 const LIQUIDS = {
@@ -2057,6 +2277,31 @@ const TRANSLATIONS = {
     pdfHint:'In the print dialog, choose "Save as PDF" as the destination.',
     copiedToClipboard:'Recipe copied to clipboard',shareFailed:'Could not share recipe',
     shareVia:'Shared from the Bread Maker app',
+    proTitle:'Pro Feature',proBadge:'PRO',
+    pro_upsell_print:'Print, PDF and Share are Pro features on Google Play. Purchasing isn’t available yet — check back in a future update.',
+    pro_upsell_backup:'Backup & Restore is a Pro feature on Google Play. Purchasing isn’t available yet — check back in a future update.',
+    pro_recipe_limit:'The free version saves up to {n} recipes. Unlimited saved recipes is a Pro feature on Google Play — purchasing isn’t available yet.',
+    pro_recipes_count:'{count} of {max} saved (Free) — unlimited is a Pro feature',
+    licenseHead:'🔑 Bread Maker Pro',licenseKeyHint:'XXXX-XXXX-XXXX-XXXX',
+    licenseFindKey:'Find your license key in your Niagara Indie Apps order confirmation email.',
+    licenseActivate:'Activate',
+    licenseAlreadyUnlocked:'Pro is unlocked on this device. Thank you for supporting Bread Maker.',
+    licenseRemoveDevice:'Remove this device',
+    licenseRemoveDeviceConfirmBody:'Remove this device from your license? You can activate it again later.',
+    licenseRemoveDeviceDone:'This device has been removed from your license.',
+    licenseRemoveDeviceFailed:'Couldn’t remove this device. Check your connection and try again.',
+    licenseErrorInvalid:'That license key isn’t valid. Check it and try again.',
+    licenseErrorWrongProduct:'That license key isn’t valid for Bread Maker.',
+    licenseErrorPlatformNotLicensed:'That license doesn’t cover this platform.',
+    licenseErrorMaxDevices:'This license is already activated on the maximum number of devices.',
+    licenseErrorRevoked:'This license has been revoked.',
+    licenseErrorRefunded:'This license was refunded and is no longer active.',
+    licenseErrorChargeback:'This license was disabled due to a payment dispute.',
+    licenseErrorDisabled:'This license has been disabled.',
+    licenseErrorNetwork:'Couldn’t reach Niagara Indie Apps. Check your connection and try again.',
+    licenseErrorGeneric:'Something went wrong activating this license. Please try again.',
+    proUpsellGoToLicense:'Enter a license key now?',
+    premiumThanks:'Thanks for supporting Bread Maker.',
   },
   es: {
     appSub:'Calculadora de Porcentajes del Panadero',tabCalc:'⚗️ Calculadora',tabRecipes:'📋 Recetas guardadas',tabSettings:'⚙️ Ajustes',
@@ -2117,6 +2362,31 @@ const TRANSLATIONS = {
     pdfHint:'En el diálogo de impresión, elige "Guardar como PDF" como destino.',
     copiedToClipboard:'Receta copiada al portapapeles',shareFailed:'No se pudo compartir la receta',
     shareVia:'Compartido desde la app Bread Maker',
+    proTitle:'Función Pro',proBadge:'PRO',
+    pro_upsell_print:'Imprimir, PDF y Compartir son funciones Pro en Google Play. La compra aún no está disponible: vuelve a consultarlo en una futura actualización.',
+    pro_upsell_backup:'Copia de seguridad y restauración es una función Pro en Google Play. La compra aún no está disponible: vuelve a consultarlo en una futura actualización.',
+    pro_recipe_limit:'La versión gratuita guarda hasta {n} recetas. Guardar recetas ilimitadas es una función Pro en Google Play: la compra aún no está disponible.',
+    pro_recipes_count:'{count} de {max} guardadas (Gratis) — ilimitado es una función Pro',
+    licenseHead:'🔑 Bread Maker Pro',licenseKeyHint:'XXXX-XXXX-XXXX-XXXX',
+    licenseFindKey:'Encuentra tu clave de licencia en el correo de confirmación del pedido de Niagara Indie Apps.',
+    licenseActivate:'Activar',
+    licenseAlreadyUnlocked:'Pro está desbloqueado en este dispositivo. Gracias por apoyar Bread Maker.',
+    licenseRemoveDevice:'Quitar este dispositivo',
+    licenseRemoveDeviceConfirmBody:'¿Quitar este dispositivo de tu licencia? Podrás activarlo de nuevo más adelante.',
+    licenseRemoveDeviceDone:'Este dispositivo se ha quitado de tu licencia.',
+    licenseRemoveDeviceFailed:'No se pudo quitar este dispositivo. Comprueba tu conexión e inténtalo de nuevo.',
+    licenseErrorInvalid:'Esa clave de licencia no es válida. Compruébala e inténtalo de nuevo.',
+    licenseErrorWrongProduct:'Esa clave de licencia no es válida para Bread Maker.',
+    licenseErrorPlatformNotLicensed:'Esa licencia no cubre esta plataforma.',
+    licenseErrorMaxDevices:'Esta licencia ya está activada en el número máximo de dispositivos.',
+    licenseErrorRevoked:'Esta licencia ha sido revocada.',
+    licenseErrorRefunded:'Esta licencia fue reembolsada y ya no está activa.',
+    licenseErrorChargeback:'Esta licencia se desactivó debido a una disputa de pago.',
+    licenseErrorDisabled:'Esta licencia ha sido desactivada.',
+    licenseErrorNetwork:'No se pudo contactar con Niagara Indie Apps. Comprueba tu conexión e inténtalo de nuevo.',
+    licenseErrorGeneric:'Algo salió mal al activar esta licencia. Inténtalo de nuevo.',
+    proUpsellGoToLicense:'¿Introducir una clave de licencia ahora?',
+    premiumThanks:'Gracias por apoyar Bread Maker.',
   },
   fr: {
     appSub:'Calculatrice de pourcentages du boulanger',tabCalc:'⚗️ Calculatrice',tabRecipes:'📋 Recettes sauvegardées',tabSettings:'⚙️ Paramètres',
@@ -2177,6 +2447,31 @@ const TRANSLATIONS = {
     pdfHint:'Dans la boîte de dialogue d\'impression, choisissez « Enregistrer au format PDF » comme destination.',
     copiedToClipboard:'Recette copiée dans le presse-papiers',shareFailed:'Impossible de partager la recette',
     shareVia:'Partagé depuis l\'app Bread Maker',
+    proTitle:'Fonction Pro',proBadge:'PRO',
+    pro_upsell_print:'Imprimer, PDF et Partager sont des fonctions Pro sur Google Play. L’achat n’est pas encore disponible — revenez lors d’une prochaine mise à jour.',
+    pro_upsell_backup:'Sauvegarde et restauration est une fonction Pro sur Google Play. L’achat n’est pas encore disponible — revenez lors d’une prochaine mise à jour.',
+    pro_recipe_limit:'La version gratuite enregistre jusqu’à {n} recettes. Les recettes illimitées sont une fonction Pro sur Google Play — l’achat n’est pas encore disponible.',
+    pro_recipes_count:'{count} sur {max} enregistrées (Gratuit) — illimité avec Pro',
+    licenseHead:'🔑 Bread Maker Pro',licenseKeyHint:'XXXX-XXXX-XXXX-XXXX',
+    licenseFindKey:'Retrouvez votre clé de licence dans l’e-mail de confirmation de commande Niagara Indie Apps.',
+    licenseActivate:'Activer',
+    licenseAlreadyUnlocked:'Pro est débloqué sur cet appareil. Merci de soutenir Bread Maker.',
+    licenseRemoveDevice:'Retirer cet appareil',
+    licenseRemoveDeviceConfirmBody:'Retirer cet appareil de votre licence ? Vous pourrez le réactiver plus tard.',
+    licenseRemoveDeviceDone:'Cet appareil a été retiré de votre licence.',
+    licenseRemoveDeviceFailed:'Impossible de retirer cet appareil. Vérifiez votre connexion et réessayez.',
+    licenseErrorInvalid:'Cette clé de licence n’est pas valide. Vérifiez-la et réessayez.',
+    licenseErrorWrongProduct:'Cette clé de licence n’est pas valide pour Bread Maker.',
+    licenseErrorPlatformNotLicensed:'Cette licence ne couvre pas cette plateforme.',
+    licenseErrorMaxDevices:'Cette licence est déjà activée sur le nombre maximal d’appareils.',
+    licenseErrorRevoked:'Cette licence a été révoquée.',
+    licenseErrorRefunded:'Cette licence a été remboursée et n’est plus active.',
+    licenseErrorChargeback:'Cette licence a été désactivée suite à une contestation de paiement.',
+    licenseErrorDisabled:'Cette licence a été désactivée.',
+    licenseErrorNetwork:'Impossible de contacter Niagara Indie Apps. Vérifiez votre connexion et réessayez.',
+    licenseErrorGeneric:'Une erreur est survenue lors de l’activation de cette licence. Veuillez réessayer.',
+    proUpsellGoToLicense:'Saisir une clé de licence maintenant ?',
+    premiumThanks:'Merci de soutenir Bread Maker.',
   },
   pt: {
     appSub:'Calculadora de Percentagem do Padeiro',tabCalc:'⚗️ Calculadora',tabRecipes:'📋 Receitas guardadas',tabSettings:'⚙️ Definições',
@@ -2237,6 +2532,31 @@ const TRANSLATIONS = {
     pdfHint:'Na caixa de diálogo de impressão, escolhe "Guardar como PDF" como destino.',
     copiedToClipboard:'Receita copiada para a área de transferência',shareFailed:'Não foi possível partilhar a receita',
     shareVia:'Partilhado a partir da app Bread Maker',
+    proTitle:'Recurso Pro',proBadge:'PRO',
+    pro_upsell_print:'Imprimir, PDF e Compartilhar são recursos Pro no Google Play. A compra ainda não está disponível — volte em uma atualização futura.',
+    pro_upsell_backup:'Backup e Restauração é um recurso Pro no Google Play. A compra ainda não está disponível — volte em uma atualização futura.',
+    pro_recipe_limit:'A versão gratuita salva até {n} receitas. Receitas ilimitadas são um recurso Pro no Google Play — a compra ainda não está disponível.',
+    pro_recipes_count:'{count} de {max} salvas (Grátis) — ilimitado é um recurso Pro',
+    licenseHead:'🔑 Bread Maker Pro',licenseKeyHint:'XXXX-XXXX-XXXX-XXXX',
+    licenseFindKey:'Encontra a tua chave de licença no e-mail de confirmação de encomenda da Niagara Indie Apps.',
+    licenseActivate:'Ativar',
+    licenseAlreadyUnlocked:'O Pro está desbloqueado neste dispositivo. Obrigado por apoiares o Bread Maker.',
+    licenseRemoveDevice:'Remover este dispositivo',
+    licenseRemoveDeviceConfirmBody:'Remover este dispositivo da tua licença? Podes ativá-lo novamente mais tarde.',
+    licenseRemoveDeviceDone:'Este dispositivo foi removido da tua licença.',
+    licenseRemoveDeviceFailed:'Não foi possível remover este dispositivo. Verifica a tua ligação e tenta novamente.',
+    licenseErrorInvalid:'Essa chave de licença não é válida. Verifica-a e tenta novamente.',
+    licenseErrorWrongProduct:'Essa chave de licença não é válida para o Bread Maker.',
+    licenseErrorPlatformNotLicensed:'Essa licença não cobre esta plataforma.',
+    licenseErrorMaxDevices:'Esta licença já está ativada no número máximo de dispositivos.',
+    licenseErrorRevoked:'Esta licença foi revogada.',
+    licenseErrorRefunded:'Esta licença foi reembolsada e já não está ativa.',
+    licenseErrorChargeback:'Esta licença foi desativada devido a uma contestação de pagamento.',
+    licenseErrorDisabled:'Esta licença foi desativada.',
+    licenseErrorNetwork:'Não foi possível contactar a Niagara Indie Apps. Verifica a tua ligação e tenta novamente.',
+    licenseErrorGeneric:'Algo correu mal ao ativar esta licença. Tenta novamente.',
+    proUpsellGoToLicense:'Introduzir uma chave de licença agora?',
+    premiumThanks:'Obrigado por apoiares o Bread Maker.',
   },
   de: {
     appSub:'Bäcker-Prozent-Rechner',tabCalc:'⚗️ Rechner',tabRecipes:'📋 Gespeicherte Rezepte',tabSettings:'⚙️ Einstellungen',
@@ -2297,6 +2617,31 @@ const TRANSLATIONS = {
     pdfHint:'Wähle im Druckdialog „Als PDF speichern“ als Ziel.',
     copiedToClipboard:'Rezept in die Zwischenablage kopiert',shareFailed:'Rezept konnte nicht geteilt werden',
     shareVia:'Geteilt aus der Bread-Maker-App',
+    proTitle:'Pro-Funktion',proBadge:'PRO',
+    pro_upsell_print:'Drucken, PDF und Teilen sind Pro-Funktionen bei Google Play. Der Kauf ist noch nicht möglich — schau in einem zukünftigen Update wieder vorbei.',
+    pro_upsell_backup:'Sicherung & Wiederherstellung ist eine Pro-Funktion bei Google Play. Der Kauf ist noch nicht möglich — schau in einem zukünftigen Update wieder vorbei.',
+    pro_recipe_limit:'Die kostenlose Version speichert bis zu {n} Rezepte. Unbegrenzte gespeicherte Rezepte sind eine Pro-Funktion bei Google Play — der Kauf ist noch nicht möglich.',
+    pro_recipes_count:'{count} von {max} gespeichert (Kostenlos) — unbegrenzt mit Pro',
+    licenseHead:'🔑 Bread Maker Pro',licenseKeyHint:'XXXX-XXXX-XXXX-XXXX',
+    licenseFindKey:'Du findest deinen Lizenzschlüssel in der Bestellbestätigungs-E-Mail von Niagara Indie Apps.',
+    licenseActivate:'Aktivieren',
+    licenseAlreadyUnlocked:'Pro ist auf diesem Gerät freigeschaltet. Danke, dass du Bread Maker unterstützt.',
+    licenseRemoveDevice:'Dieses Gerät entfernen',
+    licenseRemoveDeviceConfirmBody:'Dieses Gerät von deiner Lizenz entfernen? Du kannst es später wieder aktivieren.',
+    licenseRemoveDeviceDone:'Dieses Gerät wurde von deiner Lizenz entfernt.',
+    licenseRemoveDeviceFailed:'Das Gerät konnte nicht entfernt werden. Prüfe deine Verbindung und versuche es erneut.',
+    licenseErrorInvalid:'Dieser Lizenzschlüssel ist ungültig. Prüfe ihn und versuche es erneut.',
+    licenseErrorWrongProduct:'Dieser Lizenzschlüssel ist für Bread Maker nicht gültig.',
+    licenseErrorPlatformNotLicensed:'Diese Lizenz deckt diese Plattform nicht ab.',
+    licenseErrorMaxDevices:'Diese Lizenz ist bereits auf der maximalen Anzahl von Geräten aktiviert.',
+    licenseErrorRevoked:'Diese Lizenz wurde widerrufen.',
+    licenseErrorRefunded:'Diese Lizenz wurde erstattet und ist nicht mehr aktiv.',
+    licenseErrorChargeback:'Diese Lizenz wurde wegen einer Zahlungsanfechtung deaktiviert.',
+    licenseErrorDisabled:'Diese Lizenz wurde deaktiviert.',
+    licenseErrorNetwork:'Niagara Indie Apps konnte nicht erreicht werden. Prüfe deine Verbindung und versuche es erneut.',
+    licenseErrorGeneric:'Bei der Aktivierung dieser Lizenz ist etwas schiefgegangen. Bitte versuche es erneut.',
+    proUpsellGoToLicense:'Jetzt einen Lizenzschlüssel eingeben?',
+    premiumThanks:'Danke, dass du Bread Maker unterstützt.',
   },
   it: {
     appSub:'Calcolatore di Percentuali del Fornaio',tabCalc:'⚗️ Calcolatore',tabRecipes:'📋 Ricette salvate',tabSettings:'⚙️ Impostazioni',
@@ -2357,6 +2702,31 @@ const TRANSLATIONS = {
     pdfHint:'Nella finestra di stampa, scegli "Salva come PDF" come destinazione.',
     copiedToClipboard:'Ricetta copiata negli appunti',shareFailed:'Impossibile condividere la ricetta',
     shareVia:'Condiviso dall\'app Bread Maker',
+    proTitle:'Funzione Pro',proBadge:'PRO',
+    pro_upsell_print:'Stampa, PDF e Condividi sono funzioni Pro su Google Play. L’acquisto non è ancora disponibile: torna a controllare in un futuro aggiornamento.',
+    pro_upsell_backup:'Backup e Ripristino è una funzione Pro su Google Play. L’acquisto non è ancora disponibile: torna a controllare in un futuro aggiornamento.',
+    pro_recipe_limit:'La versione gratuita salva fino a {n} ricette. Le ricette illimitate sono una funzione Pro su Google Play: l’acquisto non è ancora disponibile.',
+    pro_recipes_count:'{count} di {max} salvate (Gratis) — illimitato è una funzione Pro',
+    licenseHead:'🔑 Bread Maker Pro',licenseKeyHint:'XXXX-XXXX-XXXX-XXXX',
+    licenseFindKey:'Trovi la tua chiave di licenza nell’e-mail di conferma d’ordine di Niagara Indie Apps.',
+    licenseActivate:'Attiva',
+    licenseAlreadyUnlocked:'Pro è sbloccato su questo dispositivo. Grazie per il tuo sostegno a Bread Maker.',
+    licenseRemoveDevice:'Rimuovi questo dispositivo',
+    licenseRemoveDeviceConfirmBody:'Rimuovere questo dispositivo dalla tua licenza? Potrai riattivarlo in seguito.',
+    licenseRemoveDeviceDone:'Questo dispositivo è stato rimosso dalla tua licenza.',
+    licenseRemoveDeviceFailed:'Impossibile rimuovere questo dispositivo. Controlla la connessione e riprova.',
+    licenseErrorInvalid:'Questa chiave di licenza non è valida. Controllala e riprova.',
+    licenseErrorWrongProduct:'Questa chiave di licenza non è valida per Bread Maker.',
+    licenseErrorPlatformNotLicensed:'Questa licenza non copre questa piattaforma.',
+    licenseErrorMaxDevices:'Questa licenza è già attivata sul numero massimo di dispositivi.',
+    licenseErrorRevoked:'Questa licenza è stata revocata.',
+    licenseErrorRefunded:'Questa licenza è stata rimborsata e non è più attiva.',
+    licenseErrorChargeback:'Questa licenza è stata disattivata a causa di una contestazione di pagamento.',
+    licenseErrorDisabled:'Questa licenza è stata disattivata.',
+    licenseErrorNetwork:'Impossibile contattare Niagara Indie Apps. Controlla la connessione e riprova.',
+    licenseErrorGeneric:'Si è verificato un problema durante l’attivazione della licenza. Riprova.',
+    proUpsellGoToLicense:'Inserire una chiave di licenza ora?',
+    premiumThanks:'Grazie per il tuo sostegno a Bread Maker.',
   },
   ja: {
     appSub:'ベーカーズパーセント計算機',tabCalc:'⚗️ 計算機',tabRecipes:'📋 保存レシピ',tabSettings:'⚙️ 設定',
@@ -2417,6 +2787,31 @@ const TRANSLATIONS = {
     pdfHint:'印刷ダイアログで送信先として「PDFに保存」を選択してください。',
     copiedToClipboard:'レシピをクリップボードにコピーしました',shareFailed:'レシピを共有できませんでした',
     shareVia:'Bread Maker アプリから共有',
+    proTitle:'Pro機能',proBadge:'PRO',
+    pro_upsell_print:'印刷・PDF・共有はGoogle PlayのPro機能です。購入はまだご利用いただけません — 今後のアップデートをお待ちください。',
+    pro_upsell_backup:'バックアップと復元はGoogle PlayのPro機能です。購入はまだご利用いただけません — 今後のアップデートをお待ちください。',
+    pro_recipe_limit:'無料版ではレシピを{n}件まで保存できます。無制限のレシピ保存はGoogle PlayのPro機能です — 購入はまだご利用いただけません。',
+    pro_recipes_count:'{count} / {max} 件保存済み(無料)— Proなら無制限',
+    licenseHead:'🔑 Bread Maker Pro',licenseKeyHint:'XXXX-XXXX-XXXX-XXXX',
+    licenseFindKey:'ライセンスキーはNiagara Indie Appsのご注文確認メールに記載されています。',
+    licenseActivate:'有効化',
+    licenseAlreadyUnlocked:'このデバイスでProが有効になっています。Bread Makerをご利用いただきありがとうございます。',
+    licenseRemoveDevice:'このデバイスを削除',
+    licenseRemoveDeviceConfirmBody:'このデバイスをライセンスから削除しますか?後でまた有効化できます。',
+    licenseRemoveDeviceDone:'このデバイスはライセンスから削除されました。',
+    licenseRemoveDeviceFailed:'このデバイスを削除できませんでした。接続を確認してもう一度お試しください。',
+    licenseErrorInvalid:'このライセンスキーは無効です。確認してもう一度お試しください。',
+    licenseErrorWrongProduct:'このライセンスキーはBread Makerでは使用できません。',
+    licenseErrorPlatformNotLicensed:'このライセンスはこのプラットフォームに対応していません。',
+    licenseErrorMaxDevices:'このライセンスはすでに上限台数まで有効化されています。',
+    licenseErrorRevoked:'このライセンスは取り消されました。',
+    licenseErrorRefunded:'このライセンスは返金され、無効になりました。',
+    licenseErrorChargeback:'支払いの異議申し立てによりこのライセンスは無効化されました。',
+    licenseErrorDisabled:'このライセンスは無効化されました。',
+    licenseErrorNetwork:'Niagara Indie Appsに接続できませんでした。接続を確認してもう一度お試しください。',
+    licenseErrorGeneric:'ライセンスの有効化中に問題が発生しました。もう一度お試しください。',
+    proUpsellGoToLicense:'今すぐライセンスキーを入力しますか?',
+    premiumThanks:'Bread Makerをご利用いただきありがとうございます。',
   },
 };
 
@@ -3137,6 +3532,8 @@ function buildLangGrid() {
 
 // ── INIT ──────────────────────────────────────────────────────
 function init() {
+  applyProLockUI();
+  initLicense();
   setTheme(currentTheme);
   document.documentElement.lang = currentLang;
   document.documentElement.dir = LANG_META[currentLang]?.rtl ? 'rtl' : 'ltr';
@@ -3731,6 +4128,12 @@ function closeSaveModal() {
 function confirmSave() {
   const name = document.getElementById('saveNameInput').value.trim();
   if (!name) { document.getElementById('saveNameInput').focus(); return; }
+  const saved = getSavedRecipes();
+  if (isProLocked() && saved.length >= PRO_FREE_RECIPE_LIMIT) {
+    closeSaveModal();
+    proUpsell(T('pro_recipe_limit').replace('{n}', PRO_FREE_RECIPE_LIMIT));
+    return;
+  }
   const notes = document.getElementById('saveNotesInput').value.trim();
   const r = window._lastResult;
   const recipe = {
@@ -3745,7 +4148,6 @@ function confirmSave() {
     state: r.state,
     snapshot: document.getElementById('outputBody').innerHTML,
   };
-  const saved = getSavedRecipes();
   saved.unshift(recipe);
   localStorage.setItem('breadmaker_recipes', JSON.stringify(saved));
   closeSaveModal();
@@ -3758,6 +4160,7 @@ function getSavedRecipes() {
 
 // ── BACKUP & RESTORE ──────────────────────────────────────────
 function backupData() {
+  if (isProLocked()) { proUpsell(T('pro_upsell_backup')); return; }
   const backup = {
     version: 1,
     date: new Date().toISOString(),
@@ -3778,6 +4181,7 @@ function backupData() {
 }
 
 function restoreData(event) {
+  if (isProLocked()) { event.target.value = ''; proUpsell(T('pro_upsell_backup')); return; }
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -3998,15 +4402,18 @@ function closeLegal(e) {
 function renderRecipesPage() {
   const saved = getSavedRecipes();
   const el = document.getElementById('recipesContent');
+  const limitNote = isProLocked()
+    ? `<div class="pro-limit-note">${T('pro_recipes_count').replace('{count}', saved.length).replace('{max}', PRO_FREE_RECIPE_LIMIT)}</div>`
+    : '';
   if (saved.length === 0) {
-    el.innerHTML = `<div class="empty-state">
+    el.innerHTML = `${limitNote}<div class="empty-state">
       <div class="empty-state-icon">📋</div>
       <div class="empty-state-title">${T('noRecipes')}</div>
       <div class="empty-state-sub">${T('saveRecipe')}</div>
     </div>`;
     return;
   }
-  el.innerHTML = `<div class="recipes-grid">${saved.map(r => `
+  el.innerHTML = `${limitNote}<div class="recipes-grid">${saved.map(r => `
     <div class="recipe-item" onclick="viewRecipe('${r.id}')">
       <div class="recipe-item-head">
         <div class="recipe-item-name">${r.name}</div>
@@ -4066,12 +4473,14 @@ function currentViewResult() {
 }
 
 function printSavedRecipe() {
+  if (isProLocked()) { proUpsell(T('pro_upsell_print')); return; }
   const cv = currentViewResult();
   if (!cv) { showToast(T('calcFirst'), 'error'); return; }
   printRecipe(cv.result, { name: cv.recipe.name, date: cv.recipe.date, notes: cv.recipe.notes });
 }
 
 function pdfSavedRecipe() {
+  if (isProLocked()) { proUpsell(T('pro_upsell_print')); return; }
   const cv = currentViewResult();
   if (!cv) { showToast(T('calcFirst'), 'error'); return; }
   // A dedicated PDF engine would add a bundled dependency for no real gain:
@@ -4143,6 +4552,7 @@ async function shareRecipeText(title, text) {
 }
 
 async function shareSavedRecipe() {
+  if (isProLocked()) { proUpsell(T('pro_upsell_print')); return; }
   const cv = currentViewResult();
   if (!cv) { showToast(T('calcFirst'), 'error'); return; }
   const text = buildRecipeText(
@@ -4154,6 +4564,7 @@ async function shareSavedRecipe() {
 
 // Share the live calculator result (Calculator screen action bar).
 async function shareCurrentRecipe() {
+  if (isProLocked()) { proUpsell(T('pro_upsell_print')); return; }
   const r = window._lastResult;
   if (!r) { showToast(T('calcFirst'), 'error'); return; }
   const text = buildRecipeText({ name: 'Recipe', date: new Date().toLocaleDateString(), notes: '' }, r);
@@ -4365,6 +4776,7 @@ async function resetAll() {
 // Passing an explicit result object + meta (used by the Saved Recipes screen)
 // prints that recipe instead, at whatever scale the caller computed.
 function printRecipe(resultOverride, metaOverride) {
+  if (isProLocked()) { proUpsell(T('pro_upsell_print')); return; }
   const r = resultOverride || window._lastResult;
   if (!r) { alert(T('calcFirst')); return; }
 
