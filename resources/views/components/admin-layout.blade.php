@@ -11,6 +11,7 @@
         'Sales' => [
             ['label' => 'Orders', 'route' => 'admin.orders.index', 'icon' => '🧾'],
             ['label' => 'Sales', 'route' => 'admin.sales.index', 'icon' => '📈'],
+            ['label' => 'Licenses', 'route' => 'admin.licenses.index', 'icon' => '🔑'],
         ],
         'Content' => [
             ['label' => 'Pages', 'route' => 'admin.content.index', 'icon' => '📄'],

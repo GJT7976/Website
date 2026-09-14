@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LicenseManagementController;
 use App\Http\Controllers\MyDownloadsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PricingController;
@@ -66,5 +67,22 @@ Route::get('/my-downloads/{email}', [MyDownloadsController::class, 'show'])
 Route::get('/downloads/{entitlement}', [DownloadController::class, 'download'])
     ->middleware('signed')
     ->name('downloads.show');
+
+// §10: self-service license device management — email + license key,
+// then a one-time code, mirroring My Downloads' no-account pattern.
+Route::get('/license/manage', [LicenseManagementController::class, 'requestForm'])->name('license.manage.request');
+Route::post('/license/manage', [LicenseManagementController::class, 'sendCode'])
+    ->middleware('throttle:5,1')
+    ->name('license.manage.send-code');
+Route::get('/license/manage/verify', [LicenseManagementController::class, 'verifyForm'])->name('license.manage.verify-form');
+Route::post('/license/manage/verify', [LicenseManagementController::class, 'verifyCode'])
+    ->middleware('throttle:10,1')
+    ->name('license.manage.verify');
+Route::get('/license/manage/{license}', [LicenseManagementController::class, 'show'])
+    ->middleware('signed')
+    ->name('license.manage.show');
+Route::post('/license/manage/{license}/devices/{device}/deactivate', [LicenseManagementController::class, 'deactivate'])
+    ->middleware(['signed', 'throttle:10,1'])
+    ->name('license.manage.deactivate');
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');

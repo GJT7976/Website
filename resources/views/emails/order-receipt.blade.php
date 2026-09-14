@@ -31,6 +31,14 @@ View My Downloads
 @endcomponent
 @endif
 
+@if ($licenses->isNotEmpty())
+## Your license {{ $licenses->count() > 1 ? 'keys' : 'key' }}
+
+@foreach ($licenses as $license)
+@include('emails.partials.license-block', ['license' => $license])
+@endforeach
+@endif
+
 If you have any questions about this order, just reply to this email or
 use the Contact page on our site.
 

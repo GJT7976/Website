@@ -57,8 +57,10 @@ The CLI prints a webhook signing secret (`whsec_...`) — put that in
 **Production (Hostinger or elsewhere)** — in the Stripe dashboard:
 **Developers → Webhooks → Add endpoint**, URL
 `https://yourdomain.tld/stripe/webhook`, events: `checkout.session.completed`,
-`payment_intent.payment_failed`, `charge.refunded`. Copy its signing
-secret into the production `.env` as `STRIPE_WEBHOOK_SECRET`.
+`payment_intent.payment_failed`, `charge.refunded`, `charge.dispute.created`
+(the last one is what flips a license/entitlement to the `chargeback`
+state — see `LICENSE_SYSTEM.md`). Copy its signing secret into the
+production `.env` as `STRIPE_WEBHOOK_SECRET`.
 
 ## 4. Try a full test purchase locally
 

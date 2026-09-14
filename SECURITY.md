@@ -71,6 +71,39 @@
   the same way `DownloadController` serves paid release files) — never a
   public URL.
 
+- **License keys are never stored in plain text queryable form** — only
+  `sha256($rawKey)` is used for activation/validation lookups (the same
+  pattern Laravel Sanctum uses for API tokens). A separate
+  `license_key_encrypted` column (Laravel's `encrypted` cast, AES-256 via
+  `APP_KEY`) exists solely so an admin can use "Resend License Email"; the
+  public activation/validation API never reads it.
+- **License issuance only ever follows a webhook-confirmed payment** — the
+  same rule as orders/entitlements above. `App\Services\LicenseService::
+  createFromOrder()` is `firstOrCreate`-keyed on `order_item_id`, so a
+  replayed Stripe webhook can't issue a second license for the same
+  purchase.
+- **Device identifiers are never raw hardware IDs** — the license API only
+  accepts an opaque installation identifier the app itself generates
+  (never a MAC address, IMEI, Android serial, or Windows product key), and
+  only its sha256 hash is stored.
+- **Offline entitlement tokens are signed, not just cached booleans** —
+  `App\Services\LicenseTokenSigner` uses libsodium (Ed25519) to sign the
+  payload returned from activate/validate. The private key lives only in
+  this server's `.env` (`LICENSE_SIGNING_PRIVATE_KEY`, generated via
+  `php artisan license:keys:generate`); only the public half is meant to
+  ship inside a Flutter app, which can then verify a cached token offline
+  without trusting a bare local `isPro = true` flag.
+- **License management pages are signed and short-lived, not permanent**
+  — unlike My Downloads' permanent link, `/license/manage/{license}` (and
+  its deactivate action) require a temporary signed URL that expires in
+  30 minutes, since this page can mutate state (deactivate a device)
+  rather than only read one.
+- **Self-service device-reset rate limiting** — `App\Services\
+  LicenseService` caps customer-initiated device deactivations per
+  license in a rolling window (`config/licensing.php`) before requiring
+  an admin override, so a lost/rotated device ID can't be used to dodge
+  the two-device limit indefinitely.
+
 ## Known gaps — a further phase
 
 - **Security headers** (CSP, `X-Frame-Options`, etc.) beyond Laravel's

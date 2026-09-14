@@ -28,6 +28,12 @@ Stripe checkout and the Canadian tax engine. Delivered so far:
   accounts), and admin tools for release uploads and entitlement overrides
   — see "Claude Prompt — Niagara Inde Apps Platform Selection & Purchase
   System.md" and the schema table in `ARCHITECTURE.md`
+- **Permanent PRO license keys** for website-sold Android/Windows
+  editions of the Flutter apps: a cryptographically random license key
+  issued on purchase, a 2-device activation limit, self-service and admin
+  device management, and signed offline entitlement tokens — see
+  `LICENSE_SYSTEM.md`. This is the backend/API half only; the Flutter-side
+  PRO-lock screen lives in each app's own repository.
 - Database schema, migrations, seeders, and automated tests for all of
   the above
 
@@ -53,6 +59,8 @@ doesn't exist yet.
   another app's web build
 - **`HOSTINGER_DEPLOYMENT.md`** — deploying what exists today to Hostinger
 - **`STRIPE_SETUP.md`** — Stripe Checkout + webhook setup (implemented — add your keys)
+- **`LICENSE_SYSTEM.md`** — the license-key/device-activation system for
+  website-sold Android/Windows editions
 - **`BACKUP_RESTORE.md`** — manual backup steps today; an admin UI is a further phase
 - **`SECURITY.md`** — what's implemented today and what's planned
 

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EditionController;
 use App\Http\Controllers\Admin\EntitlementController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PageContentController;
@@ -85,6 +86,15 @@ Route::middleware('auth')->group(function () {
 
     Route::get('sales', [SalesController::class, 'index'])->name('sales.index');
     Route::get('sales/export', [SalesController::class, 'export'])->name('sales.export');
+
+    Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
+    Route::get('licenses/{license}', [LicenseController::class, 'show'])->name('licenses.show');
+    Route::post('licenses/{license}/reset-activations', [LicenseController::class, 'resetActivations'])->name('licenses.reset-activations');
+    Route::post('licenses/{license}/revoke', [LicenseController::class, 'revoke'])->name('licenses.revoke');
+    Route::post('licenses/{license}/restore', [LicenseController::class, 'restore'])->name('licenses.restore');
+    Route::post('licenses/{license}/mark-refunded', [LicenseController::class, 'markRefunded'])->name('licenses.mark-refunded');
+    Route::post('licenses/{license}/resend-email', [LicenseController::class, 'resendEmail'])->name('licenses.resend-email');
+    Route::post('license-devices/{device}/deactivate', [LicenseController::class, 'deactivateDevice'])->name('license-devices.deactivate');
 
     // Self-service 2FA enrollment for one's own account — any authenticated
     // admin, not owner-only (the spec recommends but doesn't mandate 2FA).

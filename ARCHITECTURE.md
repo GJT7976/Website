@@ -109,6 +109,10 @@ on `apps`), never floats, per the spec's money-handling requirement.
 | `customer_entitlements` | The actual per-purchase (or admin-granted) access grant — distinct from `edition_entitlements`, which is just the edition's template. Created only by the Stripe webhook once payment is confirmed paid, revoked only on a *full* refund; `granted_by`/`revoked_by`/`revoked_reason` on the row itself remains the audit trail for admin overrides specifically (see note below — the general `audit_logs` table below doesn't replace this). |
 | `audit_logs` | General "who did what" trail — see note below. Immutable: no route/controller method exists to update or delete a row. |
 | `backups` | One row per generated backup archive (database/media/full) — disk/path/checksum, never a public URL. A row is only inserted after the archive is fully written; a failed attempt writes nothing. |
+| `licenses` | A permanent PRO license for a website-sold Android/Windows edition — separate from and additional to `customer_entitlements` above (which still gates the download file itself). One per order item that includes Android/Windows download access; `license_key_hash` (sha256, for lookups) and `license_key_encrypted` (AES-256, admin-resend only) — never a plaintext lookup column. See `LICENSE_SYSTEM.md`. |
+| `license_devices` | One activated device per license, capped at `maximum_devices` (default 2 total, shared across platforms for a bundle license). `device_identifier_hash` is sha256 of an opaque app-generated installation ID — never a hardware serial. |
+| `license_events` | Append-only activation/validation/deactivation/rejection history per license — backs admin license history and self-service reset-abuse limiting. Deliberately separate from `audit_logs`, which stays scoped to admin-initiated actions. |
+| `license_verification_codes` | One-time codes for the self-service device-management flow at `/license/manage`. |
 
 ## Database schema — further phase (not yet migrated)
 
@@ -182,6 +186,22 @@ and settings updates, and backup create/delete. `AuditLogController`
 exposes only `index()` — no route to update or delete a row exists, the
 literal code-level enforcement of "don't let a normal admin action erase
 the audit log."
+
+## Permanent PRO license keys
+
+A distinct, additional layer on top of platform/edition selling above:
+`App\Services\LicenseService::createFromOrder()` is called from
+`StripeWebhookHandler` right next to `EntitlementService::createFromOrder()`
+and issues one `License` (with a cryptographically random
+`XXXX-XXXX-XXXX-XXXX` key) per order item whose edition grants Android
+and/or Windows *download* access — a Web/PWA-only edition never gets one.
+This is the backend/API half only (`routes/api.php`,
+`App\Http\Controllers\Api\LicenseController`); the Flutter-side PRO-lock
+screen and license entry UI live in each app's own separate repository.
+Full design, the two-device rule, offline signed entitlement tokens
+(`App\Services\LicenseTokenSigner`, Ed25519 via libsodium), and the
+self-service device-management flow are documented in
+`LICENSE_SYSTEM.md`.
 
 ## Two-factor authentication
 

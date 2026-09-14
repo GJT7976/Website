@@ -116,7 +116,14 @@ class CheckoutController extends Controller
             ? URL::signedRoute('my-downloads.show', ['email' => $order->customer_email])
             : null;
 
-        return view('checkout.success', ['app' => $app, 'order' => $order, 'myDownloadsUrl' => $myDownloadsUrl]);
+        // §20: only ever what the webhook has already confirmed and
+        // issued — never generated or faked from this success-page
+        // request itself (see CLAUDE.md's payment-confirmation rule).
+        $licenses = ($order && $order->payment_status === 'paid')
+            ? $order->licenses()->where('app_id', $app->id)->get()
+            : collect();
+
+        return view('checkout.success', ['app' => $app, 'order' => $order, 'myDownloadsUrl' => $myDownloadsUrl, 'licenses' => $licenses]);
     }
 
     public function cancel(App $app): View

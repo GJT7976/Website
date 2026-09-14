@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,9 +17,18 @@ class OrderReceipt extends Mailable
 
     public string $myDownloadsUrl;
 
-    public function __construct(public Order $order)
+    public Collection $licenses;
+
+    /**
+     * @param  ?Collection  $licenses  Any App\Models\License rows issued for
+     *                                 this order (§21) — omitted when
+     *                                 resending a receipt for an order with
+     *                                 no license-eligible items.
+     */
+    public function __construct(public Order $order, ?Collection $licenses = null)
     {
         $this->myDownloadsUrl = URL::signedRoute('my-downloads.show', ['email' => $order->customer_email]);
+        $this->licenses = $licenses ?? $order->licenses()->get();
     }
 
     public function envelope(): Envelope

@@ -135,6 +135,35 @@ access record itself.
   Canadian/provincial tax requirements against authoritative sources
   before relying on the seeded default for a real sale.**
 
+## Licenses
+
+**Licenses** (under Sales) covers the permanent PRO license keys issued
+for website-sold Android APK / Windows MSIX-EXE editions — separate from
+Google Play, which uses its own in-app purchase system. See
+`LICENSE_SYSTEM.md` for the full design; day-to-day tasks:
+
+- **Search** by customer email, name, or transaction ID, and filter by
+  status.
+- Open a license to see its entitlement (Android / Windows / bundle),
+  amount paid, the order it came from, activated devices with platform
+  and activation date, and a history of activation/validation/deactivation
+  events.
+- **Resend License Email** re-sends the key to the customer (recovered
+  from the encrypted column — never the hash — so this works even though
+  the license page itself never displays the raw key back to you).
+- **Reset Activations** deactivates every device on a license at once —
+  use this when a customer needs a clean slate (e.g. they've lost access
+  to both devices) rather than deactivating them one at a time.
+- **Revoke** disables a license (fraud, abuse); **Restore** re-enables it.
+  **Mark Refunded** is for a refund issued outside the normal Stripe
+  refund flow — a refund processed via **Orders → Issue Refund** already
+  marks any related licenses refunded automatically.
+- Deactivating an individual device (from the license's own page) frees
+  that slot immediately — the customer can also do this themselves at
+  `/license/manage` without contacting you, subject to a self-service
+  reset limit (`config/licensing.php`) that exists purely to slow down
+  abuse, not to block someone replacing a broken device.
+
 ## Users (owner only)
 
 **Users** lets an owner add or edit administrator accounts, change roles,

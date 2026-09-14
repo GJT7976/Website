@@ -7,6 +7,7 @@ use App\Mail\OrderReceipt;
 use App\Models\Order;
 use App\Services\AuditLogger;
 use App\Services\EntitlementService;
+use App\Services\LicenseService;
 use App\Services\StripeCheckout;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class OrderController extends Controller
     public function __construct(
         private StripeCheckout $stripeCheckout,
         private EntitlementService $entitlements,
+        private LicenseService $licenses,
     ) {}
 
     public function index(Request $request): View
@@ -94,6 +96,7 @@ class OrderController extends Controller
 
         if ($fullyRefunded) {
             $this->entitlements->revokeForOrder($order, 'refund');
+            $this->licenses->revokeForOrder($order, 'refunded');
         }
 
         AuditLogger::record('order.refunded', $order, null, [

@@ -16,6 +16,19 @@
             </p>
         @endif
 
+        @if ($licenses->isNotEmpty())
+            <div class="mt-8 space-y-4 text-left">
+                @foreach ($licenses as $license)
+                    <div class="rounded-lg border border-mist-300 bg-paper p-5">
+                        <p class="text-label text-navy-soft">Your license key</p>
+                        <p class="text-h2 mt-1 font-mono tracking-wide">{{ $license->license_key_encrypted }}</p>
+                        <p class="text-small mt-2 text-navy-soft">Keep this license key in a safe place. It can activate up to {{ $license->maximum_devices }} devices.</p>
+                    </div>
+                @endforeach
+                <p class="text-small text-navy-soft">Your license key has also been emailed to you, along with a link to manage your activated devices.</p>
+            </div>
+        @endif
+
         <div class="mt-8 flex flex-wrap justify-center gap-3">
             @if ($myDownloadsUrl)
                 <a href="{{ $myDownloadsUrl }}" class="btn btn-primary">Go to My Downloads</a>

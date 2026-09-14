@@ -6,7 +6,6 @@ use App\Mail\OrderReceipt;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Refund;
-use App\Services\EntitlementService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Event;
@@ -19,13 +18,17 @@ use Stripe\Event;
  *
  * Never trust a browser redirect back to a "success" URL by itself — an
  * order is only ever marked paid/refunded/failed from here. Entitlements
- * ride along with that same rule: EntitlementService only ever creates a
- * download/web-access grant once this handler has confirmed payment, and
- * only ever revokes one once it has confirmed a full refund.
+ * and licenses ride along with that same rule: EntitlementService and
+ * LicenseService only ever create a grant/license once this handler has
+ * confirmed payment, and only ever revoke one once it has confirmed a
+ * full refund or a chargeback dispute.
  */
 class StripeWebhookHandler
 {
-    public function __construct(private EntitlementService $entitlements) {}
+    public function __construct(
+        private EntitlementService $entitlements,
+        private LicenseService $licenses,
+    ) {}
 
     public function handle(Event $event): void
     {
@@ -33,6 +36,7 @@ class StripeWebhookHandler
             'checkout.session.completed' => $this->handleCheckoutCompleted($event),
             'payment_intent.payment_failed' => $this->handlePaymentFailed($event),
             'charge.refunded' => $this->handleChargeRefunded($event),
+            'charge.dispute.created' => $this->handleDisputeCreated($event),
             default => Log::info("Stripe webhook: unhandled event type [{$event->type}]"),
         };
     }
@@ -65,9 +69,10 @@ class StripeWebhookHandler
         ]);
 
         $this->entitlements->createFromOrder($order);
+        $licenses = $this->licenses->createFromOrder($order);
 
         try {
-            Mail::to($order->customer_email)->send(new OrderReceipt($order));
+            Mail::to($order->customer_email)->send(new OrderReceipt($order, $licenses));
         } catch (\Throwable $e) {
             Log::warning('Order receipt email failed to send.', ['order_id' => $order->id, 'error' => $e->getMessage()]);
         }
@@ -116,10 +121,34 @@ class StripeWebhookHandler
 
         // §35: a fully refunded direct purchase no longer grants new
         // downloads/access unless an admin overrides it afterward. A
-        // partial refund leaves entitlements untouched.
+        // partial refund leaves entitlements/licenses untouched.
         if ($fullyRefunded) {
             $this->entitlements->revokeForOrder($order, 'refund');
+            $this->licenses->revokeForOrder($order, 'refunded');
         }
+    }
+
+    /**
+     * A chargeback dispute (§24). This deliberately doesn't touch
+     * `orders.payment_status` — that enum's values (pending/paid/failed/
+     * refunded/partially_refunded) predate license support and changing
+     * it is outside this change's scope — but it does immediately revoke
+     * entitlements and licenses, same as a full refund, so the app
+     * returns to locked on its next online validation.
+     */
+    private function handleDisputeCreated(Event $event): void
+    {
+        $dispute = $event->data->object;
+        $order = $this->findOrder(null, null, $dispute->payment_intent ?? null);
+
+        if (! $order) {
+            Log::warning('Stripe webhook: charge.dispute.created for unknown order', ['payment_intent_id' => $dispute->payment_intent ?? null]);
+
+            return;
+        }
+
+        $this->entitlements->revokeForOrder($order, 'chargeback');
+        $this->licenses->revokeForOrder($order, 'chargeback');
     }
 
     private function findOrder(?string $orderId, ?string $sessionId = null, ?string $paymentIntentId = null): ?Order

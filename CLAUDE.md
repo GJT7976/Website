@@ -65,6 +65,16 @@ deliberately not implemented yet — don't fake data for them.
   order paid from the success-page controller "to make local testing
   easier" — don't; use `stripe listen --forward-to` instead (see
   `STRIPE_SETUP.md`).
+- **This repo hosts the website's license-key backend, not any Flutter
+  app's own build system.** Website-sold Android/Windows editions get a
+  permanent PRO license (`App\Services\LicenseService`, see
+  `LICENSE_SYSTEM.md`) generated alongside the existing entitlement/
+  download system — never confuse this with Google Play's own in-app
+  purchase system, which is entirely separate and unrelated to this
+  codebase. Each Flutter app's own repository (not this one) is where its
+  PRO-lock screen, license-key entry UI, and the distinction between its
+  website build and its Google Play build actually get implemented,
+  driven off the API this backend exposes.
 - **`TaxCalculator::calculate()` returns `tax_name`/`percentage` keys, but
   `sales_tax_lines` columns are `tax_name_snapshot`/`percentage_snapshot`.**
   `CheckoutController` maps between them explicitly — mass-assigning the
