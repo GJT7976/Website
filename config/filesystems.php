@@ -33,7 +33,18 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Deliberately NOT served (no 'url', no 'serve' => true): this
+            // disk holds paid release files (ReleaseLibrary) and database
+            // backup zips (BackupService), both strictly private — every
+            // real usage reads them server-side via ->path(), never a
+            // public URL. Releases are only ever handed out through
+            // DownloadController's signed, entitlement-checked route.
+            // 'serve' => true here previously defaulted to /storage (no
+            // 'url' was set), and nothing else claimed that URI before
+            // this commit — so this was live in production: both classes
+            // of private file were reachable at a guessable /storage/{path}
+            // URL with no entitlement check, since day one of this disk's
+            // 'serve' flag being set.
             'throw' => false,
             'report' => false,
         ],
@@ -45,6 +56,16 @@ return [
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
+            // Laravel's built-in stand-in for the public/storage symlink
+            // (Illuminate\Filesystem\FilesystemServiceProvider::serveFiles())
+            // — registers a GET /storage/{path} route that serves this disk
+            // directly. Needed because `php artisan storage:link` cannot
+            // succeed on this Hostinger plan: symlink()/exec() are both
+            // disabled on its shared PHP stack (see HOSTINGER_DEPLOYMENT.md),
+            // which otherwise left every Media::url()/thumbnailUrl() link
+            // 404ing in production — every app icon, feature graphic, and
+            // screenshot site-wide.
+            'serve' => true,
         ],
 
         's3' => [
