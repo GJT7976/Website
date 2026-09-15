@@ -857,15 +857,15 @@ MD,
      * anything bought on this website, exactly the same relationship
      * La Cucina Italiana's and Margin POS's Play Billing premiums have to
      * their own website listings (see those methods' doc comments above).
-     * The Android edition below sells the signed installer file itself, the
-     * same commercial model already used for every other app on this site.
-     *
-     * Windows is not offered yet: the source project has only an
-     * unpackaged release build (build/windows/x64/runner/Release/), not a
-     * real installer — the same "not a real, customer-downloadable
-     * artifact" rule already applied to Margin POS's Windows edition (see
-     * that method's doc comment) applies here too, until a signed MSIX or
-     * Inno Setup installer exists.
+     * The Android and Windows editions below sell the signed installer
+     * files themselves, the same commercial model already used for every
+     * other app on this site. Windows ships as a self-signed MSIX
+     * (2026-09-15, certificate_path completed/windows/BarTenderAtlas-msix.pfx,
+     * password kept outside the repo at
+     * C:\Users\User\Documents\BarTenderAtlas-signing-backup\msix-cert-password.txt)
+     * — sideload/test signing, not a Microsoft Store identity; installing it
+     * will show an unknown-publisher warning until replaced with a Partner
+     * Center certificate for a real Store submission.
      *
      * No live demo is enabled. The app's own PROJECT_SPEC.md already flags
      * an unresolved owner decision: every recipe photo (~950 images) ships
@@ -918,11 +918,12 @@ MD,
                 'is_featured' => false,
                 'direct_purchase_enabled' => true,
                 'android_delivery_mode' => 'direct',
+                'windows_delivery_mode' => 'direct',
                 'license_type' => 'personal',
                 'update_policy' => 'updates_included',
                 'demo_enabled' => false,
                 'support_info' => 'For questions about Bar Tender Atlas, use the Contact page and select this app.',
-                'system_requirements' => 'Android 7.0 or later. Windows and Web/PWA builds exist but aren\'t offered here yet.',
+                'system_requirements' => 'Android 7.0 or later, or Windows 10/11 (64-bit). Web/PWA exists but isn\'t offered here yet.',
                 'seo_title' => 'Bar Tender Atlas — 2,000 Offline Cocktail Recipes',
                 'seo_description' => '2,000 offline cocktail recipes with My Bar bottle tracking, guided Bartender Mode, an ingredient guide, and a full editor for adding your own drinks.',
             ]
@@ -979,35 +980,47 @@ MD,
     }
 
     /**
-     * Real, owner-set edition pricing (WEBSITE_LICENSE_PRICE_ANDROID from
-     * the app's own PROJECT_SPEC.md), same $2.99 Android price point used
-     * for every other app on this site. Windows has no edition yet — see
-     * the class-level doc comment above; add one with
-     * seedHummusHouseEditions()'s pattern once a real installer exists.
+     * Real, owner-set edition pricing (WEBSITE_LICENSE_PRICE_ANDROID/
+     * _WINDOWS/_ANDROID_WINDOWS_BUNDLE from the app's own PROJECT_SPEC.md),
+     * same $2.99/$2.99/$4.99 structure used for every other app on this
+     * site — see seedHummusHouseEditions()'s pattern above.
      */
     private function seedBarTenderAtlasEditions(App $app): void
     {
         $android = Platform::where('code', 'android')->first();
+        $windows = Platform::where('code', 'windows')->first();
 
-        $edition = AppEdition::updateOrCreate(
-            ['app_id' => $app->id, 'slug' => 'android'],
-            [
-                'name' => 'Android',
-                'description' => 'For Android phones and tablets.',
-                'price_cents' => 299,
-                'currency' => $app->currency ?? 'USD',
-                'active' => true,
-                'featured' => false,
-                'sort_order' => 0,
-            ]
-        );
+        $editions = [
+            ['slug' => 'android', 'name' => 'Android', 'description' => 'For Android phones and tablets.', 'price_cents' => 299, 'sort_order' => 0, 'grants' => [[$android, 'download']]],
+            ['slug' => 'windows', 'name' => 'Windows', 'description' => 'For compatible Windows PCs and tablets.', 'price_cents' => 299, 'sort_order' => 1, 'grants' => [[$windows, 'download']]],
+            ['slug' => 'android-windows', 'name' => 'Android + Windows Bundle', 'description' => "One purchase. Install the app on your compatible Android and Windows devices, subject to the app's license terms.", 'price_cents' => 499, 'sort_order' => 2, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+        ];
 
-        if ($android) {
-            EditionEntitlement::updateOrCreate([
-                'app_edition_id' => $edition->id,
-                'platform_id' => $android->id,
-                'access_type' => 'download',
-            ]);
+        foreach ($editions as $data) {
+            $edition = AppEdition::updateOrCreate(
+                ['app_id' => $app->id, 'slug' => $data['slug']],
+                [
+                    'name' => $data['name'],
+                    'description' => $data['description'],
+                    'price_cents' => $data['price_cents'],
+                    'currency' => $app->currency ?? 'USD',
+                    'active' => true,
+                    'featured' => $data['featured'] ?? false,
+                    'sort_order' => $data['sort_order'],
+                ]
+            );
+
+            foreach ($data['grants'] as [$platform, $accessType]) {
+                if (! $platform) {
+                    continue;
+                }
+
+                EditionEntitlement::updateOrCreate([
+                    'app_edition_id' => $edition->id,
+                    'platform_id' => $platform->id,
+                    'access_type' => $accessType,
+                ]);
+            }
         }
     }
 
