@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\MaintenanceController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MigrateController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PageContentController;
 use App\Http\Controllers\Admin\ReleaseController;
@@ -122,6 +123,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('seed', [SeedController::class, 'edit'])->name('seed.edit');
         Route::post('seed', [SeedController::class, 'store'])->name('seed.store');
+
+        Route::get('migrate', [MigrateController::class, 'edit'])->name('migrate.edit');
+        Route::post('migrate', [MigrateController::class, 'store'])->name('migrate.store');
         Route::resource('users', UserController::class)->except(['show']);
         Route::resource('tax-rules', TaxRuleController::class)->except(['show']);
 
