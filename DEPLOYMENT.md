@@ -9,24 +9,45 @@ and `HOSTINGER_DEPLOYMENT.md` for the policy this follows.
 - GitHub repository: `https://github.com/GJT7976/Website.git`, branch `master`
 - Hosting: Hostinger shared PHP/MySQL hosting
 
-## Deployment method (audited 2026-09-15)
+## Deployment method (audited 2026-09-15, updated same day)
 Hostinger hPanel → **Website → Git**, connected to the GitHub repo above.
 - Root directory: `public_html`
-- Deploy is **pull-based, not automatic on push**: after pushing to
-  `master`, someone must click **Redeploy** in that hPanel screen to pull
-  the new commit into `public_html`.
-- This is a plain `git pull` equivalent — it does **not** run
-  `composer install`, `npm run build`, or any migration/seed command. Any
-  change that needs a new Composer dependency or a frontend asset rebuild
-  will not take effect from a Redeploy alone; the mechanism for that case
-  is not yet established (no SSH — see below — and no build step observed
-  in the Git panel as of this audit).
-- Last commit observed as actually redeployed via this panel:
-  `a2d7a8e` (2026-09-14 20:15). Commits `8355f80` and `82b87db`
-  (2026-09-15 — Bar Tender Atlas catalogue addition, admin Seed Data
-  feature, storage-serving fix) were pushed to GitHub but had not yet been
-  clicked-through to Redeploy as of this file's creation — confirm current
-  status before assuming they're live.
+- **Auto-deployment is ON** (confirmed working both directions
+  2026-09-15 — a marker comment was pushed and appeared live, then a
+  second push removed it and that also went live, with nobody clicking
+  Redeploy either time). A push to `master` deploys to `public_html` on
+  its own; the **Redeploy** button in this panel is now only needed to
+  manually re-trigger a deploy of the current commit (e.g. after an
+  environment change), not for ordinary code changes.
+- This is still a plain `git pull` equivalent — it does **not** run
+  `composer install`, `npm run build`, or any migration/seed command.
+  Any change needing a new Composer dependency or a frontend asset
+  rebuild will not take effect automatically; that mechanism is still
+  unestablished (no SSH — see below — and no build hook observed in the
+  Git panel). Schema/seed changes specifically are now covered by the
+  `POST /deploy-sync` endpoint below, added for exactly this gap.
+
+## Automatic schema/seed sync — `POST /deploy-sync`
+Added 2026-09-15 (`app/Http/Controllers/DeploySyncController.php`). Lets
+the CLI sync migrations + seed data after a push, without a human logging
+into `/admin` — the last manual-click gap now that Git deploy is
+automatic. Details:
+- Runs `php artisan migrate --force` then `php artisan db:seed --force`,
+  returns JSON with both commands' output.
+- Authenticated by an `Authorization: Bearer <token>` header, compared
+  with `hash_equals()`. The token lives in production's `.env` as
+  `DEPLOY_SYNC_TOKEN` — **not recorded in this file**. A copy is kept
+  locally, outside this repository, at
+  `C:\Users\User\Documents\BarTenderAtlas-signing-backup\deploy-sync-token.txt`
+  (same convention as the MSIX signing cert password next to it).
+- If `DEPLOY_SYNC_TOKEN` is unset in `.env`, the route 404s — the
+  endpoint doesn't exist at all until deliberately configured. **This
+  still needs that one-time manual step** (pasting the token into
+  production's `.env` via hPanel's File Manager) before it does anything
+  on production; it has only been verified locally as of this writing.
+- Throttled (`throttle:5,1`) and excluded from CSRF validation in
+  `bootstrap/app.php` (same reasoning as the existing Stripe webhook
+  exclusion — a non-browser caller authenticated its own way).
 
 ## Database
 - MySQL/MariaDB (Hostinger hPanel)
