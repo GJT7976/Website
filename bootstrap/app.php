@@ -34,6 +34,12 @@ $app = Application::configure(basePath: dirname(__DIR__))
         // Stripe signs its own webhook payloads (verified in
         // StripeWebhookController) — it can't send a Laravel CSRF token.
         $middleware->validateCsrfTokens(except: ['stripe/webhook']);
+
+        // Keep the admin backend reachable while the public site is in
+        // maintenance mode, so the owner can turn it back off from the
+        // Maintenance Mode screen instead of being locked out with
+        // everyone else (see Admin\MaintenanceController).
+        $middleware->preventRequestsDuringMaintenance(except: ['admin*']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -30,6 +30,7 @@
             ['label' => 'Payments', 'route' => 'admin.settings.edit', 'params' => ['group' => 'payments'], 'icon' => '💳'],
             ['label' => 'Audit Log', 'route' => 'admin.audit-log.index', 'icon' => '📜'],
             ['label' => 'Backups', 'route' => 'admin.backups.index', 'icon' => '💾'],
+            ['label' => 'Maintenance Mode', 'route' => 'admin.maintenance.edit', 'icon' => '🚧'],
         ],
     ];
 
@@ -121,6 +122,14 @@
             </header>
 
             <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+                @if (app()->isDownForMaintenance())
+                    <div class="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-small text-amber-900">
+                        <span>🚧 Maintenance mode is on — visitors see the maintenance page.</span>
+                        @if (auth()->user()?->isOwner() && ! request()->routeIs('admin.maintenance.edit'))
+                            <a href="{{ route('admin.maintenance.edit') }}" class="font-semibold underline">Turn it off</a>
+                        @endif
+                    </div>
+                @endif
                 @if (session('status'))
                     <x-alert type="success" class="mb-6">{{ session('status') }}</x-alert>
                 @endif

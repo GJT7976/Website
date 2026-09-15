@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\EditionController;
 use App\Http\Controllers\Admin\EntitlementController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\LicenseController;
+use App\Http\Controllers\Admin\MaintenanceController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PageContentController;
@@ -113,6 +114,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('settings/{group}', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings/{group}', [SettingController::class, 'update'])->name('settings.update');
+
+        Route::get('maintenance', [MaintenanceController::class, 'edit'])->name('maintenance.edit');
+        Route::post('maintenance', [MaintenanceController::class, 'store'])->name('maintenance.store');
+        Route::delete('maintenance', [MaintenanceController::class, 'destroy'])->name('maintenance.destroy');
         Route::resource('users', UserController::class)->except(['show']);
         Route::resource('tax-rules', TaxRuleController::class)->except(['show']);
 
