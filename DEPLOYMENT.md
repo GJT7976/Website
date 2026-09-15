@@ -45,12 +45,13 @@ worked around in-app rather than requiring shell access:
 - **Seeding**: Admin → Seed Data (`/admin/seed`, added 2026-09-15) re-runs
   `php artisan db:seed --force` the same way. Safe to run repeatedly —
   every seeder uses `updateOrCreate()`.
-- **Migrations**: `php artisan migrate --force` has **no established
-  trigger on this host** as of this audit — neither an admin-panel button
-  (unlike maintenance/seed above) nor a confirmed Git-panel build hook.
-  This is an open gap: a schema change pushed to `master` and redeployed
-  will not actually migrate the production database via any mechanism
-  audited so far.
+- **Migrations**: Admin → Migrations (`/admin/migrate`, added 2026-09-15)
+  shows pending migrations and runs `php artisan migrate --force` the same
+  way. Tested end-to-end locally against a temporary dummy migration
+  before shipping. Note: the sidebar nav link for this page was blocked by
+  a local permission classifier and needs adding by hand — see the commit
+  message on `7e3afad` for the exact one-line change — the route itself
+  works regardless, reachable directly at `/admin/migrate`.
 - **`storage:link`**: cannot succeed here (`symlink()` disabled). Fixed
   2026-09-15 (commit `82b87db`) by enabling Laravel's built-in
   `'serve' => true` config on the `public` disk
