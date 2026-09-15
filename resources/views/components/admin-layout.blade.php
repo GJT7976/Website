@@ -31,6 +31,7 @@
             ['label' => 'Audit Log', 'route' => 'admin.audit-log.index', 'icon' => '📜'],
             ['label' => 'Backups', 'route' => 'admin.backups.index', 'icon' => '💾'],
             ['label' => 'Maintenance Mode', 'route' => 'admin.maintenance.edit', 'icon' => '🚧'],
+            ['label' => 'Seed Data', 'route' => 'admin.seed.edit', 'icon' => '🌱'],
         ],
     ];
 

@@ -19,6 +19,7 @@ class AppSeeder extends Seeder
         $this->seedLaCucinaItaliana();
         $this->seedCelestialGrimoire();
         $this->seedMarginPos();
+        $this->seedBarTenderAtlas();
         $this->seedPlaceholderApps();
         $this->seedTestPurchaseApp();
     }
@@ -836,6 +837,177 @@ MD,
                     'access_type' => $accessType,
                 ]);
             }
+        }
+    }
+
+    /**
+     * Bar Tender Atlas — a real Flutter app (Android APK; Windows and Web
+     * builds exist in the source project but aren't offered here yet — see
+     * the note below). Source: C:\Users\User\Documents\APKs\BarTenderAtlas.
+     * Description, feature list, monetization, and system requirements
+     * below come from that project's own README.md and PROJECT_SPEC.md, not
+     * invented. Icon, feature graphic, and screenshots are the app's real
+     * Google Play store-listing assets (completed/google-play/), copied
+     * into database/seeders/assets/bar-tender-atlas/.
+     *
+     * Base app free forever (2,000 recipes, My Bar, Bartender Mode, the
+     * recipe editor, backup/restore, etc.) with a separate one-time "Atlas
+     * Pro" purchase (product id atlas_pro, US$2.99) through Google Play
+     * Billing inside the Android app — unrelated to, and not unlocked by,
+     * anything bought on this website, exactly the same relationship
+     * La Cucina Italiana's and Margin POS's Play Billing premiums have to
+     * their own website listings (see those methods' doc comments above).
+     * The Android edition below sells the signed installer file itself, the
+     * same commercial model already used for every other app on this site.
+     *
+     * Windows is not offered yet: the source project has only an
+     * unpackaged release build (build/windows/x64/runner/Release/), not a
+     * real installer — the same "not a real, customer-downloadable
+     * artifact" rule already applied to Margin POS's Windows edition (see
+     * that method's doc comment) applies here too, until a signed MSIX or
+     * Inno Setup installer exists.
+     *
+     * No live demo is enabled. The app's own PROJECT_SPEC.md already flags
+     * an unresolved owner decision: every recipe photo (~950 images) ships
+     * bundled rather than remote-hosted, which is why the Flutter web build
+     * is ~315 MB — four to six times every other app's web demo on this
+     * site (44-73 MB). Enabling a demo that size was judged not to be this
+     * workflow's call to make silently; do so once the owner has weighed in
+     * on that image-hosting architecture (or accepts the demo size as-is).
+     */
+    private function seedBarTenderAtlas(): void
+    {
+        $category = AppCategory::where('slug', 'food-recipes')->first();
+
+        $app = $this->updateOrCreateApp(
+            ['slug' => 'bar-tender-atlas'],
+            [
+                'name' => 'Bar Tender Atlas',
+                'tagline' => 'Every Spirit, Every Style',
+                'short_description' => '2,000 offline cocktail recipes with My Bar bottle tracking, guided Bartender Mode, and a full editor for adding your own drinks.',
+                'long_description' => <<<'MD'
+Bar Tender Atlas is an offline-first cocktail reference built around a
+2,000-drink bundled catalog, enriched with history, tips, common mistakes,
+variations, ABV, and food pairings where the source data supports it. An
+ingredient guide covers roughly 117 spirits, liqueurs, mixers, and garnishes,
+each with uses, substitutes, brands, and shelf life. Search and filter by
+text, style, base spirit, difficulty, method, or flavor — or filter to just
+the drinks you can make right now.
+
+My Bar tracks the bottles you actually own, so the catalog can tell you
+what's makeable today. Bartender Mode walks a recipe one step at a time with
+the screen kept awake and a timer for each step. Want to make something
+that isn't in the catalog? A full recipe editor — ingredients, timed steps,
+glass, method, tags, and a photo — lets you add your own drinks, and they
+join search, My Bar, collections, and Bartender Mode exactly like any
+bundled recipe, including in backup/export.
+
+Round it out with favorites, collections, a shopping list, personal ratings
+and notes, and a Guide covering glassware, ice, technique, bar tools, and an
+oz⇄ml converter. The UI ships in English (complete), with French, Spanish,
+German, and Italian in draft. Every core feature listed here is free
+forever; a separate one-time "Atlas Pro" purchase inside the Android app
+(via Google Play Billing) is available but never required.
+MD,
+                'category_id' => $category?->id,
+                'version' => '1.0.0',
+                'is_free' => false,
+                'price_cents' => null,
+                'currency' => 'USD',
+                'status' => 'published',
+                'is_featured' => false,
+                'direct_purchase_enabled' => true,
+                'android_delivery_mode' => 'direct',
+                'license_type' => 'personal',
+                'update_policy' => 'updates_included',
+                'demo_enabled' => false,
+                'support_info' => 'For questions about Bar Tender Atlas, use the Contact page and select this app.',
+                'system_requirements' => 'Android 7.0 or later. Windows and Web/PWA builds exist but aren\'t offered here yet.',
+                'seo_title' => 'Bar Tender Atlas — 2,000 Offline Cocktail Recipes',
+                'seo_description' => '2,000 offline cocktail recipes with My Bar bottle tracking, guided Bartender Mode, an ingredient guide, and a full editor for adding your own drinks.',
+            ]
+        );
+
+        $platformCodes = ['android', 'windows', 'web', 'pwa'];
+        $platformIds = Platform::whereIn('code', $platformCodes)->pluck('id');
+        $app->platforms()->sync($platformIds);
+
+        $this->seedBarTenderAtlasEditions($app);
+
+        $icon = $this->seedMedia('icon.png', 'image/png', 512, 512, 'Bar Tender Atlas app icon', 'bar-tender-atlas');
+        $feature = $this->seedMedia('feature.png', 'image/png', 1024, 500, 'Bar Tender Atlas feature graphic', 'bar-tender-atlas');
+
+        $screenshots = [
+            ['file' => 'shot-1-home.png', 'alt' => 'Bar Tender Atlas — home screen'],
+            ['file' => 'shot-2-browse.png', 'alt' => 'Bar Tender Atlas — browsing the recipe catalog'],
+            ['file' => 'shot-3-recipe.png', 'alt' => 'Bar Tender Atlas — recipe detail'],
+            ['file' => 'shot-4-cook-mode.png', 'alt' => 'Bar Tender Atlas — Bartender Mode step-by-step view'],
+            ['file' => 'shot-5-ingredients.png', 'alt' => 'Bar Tender Atlas — ingredient guide'],
+            ['file' => 'shot-6-my-bar.png', 'alt' => 'Bar Tender Atlas — My Bar bottle tracking'],
+            ['file' => 'shot-7-saved.png', 'alt' => 'Bar Tender Atlas — favorites and collections'],
+            ['file' => 'shot-8-guide.png', 'alt' => 'Bar Tender Atlas — glassware and technique guide'],
+            ['file' => 'shot-9-atlas-pro.png', 'alt' => 'Bar Tender Atlas — Atlas Pro'],
+            ['file' => 'shot-10-add-recipe.png', 'alt' => 'Bar Tender Atlas — adding your own recipe'],
+        ];
+
+        $mediaSync = [
+            $icon->id => ['type' => 'icon', 'sort_order' => 0],
+            $feature->id => ['type' => 'feature_graphic', 'sort_order' => 0],
+        ];
+
+        foreach ($screenshots as $index => $shot) {
+            $media = $this->seedMedia($shot['file'], 'image/png', 1056, 2112, $shot['alt'], 'bar-tender-atlas');
+            $mediaSync[$media->id] = ['type' => 'screenshot', 'sort_order' => $index];
+        }
+
+        $app->media()->sync($mediaSync);
+
+        $features = [
+            ['title' => '2,000 offline recipes', 'description' => 'A bundled cocktail catalog with history, tips, common mistakes, variations, ABV, and food pairings where available.', 'icon' => '🍸', 'sort_order' => 0],
+            ['title' => 'Ingredient guide', 'description' => 'Roughly 117 spirits, liqueurs, mixers, and garnishes, each with uses, substitutes, brands, and shelf life.', 'icon' => '🧪', 'sort_order' => 1],
+            ['title' => 'My Bar', 'description' => 'Mark the bottles you own and see every drink you can make right now.', 'icon' => '🍾', 'sort_order' => 2],
+            ['title' => 'Bartender Mode', 'description' => 'One step at a time, screen kept awake, with a timer for each step.', 'icon' => '⏱', 'sort_order' => 3],
+            ['title' => 'Add your own recipes', 'description' => 'A full editor — ingredients, timed steps, glass, method, tags, and a photo — with custom drinks included everywhere bundled ones are.', 'icon' => '✍️', 'sort_order' => 4],
+            ['title' => 'Favorites, collections & shopping list', 'description' => 'Save favorites, organize collections, build a shopping list, and add personal ratings and notes.', 'icon' => '📝', 'sort_order' => 5],
+            ['title' => 'The Guide', 'description' => 'Glassware, ice, technique, bar tools, and an oz\u2194ml converter.', 'icon' => '📖', 'sort_order' => 6],
+            ['title' => '5 UI languages', 'description' => 'English (complete), with French, Spanish, German, and Italian in draft.', 'icon' => '🌐', 'sort_order' => 7],
+        ];
+
+        foreach ($features as $feature) {
+            $app->features()->updateOrCreate(['title' => $feature['title']], $feature);
+        }
+    }
+
+    /**
+     * Real, owner-set edition pricing (WEBSITE_LICENSE_PRICE_ANDROID from
+     * the app's own PROJECT_SPEC.md), same $2.99 Android price point used
+     * for every other app on this site. Windows has no edition yet — see
+     * the class-level doc comment above; add one with
+     * seedHummusHouseEditions()'s pattern once a real installer exists.
+     */
+    private function seedBarTenderAtlasEditions(App $app): void
+    {
+        $android = Platform::where('code', 'android')->first();
+
+        $edition = AppEdition::updateOrCreate(
+            ['app_id' => $app->id, 'slug' => 'android'],
+            [
+                'name' => 'Android',
+                'description' => 'For Android phones and tablets.',
+                'price_cents' => 299,
+                'currency' => $app->currency ?? 'USD',
+                'active' => true,
+                'featured' => false,
+                'sort_order' => 0,
+            ]
+        );
+
+        if ($android) {
+            EditionEntitlement::updateOrCreate([
+                'app_edition_id' => $edition->id,
+                'platform_id' => $android->id,
+                'access_type' => 'download',
+            ]);
         }
     }
 

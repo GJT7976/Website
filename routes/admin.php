@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PageContentController;
 use App\Http\Controllers\Admin\ReleaseController;
 use App\Http\Controllers\Admin\SalesController;
+use App\Http\Controllers\Admin\SeedController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SupportRequestController;
 use App\Http\Controllers\Admin\TaxRuleController;
@@ -118,6 +119,9 @@ Route::middleware('auth')->group(function () {
         Route::get('maintenance', [MaintenanceController::class, 'edit'])->name('maintenance.edit');
         Route::post('maintenance', [MaintenanceController::class, 'store'])->name('maintenance.store');
         Route::delete('maintenance', [MaintenanceController::class, 'destroy'])->name('maintenance.destroy');
+
+        Route::get('seed', [SeedController::class, 'edit'])->name('seed.edit');
+        Route::post('seed', [SeedController::class, 'store'])->name('seed.store');
         Route::resource('users', UserController::class)->except(['show']);
         Route::resource('tax-rules', TaxRuleController::class)->except(['show']);
 
