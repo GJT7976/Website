@@ -4,6 +4,7 @@ use App\Http\Controllers\AppController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DemoController;
+use App\Http\Controllers\DeploySyncController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LicenseManagementController;
@@ -86,3 +87,8 @@ Route::post('/license/manage/{license}/devices/{device}/deactivate', [LicenseMan
     ->name('license.manage.deactivate');
 
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name('stripe.webhook');
+
+// CLI-triggerable migrate+seed — see DeploySyncController's docblock.
+Route::post('/deploy-sync', DeploySyncController::class)
+    ->middleware('throttle:5,1')
+    ->name('deploy-sync');

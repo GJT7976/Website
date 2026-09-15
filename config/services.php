@@ -41,4 +41,14 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    // Lets the CLI trigger `migrate --force` + `db:seed --force` on this
+    // host without SSH or an admin browser session — see
+    // DeploySyncController's docblock. Deliberately not set in
+    // .env.example: the route 404s (DeploySyncController::__invoke aborts)
+    // whenever this is empty, so the endpoint doesn't exist at all until
+    // someone deliberately sets DEPLOY_SYNC_TOKEN.
+    'deploy_sync' => [
+        'token' => env('DEPLOY_SYNC_TOKEN'),
+    ],
+
 ];

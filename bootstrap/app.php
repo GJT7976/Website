@@ -33,7 +33,10 @@ $app = Application::configure(basePath: dirname(__DIR__))
 
         // Stripe signs its own webhook payloads (verified in
         // StripeWebhookController) — it can't send a Laravel CSRF token.
-        $middleware->validateCsrfTokens(except: ['stripe/webhook']);
+        // deploy-sync is likewise a non-browser caller (the CLI) —
+        // authenticated by its own bearer token instead; see
+        // DeploySyncController's docblock.
+        $middleware->validateCsrfTokens(except: ['stripe/webhook', 'deploy-sync']);
 
         // Keep the admin backend reachable while the public site is in
         // maintenance mode, so the owner can turn it back off from the
