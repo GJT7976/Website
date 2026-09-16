@@ -6,6 +6,7 @@ use App\Services\AuditLogger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Throwable;
 
 /**
  * CLI-triggerable counterpart to Admin\SeedController and
@@ -37,11 +38,38 @@ class DeploySyncController extends Controller
         $provided = (string) $request->bearerToken();
         abort_unless(hash_equals($expected, $provided), 403);
 
-        Artisan::call('migrate', ['--force' => true]);
-        $migrateOutput = trim(Artisan::output());
+        // Artisan::call() throws straight through on a failed migration/
+        // seeder — previously uncaught here, which surfaced as an opaque
+        // generic 500 (production runs with APP_DEBUG=false) with no way
+        // to tell what actually broke without server log access. Caught
+        // explicitly so the caller gets the real exception instead, same
+        // as MigrateController/SeedController should (see their own
+        // follow-up note) — this endpoint is bearer-token-authenticated,
+        // not public, so returning the message/class here doesn't leak
+        // anything a legitimate caller couldn't already infer by having
+        // the token in the first place.
+        try {
+            Artisan::call('migrate', ['--force' => true]);
+            $migrateOutput = trim(Artisan::output());
+        } catch (Throwable $e) {
+            return response()->json([
+                'ok' => false,
+                'step' => 'migrate',
+                'error' => $e::class.': '.$e->getMessage(),
+            ], 500);
+        }
 
-        Artisan::call('db:seed', ['--force' => true]);
-        $seedOutput = trim(Artisan::output());
+        try {
+            Artisan::call('db:seed', ['--force' => true]);
+            $seedOutput = trim(Artisan::output());
+        } catch (Throwable $e) {
+            return response()->json([
+                'ok' => false,
+                'step' => 'seed',
+                'migrate' => $migrateOutput,
+                'error' => $e::class.': '.$e->getMessage(),
+            ], 500);
+        }
 
         AuditLogger::record('database.deploy-sync', label: 'Deploy sync (migrate + seed) triggered via CLI token');
 
