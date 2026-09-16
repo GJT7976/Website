@@ -20,6 +20,7 @@ class AppSeeder extends Seeder
         $this->seedCelestialGrimoire();
         $this->seedMarginPos();
         $this->seedBarTenderAtlas();
+        $this->seedTheStockPot();
         $this->seedPlaceholderApps();
         $this->seedTestPurchaseApp();
     }
@@ -92,11 +93,17 @@ on your device with backup/restore built in.
 MD,
                 'category_id' => $category?->id,
                 'version' => '1.1.2',
-                'is_free' => false,
-                // Legacy flat-price fallback (see App::hasEditions()) — the
-                // real price comes from the editions below, same pattern as
-                // Hummus House.
-                'price_cents' => 299,
+                // 2026-09-16: converted to free-install + Pro Upgrade (the
+                // app's own website-license system was verified real and
+                // correctly configured for app_id=1 before this change —
+                // see F:\website's session notes). Was previously sold as
+                // paid per-platform editions; is_free=true + a single
+                // pro-upgrade edition below matches every other app
+                // retrofitted the same day. Existing uploaded releases are
+                // unchanged and become free downloads automatically via
+                // FreeDownloadController.
+                'is_free' => true,
+                'price_cents' => null,
                 'currency' => 'USD',
                 'status' => 'published',
                 'is_featured' => false,
@@ -130,6 +137,7 @@ MD,
         $app->platforms()->sync($platformIds);
 
         $this->seedBreadMakerEditions($app);
+        $this->deactivateOtherEditions($app, ['pro-upgrade']);
 
         $icon = $this->seedMedia('bread-maker-icon.png', 'image/png', 1024, 1024, 'Bread Maker app icon');
         $feature = $this->seedMedia('bread-maker-feature.png', 'image/png', 1024, 500, 'Bread Maker feature graphic');
@@ -160,9 +168,13 @@ MD,
     }
 
     /**
-     * Real, adjustable edition pricing — same structure and price points as
-     * Hummus House's and La Cucina Italiana's editions. The owner can
-     * retune all three from Apps → Bread Maker → Editions.
+     * 2026-09-16: replaced the old split Android/Windows/Bundle editions
+     * with a single flat "Pro Upgrade" — the app is now a free install
+     * (see is_free above) and this edition's only job is to grant the
+     * license that unlocks Pro via lib/services/license_client_service.dart
+     * (app_id=1), not to gate the download. Same pattern as every other
+     * app retrofitted this session — see The Stock Pot's seeder methods
+     * for the fullest doc-comment explanation of why.
      */
     private function seedBreadMakerEditions(App $app): void
     {
@@ -170,9 +182,7 @@ MD,
         $windows = Platform::where('code', 'windows')->first();
 
         $editions = [
-            ['slug' => 'android', 'name' => 'Android', 'description' => 'For Android phones and tablets.', 'price_cents' => 299, 'sort_order' => 0, 'grants' => [[$android, 'download']]],
-            ['slug' => 'windows', 'name' => 'Windows', 'description' => 'For compatible Windows PCs and tablets.', 'price_cents' => 299, 'sort_order' => 1, 'grants' => [[$windows, 'download']]],
-            ['slug' => 'android-windows', 'name' => 'Android + Windows Bundle', 'description' => "One purchase. Install the app on your compatible Android and Windows devices, subject to the app's license terms.", 'price_cents' => 499, 'sort_order' => 2, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+            ['slug' => 'pro-upgrade', 'name' => 'Pro Upgrade', 'description' => 'Bread Maker is free to download and use. This one-time purchase unlocks Pro on up to 2 of your Android and/or Windows devices via a license key.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
         ];
 
         foreach ($editions as $data) {
@@ -242,18 +252,15 @@ The app is available in English, French, Spanish, German, and Italian.
 MD,
                 'category_id' => $category?->id,
                 'version' => '1.0',
-                'is_free' => false,
-                'price_cents' => 299,
+                // 2026-09-16: converted to free-install + Pro Upgrade — the
+                // app's own website-license system (app_id=2) was verified
+                // real before this change. See seedHummusHouseEditions().
+                'is_free' => true,
+                'price_cents' => null,
                 'currency' => 'USD',
                 'status' => 'published',
                 'is_featured' => false,
                 'direct_purchase_enabled' => true,
-                // Platform Selection & Purchase System (§22/§25/§26): sold
-                // as separate Android/Windows/Bundle editions below, rather
-                // than the single flat price_cents above (kept only as a
-                // legacy fallback — see App::hasEditions()). No Web/Complete
-                // edition yet: the only web build today is the Live Demo,
-                // not a separately hosted paid web app.
                 'android_delivery_mode' => 'direct',
                 'windows_delivery_mode' => 'direct',
                 'license_type' => 'personal',
@@ -277,6 +284,7 @@ MD,
         $app->platforms()->sync($platformIds);
 
         $this->seedHummusHouseEditions($app);
+        $this->deactivateOtherEditions($app, ['pro-upgrade']);
 
         $icon = $this->seedMedia('icon.png', 'image/png', 512, 512, 'Hummus House app icon', 'hummus-house');
         $feature = $this->seedMedia('feature.png', 'image/png', 1024, 500, 'Hummus House feature graphic', 'hummus-house');
@@ -319,12 +327,11 @@ MD,
     }
 
     /**
-     * Real, adjustable edition pricing for the first app configured with
-     * the Platform Selection & Purchase System (not placeholders) — see
-     * "Claude Prompt — Niagara Inde Apps Platform Selection & Purchase
-     * System.md". Android/Windows match the app's existing $2.99 price;
-     * the Bundle is a modest discount versus buying both separately. The
-     * owner can retune all three from Apps → Hummus House → Editions.
+     * 2026-09-16: replaced the old split Android/Windows/Bundle editions
+     * with a single flat "Pro Upgrade" ($2.99) — the app is now a free
+     * install (see is_free above); this edition's only job is to grant the
+     * license that unlocks Premium via lib/services/license_client_service.dart
+     * (app_id=2), not to gate the download.
      */
     private function seedHummusHouseEditions(App $app): void
     {
@@ -332,9 +339,7 @@ MD,
         $windows = Platform::where('code', 'windows')->first();
 
         $editions = [
-            ['slug' => 'android', 'name' => 'Android', 'description' => 'For Android phones and tablets.', 'price_cents' => 299, 'sort_order' => 0, 'grants' => [[$android, 'download']]],
-            ['slug' => 'windows', 'name' => 'Windows', 'description' => 'For compatible Windows PCs and tablets.', 'price_cents' => 299, 'sort_order' => 1, 'grants' => [[$windows, 'download']]],
-            ['slug' => 'android-windows', 'name' => 'Android + Windows Bundle', 'description' => "One purchase. Install the app on your compatible Android and Windows devices, subject to the app's license terms.", 'price_cents' => 499, 'sort_order' => 2, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+            ['slug' => 'pro-upgrade', 'name' => 'Pro Upgrade', 'description' => 'Hummus House is free to download and use. This one-time purchase unlocks Premium on up to 2 of your Android and/or Windows devices via a license key.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
         ];
 
         foreach ($editions as $data) {
@@ -423,14 +428,15 @@ here.
 MD,
                 'category_id' => $category?->id,
                 'version' => '1.0.0',
-                'is_free' => false,
+                // 2026-09-16: converted to free-install + Pro Upgrade — the
+                // app's own website-license system (app_id=6) was verified
+                // real before this change. See seedLaCucinaItalianaEditions().
+                'is_free' => true,
                 'price_cents' => null,
                 'currency' => 'USD',
                 'status' => 'published',
                 'is_featured' => false,
                 'direct_purchase_enabled' => true,
-                // Sold as separate Android/Windows/Bundle editions, same
-                // model as Hummus House — see seedLaCucinaItalianaEditions().
                 'android_delivery_mode' => 'direct',
                 'windows_delivery_mode' => 'direct',
                 'license_type' => 'personal',
@@ -455,6 +461,7 @@ MD,
         $app->platforms()->sync($platformIds);
 
         $this->seedLaCucinaItalianaEditions($app);
+        $this->deactivateOtherEditions($app, ['pro-upgrade']);
 
         // feature.png is the polished marketing banner supplied in the
         // app's Website_Delivery folder (not the plain Play Store
@@ -502,9 +509,11 @@ MD,
     }
 
     /**
-     * Real, adjustable edition pricing — same structure and price points as
-     * Hummus House's editions (seedHummusHouseEditions). The owner can
-     * retune all three from Apps → La Cucina Italiana → Editions.
+     * 2026-09-16: replaced the old split Android/Windows/Bundle editions
+     * with a single flat "Pro Upgrade" ($2.99) — the app is now a free
+     * install (see is_free above); this edition's only job is to grant the
+     * license that unlocks Premium via lib/services/license_client_service.dart
+     * (app_id=6), not to gate the download.
      */
     private function seedLaCucinaItalianaEditions(App $app): void
     {
@@ -512,9 +521,7 @@ MD,
         $windows = Platform::where('code', 'windows')->first();
 
         $editions = [
-            ['slug' => 'android', 'name' => 'Android', 'description' => 'For Android phones and tablets.', 'price_cents' => 299, 'sort_order' => 0, 'grants' => [[$android, 'download']]],
-            ['slug' => 'windows', 'name' => 'Windows', 'description' => 'For compatible Windows PCs and tablets.', 'price_cents' => 299, 'sort_order' => 1, 'grants' => [[$windows, 'download']]],
-            ['slug' => 'android-windows', 'name' => 'Android + Windows Bundle', 'description' => "One purchase. Install the app on your compatible Android and Windows devices, subject to the app's license terms.", 'price_cents' => 499, 'sort_order' => 2, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+            ['slug' => 'pro-upgrade', 'name' => 'Pro Upgrade', 'description' => 'La Cucina Italiana is free to download and use. This one-time purchase unlocks Premium on up to 2 of your Android and/or Windows devices via a license key.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
         ];
 
         foreach ($editions as $data) {
@@ -575,8 +582,10 @@ celestial card for every day of the year, generated from real planetary
 positions rather than a generic horoscope template.
 
 Your natal chart is calculated from a real, independently-verified
-ephemeris engine — Sun through Pluto, Whole Sign or Placidus houses, your
-Ascendant and Midheaven — never a fabricated placement. Sky Now and Moon
+ephemeris engine — Sun through Pluto plus the lunar nodes and Chiron,
+Whole Sign or Placidus houses, your Ascendant and Midheaven — never a
+fabricated placement. An interactive chart wheel shows it all at a glance.
+Sky Now and Moon
 Center show the current sky live: today's planetary positions, Moon phase,
 illumination, and the next New and Full Moon. Year of Stars collects your
 daily cards across the full 365 (366 in a leap year) day cycle.
@@ -594,7 +603,7 @@ Moon phases — stored locally on your device by default, with no account
 required.
 MD,
                 'category_id' => $category?->id,
-                'version' => '1.0.0',
+                'version' => '1.1.0',
                 'is_free' => false,
                 'currency' => 'USD',
                 'status' => 'published',
@@ -609,7 +618,7 @@ MD,
                 'demo_enabled' => true,
                 'demo_type' => 'flutter_web',
                 'demo_url' => '/demo-builds/celestial-grimoire/index.html',
-                'demo_version' => '1.0.0',
+                'demo_version' => '1.1.0',
                 'demo_instructions' => 'This is the real app, running in your browser. Complete onboarding with any birth date/time/place to see your own natal chart and today\'s Daily Card — nothing you enter here leaves this browser.',
                 'demo_warning' => 'This demo is a full Flutter web build (~45 MB) — first load can take a few seconds on a slower connection.',
                 'demo_reset_mode' => 'Your profile, chart, and journal are saved in this browser only. Clearing this site\'s data in your browser resets the demo.',
@@ -638,7 +647,7 @@ MD,
 
         $features = [
             ['title' => 'Daily Celestial Card', 'description' => 'A deterministic, collectible card generated from real planetary positions, your natal chart, and the day\'s Moon phase — the same day always reveals the same card.', 'icon' => '✨', 'sort_order' => 0],
-            ['title' => 'Real natal chart, Pluto included', 'description' => 'Sun through Pluto, Whole Sign or Placidus houses, Ascendant and Midheaven — independently verified against reference astronomical data, never fabricated.', 'icon' => '🪐', 'sort_order' => 1],
+            ['title' => 'Real natal chart, nodes & Chiron included', 'description' => 'Sun through Pluto plus the lunar nodes and Chiron, Whole Sign or Placidus houses, Ascendant and Midheaven, all on an interactive chart wheel — independently verified against reference astronomical data, never fabricated.', 'icon' => '🪐', 'sort_order' => 1],
             ['title' => 'Sky Now & Moon Center', 'description' => 'Live current planetary positions, Moon phase, illumination, and the next New and Full Moon.', 'icon' => '🌙', 'sort_order' => 2],
             ['title' => 'Year of Stars', 'description' => 'Your full collection of 365 (366 in a leap year) Daily Cards, revealed one day at a time.', 'icon' => '📅', 'sort_order' => 3],
             ['title' => 'Real synastry & compatibility', 'description' => 'Inter-chart aspects scored across seven areas, always shown with the specific aspects behind the score — never an unexplained percentage.', 'icon' => '💞', 'sort_order' => 4],
@@ -727,7 +736,13 @@ right-to-left support.
 MD,
                 'category_id' => $category?->id,
                 'version' => '1.0.0',
-                'is_free' => false,
+                // 2026-09-16: converted to free-install + Pro Upgrade — the
+                // app's own website-license system (app_id=9) was verified
+                // real before this change; already the most complete
+                // implementation of any app on this site (Ed25519 offline
+                // verification, background revalidation). See
+                // seedMarginPosEditions().
+                'is_free' => true,
                 'price_cents' => null,
                 'currency' => 'USD',
                 'status' => 'published',
@@ -757,6 +772,7 @@ MD,
         $app->platforms()->sync($platformIds);
 
         $this->seedMarginPosEditions($app);
+        $this->deactivateOtherEditions($app, ['pro-upgrade']);
 
         $icon = $this->seedMedia('icon.png', 'image/png', 512, 512, 'Margin POS app icon', 'margin-pos');
         $feature = $this->seedMedia('feature.png', 'image/png', 1024, 500, 'Margin POS feature graphic', 'margin-pos');
@@ -798,8 +814,16 @@ MD,
     }
 
     /**
-     * Real, owner-set edition pricing (owner-directed 2026-09-13: Android
-     * $2.99 USD, Windows $2.00 USD, Bundle $4.99 USD).
+     * 2026-09-16: replaced the old split Android $2.99 / Windows $2.00 /
+     * Bundle $4.99 editions (owner-directed 2026-09-13) with a single flat
+     * "Pro Upgrade" ($2.99) — the app is now a free install (see is_free
+     * above); this edition's only job is to grant the license that
+     * unlocks Margin POS Pro via
+     * lib/src/pro/website_license_entitlement_service.dart (app_id=9), not
+     * to gate the download. The old asymmetric $2.00 Windows price is
+     * folded into this single $2.99 price for catalog consistency with
+     * every other app — owner can retune from Apps → Margin POS →
+     * Editions.
      */
     private function seedMarginPosEditions(App $app): void
     {
@@ -807,9 +831,7 @@ MD,
         $windows = Platform::where('code', 'windows')->first();
 
         $editions = [
-            ['slug' => 'android', 'name' => 'Android', 'description' => 'For Android phones and tablets.', 'price_cents' => 299, 'sort_order' => 0, 'grants' => [[$android, 'download']]],
-            ['slug' => 'windows', 'name' => 'Windows', 'description' => 'For compatible Windows PCs and tablets.', 'price_cents' => 200, 'sort_order' => 1, 'grants' => [[$windows, 'download']]],
-            ['slug' => 'android-windows', 'name' => 'Android + Windows Bundle', 'description' => "One purchase. Install the app on your compatible Android and Windows devices, subject to the app's license terms.", 'price_cents' => 499, 'sort_order' => 2, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+            ['slug' => 'pro-upgrade', 'name' => 'Pro Upgrade', 'description' => 'Margin POS is free to download and use for a single-register business. This one-time purchase unlocks Margin POS Pro (multi-register mode, payroll, accounting, reports) on up to 2 of your Android and/or Windows devices via a license key.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
         ];
 
         foreach ($editions as $data) {
@@ -1022,6 +1044,193 @@ MD,
                 ]);
             }
         }
+    }
+
+    /**
+     * The Stock Pot — a real Flutter app (Android APK, Windows Inno Setup
+     * installer, Web/PWA build; iOS not built). Source:
+     * C:\Users\User\Documents\APKs\The Stock Pot\completed\Website_Delivery.
+     * Recipe counts by category are read directly from the app's own
+     * assets/data/recipes.json (500 total: 150 Soup, 110 Stew, 60 Chowder,
+     * 60 Traditional Gravy, 70 No-Drippings Gravy, 50 Stock/Broth/Base),
+     * and the feature list below matches the app's actual controllers
+     * (test/*.dart), not invented claims. Localization (PROJECT_SPEC's
+     * aspirational 5-language list) is NOT implemented in the app — no
+     * lib/l10n or .arb files exist — so it is deliberately omitted here.
+     *
+     * Unlike every other app seeded above (all is_free=false, sold as
+     * paid downloads), The Stock Pot's install itself is free
+     * (is_free=true) — only a single "Pro Upgrade" edition is sold, which
+     * issues an in-app license rather than gating the download. The
+     * actual installer files are served free and unauthenticated via
+     * FreeDownloadController (app/Http/Controllers/FreeDownloadController.php,
+     * route apps.free-download) — a new, separate path from
+     * DownloadController's entitlement-gated one every other app uses —
+     * and the show page renders a dedicated "Download Free" + "Unlock
+     * Pro" layout (resources/views/apps/partials/{free-download,
+     * pro-unlock}.blade.php) instead of the generic edition-picker, so a
+     * buyer never reads this as "pay $2.99 to get the app." See
+     * seedTheStockPotEditions() for how the edition/license side works.
+     *
+     * Icon is the app's real assets/icon.png. The two marketing graphics
+     * (feature_graphic.png, banner.png) are the owner-supplied promotional
+     * images for this launch — feature_graphic.png as the primary feature
+     * graphic, banner.png as an additional screenshot-slot image, since the
+     * app has no captured in-app UI screenshots yet.
+     */
+    private function seedTheStockPot(): void
+    {
+        $category = AppCategory::where('slug', 'food-recipes')->first();
+
+        $app = $this->updateOrCreateApp(
+            ['slug' => 'the-stock-pot'],
+            [
+                'name' => 'The Stock Pot',
+                'tagline' => 'Real Recipes. Real Food. A Better Table.',
+                'short_description' => '500 soup, stew, chowder, gravy, and stock/broth recipes with an ingredient scaler, guided cook timers, a shopping list, and offline-first backup.',
+                'long_description' => <<<'MD'
+The Stock Pot is a 500-recipe collection built around one kitchen staple:
+what goes in the pot. 150 soups, 110 stews, 60 chowders, 130 gravies (both
+traditional pan-drippings and no-drippings versions), and 50 stocks, broths,
+and bases — real recipes with real ingredient lists and step-by-step
+instructions, not generated filler.
+
+A mathematical ingredient scaler rebalances every quantity — whole numbers,
+fractions, mixed numbers, and ranges — to whatever serving count you need.
+Cook timers are built into the steps that need them, with Stock Pot Pro
+allowing up to three running at once for a multi-stage recipe. Save
+favorites, organize recipes into collections, add personal ratings and
+notes, and build a shopping list automatically as you cook.
+
+Everything is stored locally with validated backup and restore — no
+account, and no internet connection required after install. The interface
+adapts to wider screens with a master-detail layout on tablets and desktop.
+Switch between Metric and US measurements at any time.
+MD,
+                'category_id' => $category?->id,
+                'version' => '1.3.0',
+                // The app itself is a free install — only Pro is sold, via
+                // the single edition below. Every other app on this site
+                // is is_free=false because the purchase IS the download;
+                // here the download is free and the edition instead grants
+                // an in-app Pro license. See seedTheStockPotEditions() and
+                // resources/views/apps/partials/{free-download,pro-unlock}.blade.php.
+                'is_free' => true,
+                'price_cents' => null,
+                'currency' => 'USD',
+                'status' => 'published',
+                'is_featured' => false,
+                'direct_purchase_enabled' => true,
+                'android_delivery_mode' => 'direct',
+                'windows_delivery_mode' => 'direct',
+                'license_type' => 'personal',
+                'update_policy' => 'updates_included',
+                'demo_enabled' => true,
+                'demo_type' => 'flutter_web',
+                // Deliberately NOT public/demos/{slug}/ — see DEMO_DEPLOYMENT.md.
+                'demo_url' => '/demo-builds/the-stock-pot/index.html',
+                'demo_version' => '1.2.0',
+                'demo_instructions' => 'This is the real app, running in your browser. Browse all 500 recipes, scale servings, and try the shopping list — everything you do stays in this browser only.',
+                'demo_warning' => 'This demo is a full Flutter web build (~97 MB, since all 499 available recipe photos are bundled) — first load can take a while on a slower connection.',
+                'demo_reset_mode' => 'Favorites, collections, notes, and the shopping list are saved in this browser only. Clearing this site\'s data in your browser resets the demo.',
+                'support_info' => 'For questions about The Stock Pot, use the Contact page and select this app.',
+                'system_requirements' => 'Android 5.0+ or Windows 10 (64-bit) or later, or any modern web browser.',
+                'seo_title' => 'The Stock Pot — 500 Soup, Stew, Chowder & Gravy Recipes',
+                'seo_description' => '500 soup, stew, chowder, gravy, and stock/broth recipes with an ingredient scaler, guided cook timers, a shopping list, and offline-first backup. Available for Android, Windows, and in your browser.',
+            ]
+        );
+
+        $platformCodes = ['android', 'windows', 'web', 'pwa'];
+        $platformIds = Platform::whereIn('code', $platformCodes)->pluck('id');
+        $app->platforms()->sync($platformIds);
+
+        $this->seedTheStockPotEditions($app);
+
+        $icon = $this->seedMedia('icon.png', 'image/png', 1254, 1254, 'The Stock Pot app icon', 'the-stock-pot');
+        $feature = $this->seedMedia('feature.png', 'image/png', 1793, 877, 'The Stock Pot — Real Recipes. Real Food. A Better Table.', 'the-stock-pot');
+        $banner = $this->seedMedia('banner.png', 'image/png', 1794, 877, 'The Stock Pot — Soups, Stews, Chowders, Gravies, 500 recipes', 'the-stock-pot');
+
+        $app->media()->sync([
+            $icon->id => ['type' => 'icon', 'sort_order' => 0],
+            $feature->id => ['type' => 'feature_graphic', 'sort_order' => 0],
+            $banner->id => ['type' => 'screenshot', 'sort_order' => 0],
+        ]);
+
+        $features = [
+            ['title' => '500 recipes, 6 categories', 'description' => '150 Soups, 110 Stews, 60 Chowders, 60 Traditional and 70 No-Drippings Gravies, and 50 Stocks, Broths & Bases.', 'icon' => '🍲', 'sort_order' => 0],
+            ['title' => 'Ingredient scaler', 'description' => 'Rebalances whole numbers, fractions, mixed numbers, and ranges to any serving count.', 'icon' => '⚖️', 'sort_order' => 1],
+            ['title' => 'Cook timers', 'description' => 'Built into the steps that need them — Stock Pot Pro allows up to three running at once for multi-stage recipes.', 'icon' => '⏱', 'sort_order' => 2],
+            ['title' => 'Shopping list', 'description' => 'Build a shopping list automatically from the recipes you\'ve picked.', 'icon' => '🛒', 'sort_order' => 3],
+            ['title' => 'Favorites, collections & notes', 'description' => 'Save favorites, organize recipes into collections, and add personal ratings and notes.', 'icon' => '📝', 'sort_order' => 4],
+            ['title' => 'Validated backup & restore', 'description' => 'Your data stays on your device, with validated export/import and no account required.', 'icon' => '💾', 'sort_order' => 5],
+            ['title' => 'Wide-screen layout', 'description' => 'A master-detail view on tablets and desktop, not just a stretched phone screen.', 'icon' => '🖥', 'sort_order' => 6],
+            ['title' => 'Metric & US measurements', 'description' => 'Switch between measurement systems at any time.', 'icon' => '📏', 'sort_order' => 7],
+            ['title' => 'Share & print', 'description' => 'Share a recipe as text or print/save it as a PDF, right from the recipe page.', 'icon' => '🖨️', 'sort_order' => 8],
+        ];
+
+        foreach ($features as $feature) {
+            $app->features()->updateOrCreate(['title' => $feature['title']], $feature);
+        }
+    }
+
+    /**
+     * Owner-directed 2026-09-15: a single "Pro Upgrade" at $2.99 USD,
+     * rather than the split Android/Windows/Bundle editions every other
+     * app on this site uses. This matches the app's own PROJECT_SPEC.md
+     * design (one unified one-time Pro unlock, not a per-platform price),
+     * and the EditionEntitlement grants below (android + windows, both
+     * 'download') make it resolve to the license system's
+     * 'android_windows_bundle' platform_entitlement — a single purchase,
+     * one license, good for 2 devices total across both platforms — see
+     * LICENSE_SYSTEM.md. The installer itself is free regardless (see
+     * FreeDownloadController); buying this edition is purely how a
+     * customer gets the license key that unlocks Pro in the installed
+     * app via its license-activation screen (Settings → Unlock Pro),
+     * which calls POST /api/license/activate.
+     */
+    private function seedTheStockPotEditions(App $app): void
+    {
+        $android = Platform::where('code', 'android')->first();
+        $windows = Platform::where('code', 'windows')->first();
+
+        $edition = AppEdition::updateOrCreate(
+            ['app_id' => $app->id, 'slug' => 'pro-upgrade'],
+            [
+                'name' => 'Pro Upgrade',
+                'description' => 'The Stock Pot is free to download and use. This one-time purchase unlocks Stock Pot Pro (up to 3 concurrent cook timers) on up to 2 of your Android and/or Windows devices via a license key.',
+                'price_cents' => 299,
+                'currency' => $app->currency ?? 'USD',
+                'active' => true,
+                'featured' => true,
+                'sort_order' => 0,
+            ]
+        );
+
+        foreach ([$android, $windows] as $platform) {
+            if (! $platform) {
+                continue;
+            }
+
+            EditionEntitlement::updateOrCreate([
+                'app_edition_id' => $edition->id,
+                'platform_id' => $platform->id,
+                'access_type' => 'download',
+            ]);
+        }
+    }
+
+    /**
+     * 2026-09-16: when an app is converted from split per-platform editions
+     * to a single flat "Pro Upgrade" edition, AppEdition::updateOrCreate()
+     * keys on slug and so never removes the old android/windows/bundle
+     * rows — they'd otherwise sit there still `active`, and the edition
+     * picker would show 4 confusing options instead of 1. Called right
+     * after each such app's seedXEditions() with the slug(s) it just
+     * created, to deactivate everything else.
+     */
+    private function deactivateOtherEditions(App $app, array $keepSlugs): void
+    {
+        $app->editions()->whereNotIn('slug', $keepSlugs)->update(['active' => false]);
     }
 
     private function seedMedia(string $filename, string $mime, int $width, int $height, string $alt, string $sourceDir = 'bread-maker'): Media
