@@ -883,15 +883,22 @@ MD,
      * their own website listings (see those methods' doc comments above).
      * The Android and Windows editions below sell the signed installer
      * files themselves, the same commercial model already used for every
-     * other app on this site. The app's own PROJECT_SPEC.md separately
-     * describes an aspirational free-download-plus-72h-trial model that is
-     * NOT yet implemented in the app (no trial timer/lock code exists as of
-     * the 2026-09-17 build) — this listing intentionally keeps the current,
-     * actually-functioning paid-edition-download model rather than
-     * advertising a trial the client can't yet enforce; revisit once that
-     * system ships.
+     * other app on this site. As of v1.1.0 (2026-09-17 same-day REPAIR
+     * cycle) the app's client code now actually implements the
+     * PROJECT_SPEC.md free-download-plus-72h-trial model (secure-storage
+     * trial timer, lock screen, device ID, LicenseClient abstraction —
+     * lib/domain/licensing/, lib/data/licensing/) — but this listing
+     * deliberately still keeps the current, actually-functioning
+     * paid-edition-download model rather than switching the storefront
+     * over, because: (1) the app's LICENSE_API_BASE_URL is still an unset
+     * placeholder, so in-app license activation would fail for any real
+     * customer today, and (2) switching the storefront itself (free
+     * download, checkout that issues a license key instead of gating the
+     * download) is a separate backend/checkout task not done in this pass.
+     * Revisit once both are live — do not flip this listing to "free
+     * download" before the license API actually issues/validates licenses.
      *
-     * As of the 2026-09-17 release (v1.0.1), Windows ships as an Inno Setup
+     * As of the 2026-09-17 release, Windows ships as an Inno Setup
      * installer EXE (unsigned — Windows SmartScreen may warn on first run),
      * not MSIX; the app dropped MSIX entirely. The old self-signed MSIX
      * certificate reference below no longer applies to current builds.
@@ -938,7 +945,7 @@ forever; a separate one-time "Atlas Pro" purchase inside the Android app
 (via Google Play Billing) is available but never required.
 MD,
                 'category_id' => $category?->id,
-                'version' => '1.0.1',
+                'version' => '1.1.0',
                 'is_free' => false,
                 'price_cents' => null,
                 'currency' => 'USD',
