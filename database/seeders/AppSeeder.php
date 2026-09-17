@@ -863,16 +863,18 @@ MD,
     }
 
     /**
-     * Bar Tender Atlas — a real Flutter app (Android APK; Windows and Web
-     * builds exist in the source project but aren't offered here yet — see
-     * the note below). Source: C:\Users\User\Documents\APKs\BarTenderAtlas.
-     * Description, feature list, monetization, and system requirements
-     * below come from that project's own README.md and PROJECT_SPEC.md, not
+     * Bar Tender Atlas — a real Flutter app, built for Android and Windows
+     * only (current project governance excludes MSIX and Web/PWA — see the
+     * app's own CLAUDE.md/PROJECT_SPEC.md). Source:
+     * C:\Users\User\Documents\APKs\BarTenderAtlas. Description, feature
+     * list, monetization, and system requirements below come from that
+     * project's own README.md, PROJECT_SPEC.md and CHANGELOG.md, not
      * invented. Icon, feature graphic, and screenshots are the app's real
-     * Google Play store-listing assets (completed/google-play/), copied
-     * into database/seeders/assets/bar-tender-atlas/.
+     * Google Play store-listing assets (store_assets/google-play/ in the
+     * app repo as of the 2026-09-17 release cycle), copied into
+     * database/seeders/assets/bar-tender-atlas/.
      *
-     * Base app free forever (2,000 recipes, My Bar, Bartender Mode, the
+     * Base app free forever (2,035 recipes, My Bar, Bartender Mode, the
      * recipe editor, backup/restore, etc.) with a separate one-time "Atlas
      * Pro" purchase (product id atlas_pro, US$2.99) through Google Play
      * Billing inside the Android app — unrelated to, and not unlocked by,
@@ -881,21 +883,25 @@ MD,
      * their own website listings (see those methods' doc comments above).
      * The Android and Windows editions below sell the signed installer
      * files themselves, the same commercial model already used for every
-     * other app on this site. Windows ships as a self-signed MSIX
-     * (2026-09-15, certificate_path completed/windows/BarTenderAtlas-msix.pfx,
-     * password kept outside the repo at
-     * C:\Users\User\Documents\BarTenderAtlas-signing-backup\msix-cert-password.txt)
-     * — sideload/test signing, not a Microsoft Store identity; installing it
-     * will show an unknown-publisher warning until replaced with a Partner
-     * Center certificate for a real Store submission.
+     * other app on this site. The app's own PROJECT_SPEC.md separately
+     * describes an aspirational free-download-plus-72h-trial model that is
+     * NOT yet implemented in the app (no trial timer/lock code exists as of
+     * the 2026-09-17 build) — this listing intentionally keeps the current,
+     * actually-functioning paid-edition-download model rather than
+     * advertising a trial the client can't yet enforce; revisit once that
+     * system ships.
      *
-     * No live demo is enabled. The app's own PROJECT_SPEC.md already flags
-     * an unresolved owner decision: every recipe photo (~950 images) ships
-     * bundled rather than remote-hosted, which is why the Flutter web build
-     * is ~315 MB — four to six times every other app's web demo on this
-     * site (44-73 MB). Enabling a demo that size was judged not to be this
-     * workflow's call to make silently; do so once the owner has weighed in
-     * on that image-hosting architecture (or accepts the demo size as-is).
+     * As of the 2026-09-17 release (v1.0.1), Windows ships as an Inno Setup
+     * installer EXE (unsigned — Windows SmartScreen may warn on first run),
+     * not MSIX; the app dropped MSIX entirely. The old self-signed MSIX
+     * certificate reference below no longer applies to current builds.
+     *
+     * No live demo is enabled — the app's own docs flag an unresolved owner
+     * decision: every recipe photo (1,979 of 2,035 drinks) ships bundled
+     * rather than remote-hosted, which is also why the Google Play AAB is
+     * ~325 MB. A Web/PWA build isn't produced at all under current
+     * governance, so there is nothing to point a demo at; revisit if that
+     * changes.
      */
     private function seedBarTenderAtlas(): void
     {
@@ -932,7 +938,7 @@ forever; a separate one-time "Atlas Pro" purchase inside the Android app
 (via Google Play Billing) is available but never required.
 MD,
                 'category_id' => $category?->id,
-                'version' => '1.0.0',
+                'version' => '1.0.1',
                 'is_free' => false,
                 'price_cents' => null,
                 'currency' => 'USD',
@@ -945,13 +951,13 @@ MD,
                 'update_policy' => 'updates_included',
                 'demo_enabled' => false,
                 'support_info' => 'For questions about Bar Tender Atlas, use the Contact page and select this app.',
-                'system_requirements' => 'Android 7.0 or later, or Windows 10/11 (64-bit). Web/PWA exists but isn\'t offered here yet.',
+                'system_requirements' => 'Android 7.0 or later, or Windows 10/11 (64-bit).',
                 'seo_title' => 'Bar Tender Atlas — 2,000 Offline Cocktail Recipes',
                 'seo_description' => '2,000 offline cocktail recipes with My Bar bottle tracking, guided Bartender Mode, an ingredient guide, and a full editor for adding your own drinks.',
             ]
         );
 
-        $platformCodes = ['android', 'windows', 'web', 'pwa'];
+        $platformCodes = ['android', 'windows'];
         $platformIds = Platform::whereIn('code', $platformCodes)->pluck('id');
         $app->platforms()->sync($platformIds);
 
