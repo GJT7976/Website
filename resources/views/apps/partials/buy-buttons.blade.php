@@ -3,7 +3,11 @@
     app has direct_purchase_enabled + a price. External store links are
     always shown too when set, since they lead somewhere real either way.
 --}}
-@if ($app->hasEditions())
+@if ($app->is_free && $app->hasEditions())
+    {{-- Free install + separate optional Pro unlock (e.g. The Stock Pot) — never "Choose Your Version", which implies paying is how you get the app. --}}
+    <a href="#free-download" class="btn btn-primary">Download Free</a>
+    <a href="#unlock-pro" class="btn btn-secondary">Unlock Pro — {{ $app->editions->first()?->priceLabel() }}</a>
+@elseif ($app->hasEditions())
     {{-- Platform/edition selection is required before Buy Now — §13. --}}
     <a href="#choose-version" class="btn btn-primary">Choose Your Version</a>
 @elseif (! $app->is_free && $app->direct_purchase_enabled && $app->effectivePriceCents() !== null)

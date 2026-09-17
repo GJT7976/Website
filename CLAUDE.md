@@ -1,88 +1,46 @@
-# Niagara Inde Apps — Project Notes
+# CLAUDE.md — MASTER TASK ROUTER
 
-Read `README.md`, `ARCHITECTURE.md`, and the master spec
-(`Niagara Inde Apps — Claude Website Build Prompt.md`) before making
-significant changes. Phase 1 (foundation/core) and Phase 2 (Stripe
-checkout + Canadian tax engine + Orders/Sales) are both implemented.
-Full Accounting/Expenses/Audit log/2FA/Backups remain a further phase,
-deliberately not implemented yet — don't fake data for them.
+This file is the automatic project entry point. Keep it short. Its job is to route a clearly requested job to the correct task instruction file.
 
-## Commands
+## Mandatory routing rule
 
-- Tests: `php artisan test`
-- Build assets: `npm run build` / dev: `npm run dev`
-- Migrate + seed: `php artisan migrate --seed` (seeders use
-  `updateOrCreate`, safe to re-run)
-- First admin account: `php artisan make:admin` (interactive — never add a
-  seeded default password)
+When the user's command begins with, or clearly invokes, one of the Kickstarter Words below:
 
-## Things that will bite you if you forget them
+1. Read the matching file in `claude_tasks/` completely.
+2. Read every supporting `docs/` file that task file requires.
+3. Perform only that task plus dependencies genuinely required to complete it.
+4. Do not silently start another major workflow.
+5. If the command is ambiguous, ask which Kickstarter Word the user wants.
+6. Existing project specifications, release-channel rules, security rules, and user-specific requirements remain binding unless the selected task file explicitly narrows them.
 
-- **Demo builds go in `public/demo-builds/{slug}/`, never
-  `public/demos/{slug}/`.** A literal `public/demos` directory collides
-  with the `/demos` catalogue route at the web-server level (both PHP's
-  dev server and Apache/Nginx check disk before routing to Laravel) and
-  silently 404s. See `DEMO_DEPLOYMENT.md`.
-- **Tailwind v4 theme colors are plain utility classes, not arbitrary
-  brackets.** Colors are defined as `--color-*` tokens in the `@theme`
-  block of `resources/css/app.css` (e.g. `--color-niagara-500`), which
-  auto-generates real utilities like `bg-niagara-500` / `text-navy-soft`.
-  Never write `text-[--color-navy]` — that's invalid CSS (sets `color:
-  --color-navy` literally); just use `text-navy`.
-- **Laravel's attribute-based `#[Fillable([...])]` inserts explicit
-  `NULL` for any fillable column omitted from a `create()`/factory call,
-  overriding the migration's `->default(...)`.** Any code (or test
-  factory) that creates a model must explicitly set every fillable
-  boolean/enum column it cares about rather than relying on the DB
-  default. `App\Models\App` and `App\Models\User`'s factories set these
-  explicitly for this reason — follow the same pattern for new models.
-- **Money is integer cents**, never floats (`price_cents`,
-  `sale_price_cents`). The admin form accepts dollars and converts; always
-  convert at the boundary, not inside a model.
-- **`is_featured` gates homepage visibility, deliberately.** An app only
-  appears on the homepage (Featured Apps *and* the Live Demo section) if
-  it is both `published` and `is_featured`. This was specifically
-  requested so a newly added/demoed app's imagery doesn't appear on the
-  landing page until someone consciously features it — don't "simplify"
-  the homepage query to drop the `is_featured` check.
-- **Roles are a single `role` enum column on `users`**
-  (`owner`/`content_editor`), not a permissions package — intentional,
-  see `ARCHITECTURE.md`. `EnsureUserHasRole` (`role:owner` middleware
-  alias) gates Settings/Users only.
-- **SVG uploads are rejected on purpose** (stored-XSS risk — uploads are
-  served unsanitized). Don't add `svg` back to the media MIME allow-list
-  without adding sanitization first.
-- **Only `App\Services\StripeCheckout` calls the Stripe SDK.** Everything
-  else (`CheckoutController`, `Admin\OrderController`) goes through it, and
-  `App\Services\StripeWebhookHandler` has *zero* Stripe-SDK/HTTP
-  dependency of its own — it just takes a constructed `\Stripe\Event`. This
-  is what makes the webhook tests fast and network-free
-  (`\Stripe\Event::constructFrom([...])`); don't fold Stripe API calls back
-  into the handler or the controllers.
-- **A payment is only ever confirmed by the webhook, never by the
-  checkout success page.** `CheckoutController@success` just displays
-  whatever the order's current status is. If you're tempted to mark an
-  order paid from the success-page controller "to make local testing
-  easier" — don't; use `stripe listen --forward-to` instead (see
-  `STRIPE_SETUP.md`).
-- **This repo hosts the website's license-key backend, not any Flutter
-  app's own build system.** Website-sold Android/Windows editions get a
-  permanent PRO license (`App\Services\LicenseService`, see
-  `LICENSE_SYSTEM.md`) generated alongside the existing entitlement/
-  download system — never confuse this with Google Play's own in-app
-  purchase system, which is entirely separate and unrelated to this
-  codebase. Each Flutter app's own repository (not this one) is where its
-  PRO-lock screen, license-key entry UI, and the distinction between its
-  website build and its Google Play build actually get implemented,
-  driven off the API this backend exposes.
-- **`TaxCalculator::calculate()` returns `tax_name`/`percentage` keys, but
-  `sales_tax_lines` columns are `tax_name_snapshot`/`percentage_snapshot`.**
-  `CheckoutController` maps between them explicitly — mass-assigning the
-  calculator's array straight into `$order->taxLines()->create()` will
-  fail on the NOT NULL columns. Keep that mapping if you touch this code.
+## Kickstarter Words
 
-## Fonts
+- `BUILD APP` → `claude_tasks/CLAUDE1_APP_BUILD.md`
+- `UPDATE WEBSITE` → `claude_tasks/CLAUDE2_WEBSITE.md`
+- `DEPLOY WEBSITE` → `claude_tasks/CLAUDE3_DEPLOY.md`
+- `GOOGLE PLAY` → `claude_tasks/CLAUDE4_GOOGLE_PLAY.md`
+- `TEST PROJECT` → `claude_tasks/CLAUDE5_TESTING.md`
 
-TOLA hasn't been supplied yet. Lato (public/fonts/lato/, OFL-licensed) is
-the real interim font, not a placeholder — see `@font-face` blocks in
-`resources/css/app.css`.
+The user may add details after the Kickstarter Word, for example:
+
+`BUILD APP — finish the recipe search and create release builds`
+
+`UPDATE WEBSITE — add the completed Carnivore app to localhost`
+
+`DEPLOY WEBSITE — synchronize localhost with niagaraindieapps.com`
+
+`GOOGLE PLAY — prepare the new AAB release`
+
+`TEST PROJECT — audit the app and website before release`
+
+## Important separation
+
+Building an application, adding it to the localhost website, deploying the website, preparing Google Play, and testing are separate workflows. Do not confuse `Website_Delivery` application artifacts with deployment of the Niagara Indie Apps website itself.
+
+## Legacy instructions
+
+The detailed instructions that previously lived in this file are preserved in:
+
+`claude_tasks/CLAUDE0_LEGACY_MASTER.md`
+
+Selected task files may require Claude to read that file so no existing build requirements are lost.

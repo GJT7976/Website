@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\DeploySyncController;
 use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\FreeDownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LicenseManagementController;
 use App\Http\Controllers\MyDownloadsController;
@@ -68,6 +69,12 @@ Route::get('/my-downloads/{email}', [MyDownloadsController::class, 'show'])
 Route::get('/downloads/{entitlement}', [DownloadController::class, 'download'])
     ->middleware('signed')
     ->name('downloads.show');
+
+// Public, unauthenticated download for a free-to-install app — see
+// FreeDownloadController's doc comment. No 'signed' middleware: unlike
+// /downloads/{entitlement}, this link is meant to be shared/bookmarked.
+Route::get('/apps/{app:slug}/download/{platform:code}', [FreeDownloadController::class, 'download'])
+    ->name('apps.free-download');
 
 // §10: self-service license device management — email + license key,
 // then a one-time code, mirroring My Downloads' no-account pattern.

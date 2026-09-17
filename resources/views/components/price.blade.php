@@ -1,7 +1,10 @@
 @props(['app'])
 
 <span {{ $attributes->merge(['class' => 'inline-flex items-baseline gap-2']) }}>
-    @if ($app->hasEditions())
+    @if ($app->is_free && $app->hasEditions())
+        {{-- Free install with a separate optional Pro-unlock purchase (e.g. The Stock Pot) — never "From $X", which would read as a paid app. --}}
+        <span class="text-h3">Free</span>
+    @elseif ($app->hasEditions())
         <span class="text-h3">From ${{ number_format($app->lowestEditionPriceCents() / 100, 2) }} {{ $app->currency ?? 'CAD' }}</span>
     @elseif ($app->onSale())
         <span class="text-h3 text-cta-600">${{ number_format($app->sale_price_cents / 100, 2) }} {{ $app->currency }}</span>

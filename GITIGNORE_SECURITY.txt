@@ -1,0 +1,9 @@
+# Add these patterns to the project's .gitignore as applicable
+*.jks
+*.keystore
+key.properties
+.env
+.env.*
+secrets.*
+*.p12
+*.pfx

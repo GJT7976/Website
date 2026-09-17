@@ -48,7 +48,10 @@
         </div>
     </section>
 
-    @if ($app->hasEditions())
+    @if ($app->is_free && $app->hasEditions())
+        @include('apps.partials.free-download', ['app' => $app])
+        @include('apps.partials.pro-unlock', ['app' => $app])
+    @elseif ($app->hasEditions())
         <section id="choose-version" class="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8">
             <x-edition-picker :app="$app" />
         </section>

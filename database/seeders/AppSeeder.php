@@ -92,7 +92,7 @@ no internet connection required after the first load, and your recipes stay
 on your device with backup/restore built in.
 MD,
                 'category_id' => $category?->id,
-                'version' => '1.1.2',
+                'version' => '1.1.3',
                 // 2026-09-16: converted to free-install + Pro Upgrade (the
                 // app's own website-license system was verified real and
                 // correctly configured for app_id=1 before this change —
@@ -121,8 +121,8 @@ MD,
                 // directory on disk before Laravel's router ever runs).
                 // See DEMO_DEPLOYMENT.md.
                 'demo_url' => '/demo-builds/bread-maker/index.html',
-                'demo_version' => '1.1.2',
-                'demo_instructions' => 'Bread Maker runs entirely in your browser. Try a Quick Start preset, or dial in your own hydration, flour blend, and pan size — nothing you enter here is saved outside this device. Buy the Android or Windows app below for an installable version.',
+                'demo_version' => '1.1.3',
+                'demo_instructions' => 'Bread Maker runs entirely in your browser. Try a Quick Start preset, or dial in your own hydration, flour blend, and pan size — nothing you enter here is saved outside this device. Buy the Android or Windows app below for an installable version (with a 3-day free trial of Pro).',
                 'demo_warning' => null,
                 'demo_reset_mode' => 'Reload the page — the calculator has no server-side state to reset.',
                 'support_info' => 'For questions about Bread Maker, use the Contact page and select this app.',
@@ -171,10 +171,14 @@ MD,
      * 2026-09-16: replaced the old split Android/Windows/Bundle editions
      * with a single flat "Pro Upgrade" — the app is now a free install
      * (see is_free above) and this edition's only job is to grant the
-     * license that unlocks Pro via lib/services/license_client_service.dart
-     * (app_id=1), not to gate the download. Same pattern as every other
-     * app retrofitted this session — see The Stock Pot's seeder methods
-     * for the fullest doc-comment explanation of why.
+     * license that unlocks Pro via www/license-client.js (app_id=1), not
+     * to gate the download. Same pattern as every other app retrofitted
+     * this session — see The Stock Pot's seeder methods for the fullest
+     * doc-comment explanation of why.
+     *
+     * 2026-09-17: the app itself (v1.1.3) added a 3-day free trial of Pro
+     * ahead of the license-key unlock — this edition's price/mechanics are
+     * unchanged, only the description below now discloses the trial.
      */
     private function seedBreadMakerEditions(App $app): void
     {
@@ -182,7 +186,7 @@ MD,
         $windows = Platform::where('code', 'windows')->first();
 
         $editions = [
-            ['slug' => 'pro-upgrade', 'name' => 'Pro Upgrade', 'description' => 'Bread Maker is free to download and use. This one-time purchase unlocks Pro on up to 2 of your Android and/or Windows devices via a license key.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+            ['slug' => 'pro-upgrade', 'name' => 'Pro Upgrade', 'description' => 'Bread Maker is free to download and use, with a 3-day free trial of Pro built in. This one-time purchase keeps Pro unlocked permanently via a license key, activated in-app on your Android and/or Windows devices.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
         ];
 
         foreach ($editions as $data) {

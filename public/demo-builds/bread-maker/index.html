@@ -1773,6 +1773,9 @@ img, .preset-icon, .enr-icon { max-width: 100%; }
       <div class="panel" id="licensePanel" hidden>
         <div class="panel-head" data-i18n="licenseHead">🔑 Bread Maker Pro</div>
         <div class="panel-body">
+          <div id="licenseTrialBox" hidden>
+            <p style="font-size:13px;color:var(--gold);margin-bottom:12px;" id="licenseTrialText"></p>
+          </div>
           <div id="licenseUnlockedBox" hidden>
             <p style="font-size:13px;color:var(--green);margin-bottom:12px;" data-i18n="licenseAlreadyUnlocked">Pro is unlocked on this device. Thank you for supporting Bread Maker.</p>
             <button class="btn btn-outline" onclick="removeLicenseDevice()" id="licenseRemoveBtn" data-i18n="licenseRemoveDevice">Remove this device</button>
@@ -1949,8 +1952,45 @@ window.APP_VERSION = '1.1.3';
 //     before this fix. Do not silently treat an unset channel as unlocked.
 let websiteProUnlocked = false;
 
+// ── WEBSITE 3-DAY FREE TRIAL ─────────────────────────────────
+// Website channel only (see docs/06_RELEASE_CHANNEL_CONTRACT.md and root
+// CLAUDE.md's mandatory trial rule). Pro is fully unlocked for 3 days from
+// first launch on this device, then falls back to the same locked state as
+// before a license is activated. The trial start timestamp is opaque,
+// per-install, local-only state — same storage model as LicenseClient's
+// device_id (see license-client.js) — never a server round-trip.
+const TRIAL_DURATION_MS = 3 * 24 * 60 * 60 * 1000;
+const TRIAL_START_KEY = 'breadmaker_trial_start';
+
+function ensureTrialStarted() {
+  if (window.ENTITLEMENT_CHANNEL !== 'WEBSITE') return;
+  try {
+    if (!localStorage.getItem(TRIAL_START_KEY)) {
+      localStorage.setItem(TRIAL_START_KEY, String(Date.now()));
+    }
+  } catch (_) { /* ignore */ }
+}
+
+function trialMsRemaining() {
+  let start;
+  try { start = parseInt(localStorage.getItem(TRIAL_START_KEY), 10); } catch (_) { start = NaN; }
+  if (!start || Number.isNaN(start)) return 0;
+  return Math.max(0, (start + TRIAL_DURATION_MS) - Date.now());
+}
+
+function trialActive() {
+  return trialMsRemaining() > 0;
+}
+
+function trialDaysRemaining() {
+  return Math.max(1, Math.ceil(trialMsRemaining() / (24 * 60 * 60 * 1000)));
+}
+
 function isProLocked() {
-  if (window.ENTITLEMENT_CHANNEL === 'WEBSITE') return !websiteProUnlocked;
+  if (window.ENTITLEMENT_CHANNEL === 'WEBSITE') {
+    if (websiteProUnlocked) return false;
+    return !trialActive();
+  }
   return true; // Google Play channel (or channel unset): always locked.
 }
 
@@ -2007,6 +2047,21 @@ function renderLicensePanel() {
   if (!show) return;
   document.getElementById('licenseUnlockedBox').hidden = !websiteProUnlocked;
   document.getElementById('licenseLockedBox').hidden = websiteProUnlocked;
+
+  const trialBox = document.getElementById('licenseTrialBox');
+  const trialText = document.getElementById('licenseTrialText');
+  if (trialBox && trialText) {
+    if (websiteProUnlocked) {
+      trialBox.hidden = true;
+    } else if (trialActive()) {
+      const days = trialDaysRemaining();
+      trialText.textContent = days === 1 ? T('trialDaysLeftOne') : T('trialDaysLeft').replace('{n}', days);
+      trialBox.hidden = false;
+    } else {
+      trialText.textContent = T('trialExpired');
+      trialBox.hidden = false;
+    }
+  }
 }
 
 async function activateLicense() {
@@ -2302,6 +2357,9 @@ const TRANSLATIONS = {
     licenseErrorGeneric:'Something went wrong activating this license. Please try again.',
     proUpsellGoToLicense:'Enter a license key now?',
     premiumThanks:'Thanks for supporting Bread Maker.',
+    trialDaysLeft:'Free trial: {n} days left. Activate a license to keep Pro after the trial ends.',
+    trialDaysLeftOne:'Free trial: 1 day left. Activate a license to keep Pro after the trial ends.',
+    trialExpired:'Your free trial has ended. Activate a license to unlock Pro again.',
   },
   es: {
     appSub:'Calculadora de Porcentajes del Panadero',tabCalc:'⚗️ Calculadora',tabRecipes:'📋 Recetas guardadas',tabSettings:'⚙️ Ajustes',
@@ -2387,6 +2445,9 @@ const TRANSLATIONS = {
     licenseErrorGeneric:'Algo salió mal al activar esta licencia. Inténtalo de nuevo.',
     proUpsellGoToLicense:'¿Introducir una clave de licencia ahora?',
     premiumThanks:'Gracias por apoyar Bread Maker.',
+    trialDaysLeft:'Prueba gratis: quedan {n} días. Activa una licencia para conservar Pro cuando termine.',
+    trialDaysLeftOne:'Prueba gratis: queda 1 día. Activa una licencia para conservar Pro cuando termine.',
+    trialExpired:'Tu prueba gratis ha terminado. Activa una licencia para desbloquear Pro de nuevo.',
   },
   fr: {
     appSub:'Calculatrice de pourcentages du boulanger',tabCalc:'⚗️ Calculatrice',tabRecipes:'📋 Recettes sauvegardées',tabSettings:'⚙️ Paramètres',
@@ -2472,6 +2533,9 @@ const TRANSLATIONS = {
     licenseErrorGeneric:'Une erreur est survenue lors de l’activation de cette licence. Veuillez réessayer.',
     proUpsellGoToLicense:'Saisir une clé de licence maintenant ?',
     premiumThanks:'Merci de soutenir Bread Maker.',
+    trialDaysLeft:'Essai gratuit : {n} jours restants. Activez une licence pour garder Pro après l’essai.',
+    trialDaysLeftOne:'Essai gratuit : 1 jour restant. Activez une licence pour garder Pro après l’essai.',
+    trialExpired:'Votre essai gratuit est terminé. Activez une licence pour redébloquer Pro.',
   },
   pt: {
     appSub:'Calculadora de Percentagem do Padeiro',tabCalc:'⚗️ Calculadora',tabRecipes:'📋 Receitas guardadas',tabSettings:'⚙️ Definições',
@@ -2557,6 +2621,9 @@ const TRANSLATIONS = {
     licenseErrorGeneric:'Algo correu mal ao ativar esta licença. Tenta novamente.',
     proUpsellGoToLicense:'Introduzir uma chave de licença agora?',
     premiumThanks:'Obrigado por apoiares o Bread Maker.',
+    trialDaysLeft:'Teste grátis: faltam {n} dias. Ativa uma licença para manter o Pro depois do teste.',
+    trialDaysLeftOne:'Teste grátis: falta 1 dia. Ativa uma licença para manter o Pro depois do teste.',
+    trialExpired:'O teu teste grátis terminou. Ativa uma licença para desbloquear o Pro novamente.',
   },
   de: {
     appSub:'Bäcker-Prozent-Rechner',tabCalc:'⚗️ Rechner',tabRecipes:'📋 Gespeicherte Rezepte',tabSettings:'⚙️ Einstellungen',
@@ -2642,6 +2709,9 @@ const TRANSLATIONS = {
     licenseErrorGeneric:'Bei der Aktivierung dieser Lizenz ist etwas schiefgegangen. Bitte versuche es erneut.',
     proUpsellGoToLicense:'Jetzt einen Lizenzschlüssel eingeben?',
     premiumThanks:'Danke, dass du Bread Maker unterstützt.',
+    trialDaysLeft:'Kostenlose Testphase: noch {n} Tage. Aktiviere eine Lizenz, um Pro danach zu behalten.',
+    trialDaysLeftOne:'Kostenlose Testphase: noch 1 Tag. Aktiviere eine Lizenz, um Pro danach zu behalten.',
+    trialExpired:'Deine kostenlose Testphase ist abgelaufen. Aktiviere eine Lizenz, um Pro wieder freizuschalten.',
   },
   it: {
     appSub:'Calcolatore di Percentuali del Fornaio',tabCalc:'⚗️ Calcolatore',tabRecipes:'📋 Ricette salvate',tabSettings:'⚙️ Impostazioni',
@@ -2727,6 +2797,9 @@ const TRANSLATIONS = {
     licenseErrorGeneric:'Si è verificato un problema durante l’attivazione della licenza. Riprova.',
     proUpsellGoToLicense:'Inserire una chiave di licenza ora?',
     premiumThanks:'Grazie per il tuo sostegno a Bread Maker.',
+    trialDaysLeft:'Prova gratuita: mancano {n} giorni. Attiva una licenza per mantenere Pro dopo la prova.',
+    trialDaysLeftOne:'Prova gratuita: manca 1 giorno. Attiva una licenza per mantenere Pro dopo la prova.',
+    trialExpired:'La tua prova gratuita è terminata. Attiva una licenza per sbloccare di nuovo Pro.',
   },
   ja: {
     appSub:'ベーカーズパーセント計算機',tabCalc:'⚗️ 計算機',tabRecipes:'📋 保存レシピ',tabSettings:'⚙️ 設定',
@@ -2812,6 +2885,9 @@ const TRANSLATIONS = {
     licenseErrorGeneric:'ライセンスの有効化中に問題が発生しました。もう一度お試しください。',
     proUpsellGoToLicense:'今すぐライセンスキーを入力しますか?',
     premiumThanks:'Bread Makerをご利用いただきありがとうございます。',
+    trialDaysLeft:'無料お試し：残り{n}日。お試し終了後もProを使うにはライセンスを有効化してください。',
+    trialDaysLeftOne:'無料お試し：残り1日。お試し終了後もProを使うにはライセンスを有効化してください。',
+    trialExpired:'無料お試し期間が終了しました。ライセンスを有効化してProを再度アンロックしてください。',
   },
 };
 
@@ -3532,6 +3608,7 @@ function buildLangGrid() {
 
 // ── INIT ──────────────────────────────────────────────────────
 function init() {
+  ensureTrialStarted();
   applyProLockUI();
   initLicense();
   setTheme(currentTheme);

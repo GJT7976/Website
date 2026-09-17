@@ -65,6 +65,47 @@ exactly as documented in `ARCHITECTURE.md` (Admin → an app → Editions).
 `config/licensing.php` only holds the *device* limit and reset-abuse
 settings, not pricing.
 
+## Free-install apps (app itself is free; only the license is sold)
+
+Every app seeded before 2026-09-15 sells the *download itself* — `is_free =
+false`, and buying an edition is how the customer gets the file (which
+happens to also issue a license, per "How a license is issued" above).
+
+The Stock Pot (`the-stock-pot`, added 2026-09-15) is the first app that
+sells the install for free and only charges for the Pro unlock — the
+starter template (`Claude_App_Starter_v2/docs/05_WEBSITE_DIRECT_SALES_RELEASE.md`)
+makes this the *default* model for every new app going forward, not the
+exception. To add another one:
+
+1. Seed the app with `is_free = true` and a single active `AppEdition`
+   (e.g. slug `pro-upgrade`) whose `EditionEntitlement` rows still grant
+   `download` access for android/windows — that's what makes
+   `LicenseService::createFromOrder()` issue a real license for it; nothing
+   else about license issuance changes. See `seedTheStockPot()` /
+   `seedTheStockPotEditions()` in `database/seeders/AppSeeder.php` for the
+   full pattern including doc comments.
+2. Upload the real release files via `ReleaseLibrary::storeUploadedFile()`
+   exactly as for any other app (a one-off script works fine outside the
+   admin UI — see the doc comment on `seedMarginPos()` for why that's an
+   accepted pattern here).
+3. The actual free download is served by `FreeDownloadController`
+   (`app/Http/Controllers/FreeDownloadController.php`, route
+   `apps.free-download`) — deliberately separate from `DownloadController`,
+   which always requires a paid `CustomerEntitlement` and would otherwise
+   gate every download behind a purchase. `FreeDownloadController` refuses
+   to serve anything unless `$app->is_free` is true, so a paid app's file
+   can never leak through it.
+4. The show page renders `resources/views/apps/partials/free-download.blade.php`
+   (Download buttons) and `.../pro-unlock.blade.php` (the single-edition
+   "Unlock Pro — $X.XX" card) instead of the generic `<x-edition-picker>`,
+   specifically when `$app->is_free && $app->hasEditions()` — see the
+   conditional in `resources/views/apps/show.blade.php` and the matching
+   branches added to `components/price.blade.php` and
+   `apps/partials/buy-buttons.blade.php`. This exists because the generic
+   edition-picker's "Choose Your Version" / "From $X.XX" framing reads as
+   "pay to get the app," which is wrong for this model — don't reuse it
+   here even though the edition/checkout/license backend is identical.
+
 ## Adding another application
 
 Nothing app-specific to configure beyond what `ARCHITECTURE.md` already
