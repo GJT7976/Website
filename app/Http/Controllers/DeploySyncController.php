@@ -71,6 +71,19 @@ class DeploySyncController extends Controller
             ], 500);
         }
 
+        try {
+            Artisan::call('admin:bootstrap');
+            $bootstrapOutput = trim(Artisan::output());
+        } catch (Throwable $e) {
+            return response()->json([
+                'ok' => false,
+                'step' => 'admin:bootstrap',
+                'migrate' => $migrateOutput,
+                'seed' => $seedOutput,
+                'error' => $e::class.': '.$e->getMessage(),
+            ], 500);
+        }
+
         AuditLogger::record('database.deploy-sync', label: 'Deploy sync (migrate + seed) triggered via CLI token');
 
         return response()->json([
