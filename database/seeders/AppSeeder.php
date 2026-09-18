@@ -375,23 +375,30 @@ MD,
     }
 
     /**
-     * La Cucina Italiana — a real Flutter app (Android APK, Windows MSIX,
-     * Web/PWA build; iOS not built). Source: F:\Apps\La Cucina Italiana. Its
-     * web build is a genuine Flutter web release, deployed at
-     * public/demo-builds/la-cucina-italiana/ with its <base href> patched
-     * to that subdirectory, same as Hummus House — see DEMO_DEPLOYMENT.md.
-     * Recipe/region counts and feature list below are read directly from
-     * the app's own docs/feature_inventory.md and docs/final_report.md, not
+     * La Cucina Italiana — a real Flutter app. Source:
+     * F:\Apps\La Cucina Italiana. Current build targets are Android and
+     * Windows only (claude_tasks/CLAUDE0_LEGACY_MASTER.md, root
+     * CLAUDE.md): a signed Android APK and a Windows Inno Setup installer
+     * EXE — no MSIX, no new Web/PWA build going forward. The existing
+     * Flutter web demo deployed at public/demo-builds/la-cucina-italiana/
+     * (<base href> patched to that subdirectory, same as Hummus House —
+     * see DEMO_DEPLOYMENT.md) predates that policy and was left in place
+     * as-is; it was not rebuilt in the 2026-09-18 REPAIR below, so it
+     * still reflects app version 1.0.0, not the current 1.0.2. Recipe/
+     * region counts and feature list below are read directly from the
+     * app's own docs/feature_inventory.md and docs/final_report.md, not
      * invented.
      *
-     * The base app is never gated (every recipe, Cook Mode, search,
-     * shopping list, backup/restore, etc. are free in every edition sold
-     * here). Separately, the Android build offers its own one-time
-     * "Premium" in-app purchase (docs/premium_selection.md) through Google
-     * Play Billing — unrelated to, and not unlocked by, buying the app on
-     * this website; Play Billing only exists once the app is installed via
-     * Google Play, so it isn't purchasable from the sideloaded direct
-     * download or from the Windows build.
+     * 2026-09-18 REPAIR: the app gained a mandatory 3-day free trial +
+     * whole-app lock for the website channel (root CLAUDE.md's
+     * trial/license rule) — previously the base app was free forever with
+     * no trial, and the website-license purchase only unlocked "Premium"
+     * (unlimited collections, full-res photos, PDF export) as a separate
+     * feature gate. Now activating that same license both ends the trial
+     * lock and unlocks Premium — one purchase, one outcome. On Google
+     * Play specifically, the base app is still always free with no trial;
+     * Premium there remains a separate one-time Play Billing purchase
+     * (docs/premium_selection.md), unrelated to buying the app here.
      */
     private function seedLaCucinaItaliana(): void
     {
@@ -423,18 +430,28 @@ is stored locally with validated, versioned backup and restore — no
 account, and no internet connection required after install. The app is
 available in English, Italian, Spanish, French, and German.
 
-The base app is entirely free to use — no recipe, feature, or screen is
-ever locked behind a paywall. On Android, an optional one-time "Premium"
-upgrade is available separately through Google Play (unlimited collections,
-a full-resolution offline photo pack, and recipe/shopping-list PDF export);
-it's a separate in-app purchase, not something unlocked by buying the app
-here.
+Free to download and try for 3 days — every recipe, Cook Mode, the shopping
+list, and backup/restore are fully usable during the trial. A one-time $2.99
+Pro Upgrade unlocks the app permanently afterward, on up to 2 of your
+Android and/or Windows devices, and also includes unlimited collections, a
+full-resolution offline photo pack, and recipe/shopping-list PDF export.
+
+On Google Play, the base app is always free with no trial — the same
+Premium features (unlimited collections, full-res photos, PDF export) are
+instead available as a separate Play Billing in-app purchase, unrelated to
+buying the app here.
 MD,
                 'category_id' => $category?->id,
-                'version' => '1.0.0',
-                // 2026-09-16: converted to free-install + Pro Upgrade — the
-                // app's own website-license system (app_id=6) was verified
-                // real before this change. See seedLaCucinaItalianaEditions().
+                'version' => '1.0.2',
+                // 2026-09-18 REPAIR: added the mandatory 3-day free trial +
+                // whole-app lock to the website-channel build (root
+                // CLAUDE.md's trial/license rule) — previously, buying
+                // Pro Upgrade only unlocked Premium features while the base
+                // app stayed free forever with no trial or lock. Now the
+                // same website-license activation (app_id=6) both ends the
+                // trial lock AND unlocks Premium, in one purchase. See
+                // seedLaCucinaItalianaEditions() and the app's own
+                // docs/CHANGELOG.md (1.0.2+3).
                 'is_free' => true,
                 'price_cents' => null,
                 'currency' => 'USD',
@@ -450,7 +467,7 @@ MD,
                 // Deliberately NOT public/demos/{slug}/ — see DEMO_DEPLOYMENT.md.
                 'demo_url' => '/demo-builds/la-cucina-italiana/index.html',
                 'demo_version' => '1.0.0',
-                'demo_instructions' => 'This is the real app, running in your browser. Browse all 200 recipes, try Cook Mode, and build a shopping list — everything you do stays in this browser only. The optional Premium upgrade requires Google Play and isn\'t purchasable in this demo.',
+                'demo_instructions' => 'This is the real app, running in your browser. Browse all 200 recipes, try Cook Mode, and build a shopping list — everything you do stays in this browser only. The web demo never trial-locks and has no Pro Upgrade purchase; get the Android or Windows app for the 3-day trial and permanent unlock.',
                 'demo_warning' => 'This demo is a full Flutter web build (~73 MB) — first load can take a few seconds on a slower connection.',
                 'demo_reset_mode' => 'Favorites, notes, collections, and the shopping list are saved in this browser only. Clearing this site\'s data in your browser resets the demo.',
                 'support_info' => 'For questions about La Cucina Italiana, use the Contact page and select this app.',
@@ -514,10 +531,15 @@ MD,
 
     /**
      * 2026-09-16: replaced the old split Android/Windows/Bundle editions
-     * with a single flat "Pro Upgrade" ($2.99) — the app is now a free
-     * install (see is_free above); this edition's only job is to grant the
-     * license that unlocks Premium via lib/services/license_client_service.dart
-     * (app_id=6), not to gate the download.
+     * with a single flat "Pro Upgrade" ($2.99) — the app is a free install
+     * (see is_free above); this edition grants the license activated via
+     * lib/services/license_client_service.dart (app_id=6).
+     *
+     * 2026-09-18 REPAIR: the app itself gained a 3-day trial + whole-app
+     * lock on top of the existing license system (root CLAUDE.md's
+     * trial/license rule) — activating this same license now both ends
+     * the trial lock and unlocks Premium, so the description below
+     * reflects unlocking the app, not just "Premium".
      */
     private function seedLaCucinaItalianaEditions(App $app): void
     {
@@ -525,7 +547,7 @@ MD,
         $windows = Platform::where('code', 'windows')->first();
 
         $editions = [
-            ['slug' => 'pro-upgrade', 'name' => 'Pro Upgrade', 'description' => 'La Cucina Italiana is free to download and use. This one-time purchase unlocks Premium on up to 2 of your Android and/or Windows devices via a license key.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+            ['slug' => 'pro-upgrade', 'name' => 'Pro Upgrade', 'description' => 'La Cucina Italiana is free to download and use, with a 3-day free trial built in. This one-time purchase keeps the app unlocked permanently via a license key, activated in-app on your Android and/or Windows devices.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
         ];
 
         foreach ($editions as $data) {
