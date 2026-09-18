@@ -878,29 +878,32 @@ MD,
      * app repo as of the 2026-09-17 release cycle), copied into
      * database/seeders/assets/bar-tender-atlas/.
      *
-     * Base app free forever (2,035 recipes, My Bar, Bartender Mode, the
-     * recipe editor, backup/restore, etc.) with a separate one-time "Atlas
-     * Pro" purchase (product id atlas_pro, US$2.99) through Google Play
-     * Billing inside the Android app — unrelated to, and not unlocked by,
-     * anything bought on this website, exactly the same relationship
-     * La Cucina Italiana's and Margin POS's Play Billing premiums have to
-     * their own website listings (see those methods' doc comments above).
-     * The Android and Windows editions below sell the signed installer
-     * files themselves, the same commercial model already used for every
-     * other app on this site. As of v1.1.0 (2026-09-17 same-day REPAIR
-     * cycle) the app's client code now actually implements the
-     * PROJECT_SPEC.md free-download-plus-72h-trial model (secure-storage
-     * trial timer, lock screen, device ID, LicenseClient abstraction —
-     * lib/domain/licensing/, lib/data/licensing/) — but this listing
-     * deliberately still keeps the current, actually-functioning
-     * paid-edition-download model rather than switching the storefront
-     * over, because: (1) the app's LICENSE_API_BASE_URL is still an unset
-     * placeholder, so in-app license activation would fail for any real
-     * customer today, and (2) switching the storefront itself (free
-     * download, checkout that issues a license key instead of gating the
-     * download) is a separate backend/checkout task not done in this pass.
-     * Revisit once both are live — do not flip this listing to "free
-     * download" before the license API actually issues/validates licenses.
+     * On Google Play, the app is free forever (2,035 recipes, My Bar,
+     * Bartender Mode, the recipe editor, backup/restore, etc.) with a
+     * separate one-time "Atlas Pro" purchase (product id atlas_pro,
+     * US$2.99) through Google Play Billing inside the Android app —
+     * unrelated to, and not unlocked by, anything bought on this website,
+     * exactly the same relationship La Cucina Italiana's and Margin POS's
+     * Play Billing premiums have to their own website listings (see those
+     * methods' doc comments above).
+     *
+     * The WEBSITE channel is a different model: there's no separate free
+     * tier here — the app itself runs a 3-day/72h trial
+     * (lib/domain/licensing/, lib/data/licensing/) and then locks entirely
+     * until a purchased Niagara Indie Apps license key is activated, so the
+     * single "unlock" edition below buys continued use of the whole app,
+     * not a Pro feature tier. Converted 2026-09-17 from the old three-tier
+     * paid-per-platform-download model (android/windows/bundle editions
+     * gating the file itself) to this free-install + single-unlock model —
+     * same pattern as seedBreadMaker()/seedTheStockPot() — once two
+     * prerequisites were resolved the same day: (1) LICENSE_API_BASE_URL
+     * was filled in (this app shares the same license backend/app
+     * registration — app_id=10 — as every other app on this domain, see
+     * F:\website\LICENSE_SYSTEM.md), and (2) the app's HttpLicenseClient,
+     * which previously called a guessed/incompatible endpoint shape, was
+     * rewritten to match the real `/api/license/*` contract with offline
+     * Ed25519 token verification (see PROJECT_SPEC.md and the app's own
+     * CHANGELOG.md for that day's entry).
      *
      * As of the 2026-09-17 release, Windows ships as an Inno Setup
      * installer EXE (unsigned — Windows SmartScreen may warn on first run),
@@ -950,7 +953,7 @@ forever; a separate one-time "Atlas Pro" purchase inside the Android app
 MD,
                 'category_id' => $category?->id,
                 'version' => '1.1.0',
-                'is_free' => false,
+                'is_free' => true,
                 'price_cents' => null,
                 'currency' => 'USD',
                 'status' => 'published',
@@ -973,6 +976,7 @@ MD,
         $app->platforms()->sync($platformIds);
 
         $this->seedBarTenderAtlasEditions($app);
+        $this->deactivateOtherEditions($app, ['unlock']);
 
         $icon = $this->seedMedia('icon.png', 'image/png', 512, 512, 'Bar Tender Atlas app icon', 'bar-tender-atlas');
         $feature = $this->seedMedia('feature.png', 'image/png', 1024, 500, 'Bar Tender Atlas feature graphic', 'bar-tender-atlas');
@@ -1019,10 +1023,14 @@ MD,
     }
 
     /**
-     * Real, owner-set edition pricing (WEBSITE_LICENSE_PRICE_ANDROID/
-     * _WINDOWS/_ANDROID_WINDOWS_BUNDLE from the app's own PROJECT_SPEC.md),
-     * same $2.99/$2.99/$4.99 structure used for every other app on this
-     * site — see seedHummusHouseEditions()'s pattern above.
+     * 2026-09-17: replaced the old three-tier android/windows/bundle
+     * paid-download editions with a single flat "unlock" edition, now that
+     * the app is a free install gated by its own 3-day trial rather than a
+     * paid download — see seedBarTenderAtlas()'s doc comment for the full
+     * rationale. $2.99 is the app's own PROJECT_SPEC.md
+     * WEBSITE_UNLOCK_PRICE default (unchanged from the old Android/Windows
+     * per-platform price — a single edition covering both platforms at the
+     * old single-platform price, same as Bread Maker's pattern).
      */
     private function seedBarTenderAtlasEditions(App $app): void
     {
@@ -1030,9 +1038,7 @@ MD,
         $windows = Platform::where('code', 'windows')->first();
 
         $editions = [
-            ['slug' => 'android', 'name' => 'Android', 'description' => 'For Android phones and tablets.', 'price_cents' => 299, 'sort_order' => 0, 'grants' => [[$android, 'download']]],
-            ['slug' => 'windows', 'name' => 'Windows', 'description' => 'For compatible Windows PCs and tablets.', 'price_cents' => 299, 'sort_order' => 1, 'grants' => [[$windows, 'download']]],
-            ['slug' => 'android-windows', 'name' => 'Android + Windows Bundle', 'description' => "One purchase. Install the app on your compatible Android and Windows devices, subject to the app's license terms.", 'price_cents' => 499, 'sort_order' => 2, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
+            ['slug' => 'unlock', 'name' => 'Unlock', 'description' => 'Bar Tender Atlas is free to try for 3 days on Android and Windows. This one-time purchase keeps it unlocked permanently via a license key, activated in-app on up to 2 of your devices.', 'price_cents' => 299, 'sort_order' => 0, 'featured' => true, 'grants' => [[$android, 'download'], [$windows, 'download']]],
         ];
 
         foreach ($editions as $data) {

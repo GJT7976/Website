@@ -11,15 +11,23 @@
 @php($edition = $app->editions->first())
 
 @if ($edition)
+    {{--
+        Heading/CTA deliberately say "Unlock {app}", not "...Pro" — this
+        partial is shared by apps with a genuine free-tier-plus-Pro-tier
+        product (Bread Maker, The Stock Pot) and apps where the license
+        instead unlocks continued use of the whole app after a trial
+        (Bar Tender Atlas has no separate free tier once its 3-day trial
+        ends). $edition->description carries the app-specific framing.
+    --}}
     <section id="unlock-pro" class="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8">
         <div class="card border-niagara-500 p-6 ring-1 ring-niagara-500">
-            <h2 class="text-h2">Unlock {{ $app->name }} Pro</h2>
+            <h2 class="text-h2">Unlock {{ $app->name }}</h2>
             <p class="text-body mt-2">{{ $edition->description }}</p>
             <p class="text-h3 mt-4">{{ $edition->priceLabel() }} <span class="text-small font-normal text-navy-soft">one time, up to 2 devices</span></p>
             <div class="mt-5 flex flex-wrap gap-3">
-                <a href="{{ route('checkout.create.edition', [$app, $edition]) }}" class="btn btn-primary">Unlock Pro — {{ $edition->priceLabel() }}</a>
+                <a href="{{ route('checkout.create.edition', [$app, $edition]) }}" class="btn btn-primary">Unlock — {{ $edition->priceLabel() }}</a>
             </div>
-            <p class="text-small mt-4 text-navy-soft">After purchase, enter your license key in the app's Settings to unlock Pro on up to 2 of your devices.</p>
+            <p class="text-small mt-4 text-navy-soft">After purchase, enter your license key in the app's Settings to activate it on up to 2 of your devices.</p>
         </div>
     </section>
 @endif
