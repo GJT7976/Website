@@ -561,14 +561,21 @@ MD,
      * charts, Pluto included; Whole Sign and Placidus houses; a daily
      * deterministic "celestial card"; real synastry; a searchable
      * Grimoire reference library covering every sign/planet/house/
-     * aspect). Published with a working demo so it's visible on the
-     * site, but deliberately **not yet purchasable**:
-     * `direct_purchase_enabled` stays false and no price/edition is set
-     * because `PROJECT_SPEC.md`'s `PRICE_OR_PRODUCT_IDS` is still an
-     * owner-provided placeholder in the app's own repository — never
-     * invent a price here. Flip `direct_purchase_enabled` to true and add
-     * pricing/editions (see seedHummusHouseEditions for the pattern) once
-     * the owner supplies real numbers.
+     * aspect). Localized into English, Romanian, French, Italian, and
+     * Spanish (2026-09-18 REPAIR, see the app's own `docs/DECISIONS.md`).
+     *
+     * Same-day REPAIR also switched the website edition from "paid
+     * upfront, fully unlocked" to a free download with a 3-day trial and
+     * a permanent license-key unlock afterward (matching Bread Maker's
+     * model — see `is_free` above, now `true`). Published with a working
+     * demo so it's visible on the site, but deliberately **not yet
+     * purchasable**: `direct_purchase_enabled` stays false and no price/
+     * edition is set because `PROJECT_SPEC.md`'s `PRICE_OR_PRODUCT_IDS` is
+     * still an owner-provided placeholder in the app's own repository —
+     * never invent a price here. Flip `direct_purchase_enabled` to true
+     * and add a "Pro Upgrade"-style license edition (see
+     * seedBreadMakerEditions for the pattern) once the owner supplies real
+     * numbers.
      */
     private function seedCelestialGrimoire(): void
     {
@@ -605,10 +612,16 @@ each with substantial, real content rather than a two-line summary.
 A private Celestial Journal ties reflections to dates, cards, transits, and
 Moon phases — stored locally on your device by default, with no account
 required.
+
+Available in English, Romanian, French, Italian, and Spanish, with a
+language picker in onboarding and Settings.
+
+Free to download and use for 3 days from first launch; after the trial, a
+one-time license key keeps everything unlocked permanently.
 MD,
                 'category_id' => $category?->id,
                 'version' => '1.1.0',
-                'is_free' => false,
+                'is_free' => true,
                 'currency' => 'USD',
                 'status' => 'published',
                 'is_featured' => false,
@@ -623,7 +636,7 @@ MD,
                 'demo_type' => 'flutter_web',
                 'demo_url' => '/demo-builds/celestial-grimoire/index.html',
                 'demo_version' => '1.1.0',
-                'demo_instructions' => 'This is the real app, running in your browser. Complete onboarding with any birth date/time/place to see your own natal chart and today\'s Daily Card — nothing you enter here leaves this browser.',
+                'demo_instructions' => 'This is the real app, running in your browser. Complete onboarding with any birth date/time/place to see your own natal chart and today\'s Daily Card — nothing you enter here leaves this browser. Pick your language on the onboarding language step or later in Settings (English, Romanian, French, Italian, and Spanish are all supported). The downloadable Android and Windows apps below include a 3-day free trial, after which a one-time license key keeps everything unlocked permanently.',
                 'demo_warning' => 'This demo is a full Flutter web build (~45 MB) — first load can take a few seconds on a slower connection.',
                 'demo_reset_mode' => 'Your profile, chart, and journal are saved in this browser only. Clearing this site\'s data in your browser resets the demo.',
                 'support_info' => 'For questions about Celestial Grimoire, use the Contact page and select this app.',
@@ -657,11 +670,18 @@ MD,
             ['title' => 'Real synastry & compatibility', 'description' => 'Inter-chart aspects scored across seven areas, always shown with the specific aspects behind the score — never an unexplained percentage.', 'icon' => '💞', 'sort_order' => 4],
             ['title' => 'Searchable Grimoire', 'description' => 'All 12 signs, all 10 planets, all 12 houses, and all 5 aspects, with substantial reference content and one search box.', 'icon' => '📖', 'sort_order' => 5],
             ['title' => 'Private Celestial Journal', 'description' => 'Reflections tied to dates, cards, transits, and Moon phases — stored on your device by default, no account required.', 'icon' => '📓', 'sort_order' => 6],
+            ['title' => 'Five languages', 'description' => 'English, Romanian, French, Italian, and Spanish — pick your language during onboarding or anytime in Settings.', 'icon' => '🌐', 'sort_order' => 7],
         ];
 
         foreach ($features as $feature) {
             $app->features()->updateOrCreate(['title' => $feature['title']], $feature);
         }
+        // Prunes the stale pre-rename "Real natal chart, Pluto included"
+        // row left behind when that feature was renamed to "...nodes &
+        // Chiron included" in an earlier release — updateOrCreate() only
+        // ever adds/updates by title, never removes a title that's no
+        // longer in the list above.
+        $app->features()->whereNotIn('title', array_column($features, 'title'))->delete();
     }
 
     /**
