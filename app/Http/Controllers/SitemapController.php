@@ -36,6 +36,8 @@ class SitemapController extends Controller
             $urls->push([
                 'loc' => match ($page->slug) {
                     'about' => null, // already added above
+                    'install-android' => route('support.install.android'),
+                    'install-windows' => route('support.install.windows'),
                     default => route($page->slug),
                 },
                 'lastmod' => $page->updated_at->toAtomString(),
