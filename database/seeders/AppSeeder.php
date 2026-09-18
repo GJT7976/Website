@@ -1142,6 +1142,17 @@ MD,
      * images for this launch — feature_graphic.png as the primary feature
      * graphic, banner.png as an additional screenshot-slot image, since the
      * app has no captured in-app UI screenshots yet.
+     *
+     * 2026-09-18 REPAIR: the website-channel build (sideloaded Android APK
+     * / Windows installer) gained a mandatory 3-day free trial + whole-app
+     * lock (root CLAUDE.md's trial/license rule) — previously the base app
+     * was free forever with no trial, and the Pro Upgrade license only
+     * unlocked Stock Pot Pro (unlimited collections, extra timers, cooking
+     * history, accent themes) as a separate feature gate. Activating that
+     * same license now both ends the trial lock and unlocks Stock Pot Pro
+     * — one purchase, one outcome. Google Play is unaffected: the base app
+     * there is still always free with no trial, and Stock Pot Pro remains
+     * a separate Play Billing purchase.
      */
     private function seedTheStockPot(): void
     {
@@ -1171,9 +1182,17 @@ Everything is stored locally with validated backup and restore — no
 account, and no internet connection required after install. The interface
 adapts to wider screens with a master-detail layout on tablets and desktop.
 Switch between Metric and US measurements at any time.
+
+Free to download and try for 3 days on Android and Windows — every recipe,
+the ingredient scaler, Cook Mode, the shopping list, and backup/restore are
+fully usable during the trial. A one-time $2.99 Pro Upgrade unlocks the app
+permanently afterward, on up to 2 of your devices, and also unlocks Stock
+Pot Pro (unlimited collections, up to three concurrent cook timers, cooking
+history, and extra accent themes). On Google Play, the base app is always
+free with no trial; Stock Pot Pro there is a separate Play Billing purchase.
 MD,
                 'category_id' => $category?->id,
-                'version' => '1.3.0',
+                'version' => '1.4.0',
                 // The app itself is a free install — only Pro is sold, via
                 // the single edition below. Every other app on this site
                 // is is_free=false because the purchase IS the download;
@@ -1195,7 +1214,7 @@ MD,
                 // Deliberately NOT public/demos/{slug}/ — see DEMO_DEPLOYMENT.md.
                 'demo_url' => '/demo-builds/the-stock-pot/index.html',
                 'demo_version' => '1.2.0',
-                'demo_instructions' => 'This is the real app, running in your browser. Browse all 500 recipes, scale servings, and try the shopping list — everything you do stays in this browser only.',
+                'demo_instructions' => 'This is the real app, running in your browser. Browse all 500 recipes, scale servings, and try the shopping list — everything you do stays in this browser only. The web demo never trial-locks and has no Pro Upgrade purchase; get the Android or Windows app for the 3-day trial and permanent unlock.',
                 'demo_warning' => 'This demo is a full Flutter web build (~97 MB, since all 499 available recipe photos are bundled) — first load can take a while on a slower connection.',
                 'demo_reset_mode' => 'Favorites, collections, notes, and the shopping list are saved in this browser only. Clearing this site\'s data in your browser resets the demo.',
                 'support_info' => 'For questions about The Stock Pot, use the Contact page and select this app.',
@@ -1252,6 +1271,11 @@ MD,
      * customer gets the license key that unlocks Pro in the installed
      * app via its license-activation screen (Settings → Unlock Pro),
      * which calls POST /api/license/activate.
+     *
+     * 2026-09-18 REPAIR: the same license activation now also ends the
+     * app's new mandatory 3-day trial lock (see seedTheStockPot()'s doc
+     * comment) — the description below reflects unlocking the app, not
+     * just Stock Pot Pro's extra features.
      */
     private function seedTheStockPotEditions(App $app): void
     {
@@ -1262,7 +1286,7 @@ MD,
             ['app_id' => $app->id, 'slug' => 'pro-upgrade'],
             [
                 'name' => 'Pro Upgrade',
-                'description' => 'The Stock Pot is free to download and use. This one-time purchase unlocks Stock Pot Pro (up to 3 concurrent cook timers) on up to 2 of your Android and/or Windows devices via a license key.',
+                'description' => 'The Stock Pot is free to download and try for 3 days on Android and Windows. This one-time purchase keeps it unlocked permanently via a license key, activated on up to 2 of your devices, and also unlocks Stock Pot Pro (up to 3 concurrent cook timers, unlimited collections, cooking history, and extra accent themes).',
                 'price_cents' => 299,
                 'currency' => $app->currency ?? 'USD',
                 'active' => true,
