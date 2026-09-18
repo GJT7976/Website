@@ -36,7 +36,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         // deploy-sync is likewise a non-browser caller (the CLI) —
         // authenticated by its own bearer token instead; see
         // DeploySyncController's docblock.
-        $middleware->validateCsrfTokens(except: ['stripe/webhook', 'deploy-sync']);
+        $middleware->validateCsrfTokens(except: ['stripe/webhook', 'deploy-sync', 'release-sync/*']);
 
         // Keep the admin backend reachable while the public site is in
         // maintenance mode, so the owner can turn it back off from the

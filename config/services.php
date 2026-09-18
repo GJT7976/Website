@@ -51,4 +51,14 @@ return [
         'token' => env('DEPLOY_SYNC_TOKEN'),
     ],
 
+    // Same pattern, for uploading a release binary without SSH or an admin
+    // browser session — see ReleaseSyncController's docblock. Deliberately
+    // not set in .env.example: 404s (not a blank-token accept) whenever
+    // this is empty, until someone deliberately sets RELEASE_SYNC_TOKEN.
+    // A distinct token from DEPLOY_SYNC_TOKEN on purpose — least privilege,
+    // since this one can publish a new customer-facing binary.
+    'release_sync' => [
+        'token' => env('RELEASE_SYNC_TOKEN'),
+    ],
+
 ];

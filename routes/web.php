@@ -12,6 +12,7 @@ use App\Http\Controllers\LicenseManagementController;
 use App\Http\Controllers\MyDownloadsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PricingController;
+use App\Http\Controllers\ReleaseSyncController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SupportController;
@@ -99,3 +100,7 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])->name
 Route::post('/deploy-sync', DeploySyncController::class)
     ->middleware('throttle:5,1')
     ->name('deploy-sync');
+
+Route::post('/release-sync/{app:slug}/{platform:code}', ReleaseSyncController::class)
+    ->middleware('throttle:10,1')
+    ->name('release-sync');
