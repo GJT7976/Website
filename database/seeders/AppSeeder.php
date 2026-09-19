@@ -21,6 +21,7 @@ class AppSeeder extends Seeder
         $this->seedMarginPos();
         $this->seedBarTenderAtlas();
         $this->seedTheStockPot();
+        $this->seedAirFryerRecipes();
         $this->seedPlaceholderApps();
         $this->seedTestPurchaseApp();
     }
@@ -1287,6 +1288,164 @@ MD,
             [
                 'name' => 'Pro Upgrade',
                 'description' => 'The Stock Pot is free to download and try for 3 days on Android and Windows. This one-time purchase keeps it unlocked permanently via a license key, activated on up to 2 of your devices, and also unlocks Stock Pot Pro (up to 3 concurrent cook timers, unlimited collections, cooking history, and extra accent themes).',
+                'price_cents' => 299,
+                'currency' => $app->currency ?? 'USD',
+                'active' => true,
+                'featured' => true,
+                'sort_order' => 0,
+            ]
+        );
+
+        foreach ([$android, $windows] as $platform) {
+            if (! $platform) {
+                continue;
+            }
+
+            EditionEntitlement::updateOrCreate([
+                'app_edition_id' => $edition->id,
+                'platform_id' => $platform->id,
+                'access_type' => 'download',
+            ]);
+        }
+    }
+
+    /**
+     * Air Fryer Recipes — REPAIR 2026-09-18, added right alongside that
+     * app's own repair which wired up the mandatory 3-day trial + license
+     * lock on its website channel (see that repo's docs/website_license.md).
+     * Same free-install / single Pro-Upgrade-license model as The Stock Pot
+     * (seedTheStockPot() above): the app itself is free to download and try
+     * for 3 days; the license both ends the trial lock and unlocks Meal
+     * Planner Pro, since there's no separate Play Billing purchase on this
+     * channel. On Google Play the base app is always free with no trial;
+     * Meal Planner Pro there is a separate Play Billing purchase.
+     */
+    private function seedAirFryerRecipes(): void
+    {
+        $category = AppCategory::where('slug', 'food-recipes')->first();
+
+        $app = $this->updateOrCreateApp(
+            ['slug' => 'air-fryer-recipes'],
+            [
+                'name' => 'Air Fryer Recipes',
+                'tagline' => 'Everything you air fry, from one calm cookbook.',
+                'short_description' => '200 tested air-fryer recipes across 8 categories, with a serving scaler, shopping list, Cook Mode, per-step timers, and offline-first backup.',
+                'long_description' => <<<'MD'
+Air Fryer Recipes is a 200-recipe offline cookbook built around one
+appliance: your air fryer. Breakfast & brunch, appetizers & snacks,
+poultry, beef & pork, seafood, vegetarian, sides, and desserts — real
+recipes with real ingredient lists, temperatures, and step-by-step
+instructions.
+
+A serving scaler rebalances every ingredient quantity — whole numbers,
+fractions, mixed numbers, and ranges — to whatever serving count you need,
+and switches between °F and °C. Cook Mode walks you through each recipe
+with built-in per-step timers so you're not juggling your phone with
+greasy hands. Save favorites, organize recipes into collections, add
+personal ratings and notes, and build a shopping list automatically as
+you browse — Meal Planner Pro turns a whole week of planned meals into
+one consolidated shopping list in a tap.
+
+Everything is stored locally with validated backup and restore — no
+account, and no internet connection required after install. The
+interface adapts to wider screens on desktop, and the whole app is
+available in English, French, Spanish, Italian, and German.
+
+Free to download and try for 3 days on Android and Windows — every
+recipe, the serving scaler, Cook Mode, the shopping list, and
+backup/restore are fully usable during the trial. A one-time $2.99 Pro
+Upgrade unlocks the app permanently afterward, on up to 2 of your
+devices, and also unlocks Meal Planner Pro. On Google Play, the base app
+is always free with no trial; Meal Planner Pro there is a separate Play
+Billing purchase.
+MD,
+                'category_id' => $category?->id,
+                'version' => '1.5.0',
+                // Free install — only the Pro Upgrade license is sold, via
+                // the single edition below. See seedAirFryerRecipesEditions()
+                // and resources/views/apps/partials/{free-download,pro-unlock}.blade.php.
+                'is_free' => true,
+                'price_cents' => null,
+                'currency' => 'USD',
+                'status' => 'published',
+                'is_featured' => false,
+                'direct_purchase_enabled' => true,
+                'android_delivery_mode' => 'direct',
+                'windows_delivery_mode' => 'direct',
+                'license_type' => 'personal',
+                'update_policy' => 'updates_included',
+                'demo_enabled' => false,
+                'support_info' => 'For questions about Air Fryer Recipes, use the Contact page and select this app.',
+                'system_requirements' => 'Android 5.0+ or Windows 10 (64-bit) or later.',
+                'seo_title' => 'Air Fryer Recipes — 200 Tested Air-Fryer Recipes',
+                'seo_description' => '200 tested air-fryer recipes across 8 categories, with a serving scaler, shopping list, Cook Mode, per-step timers, and offline-first backup. Available for Android and Windows.',
+            ]
+        );
+
+        $platformCodes = ['android', 'windows'];
+        $platformIds = Platform::whereIn('code', $platformCodes)->pluck('id');
+        $app->platforms()->sync($platformIds);
+
+        $this->seedAirFryerRecipesEditions($app);
+
+        $icon = $this->seedMedia('icon.png', 'image/png', 512, 512, 'Air Fryer Recipes app icon', 'air-fryer-recipes');
+        $feature = $this->seedMedia('feature.png', 'image/png', 1024, 500, 'Air Fryer Recipes — Everything you air fry, from one calm cookbook.', 'air-fryer-recipes');
+        $banner = $this->seedMedia('banner.png', 'image/png', 1794, 876, 'Air Fryer Recipes — 200 recipes, 8 categories', 'air-fryer-recipes');
+        $s1 = $this->seedMedia('screenshot-1-home.png', 'image/png', 1215, 2160, 'Browse all 200 recipes by category', 'air-fryer-recipes');
+        $s2 = $this->seedMedia('screenshot-2-recipe.png', 'image/png', 1215, 2160, 'Recipe detail with serving scaler and °F/°C', 'air-fryer-recipes');
+        $s3 = $this->seedMedia('screenshot-3-cook-mode.png', 'image/png', 1215, 2160, 'Cook Mode with per-step timers', 'air-fryer-recipes');
+        $s4 = $this->seedMedia('screenshot-4-planner.png', 'image/png', 1215, 2160, 'Meal Planner Pro weekly calendar', 'air-fryer-recipes');
+
+        $app->media()->sync([
+            $icon->id => ['type' => 'icon', 'sort_order' => 0],
+            $feature->id => ['type' => 'feature_graphic', 'sort_order' => 0],
+            $banner->id => ['type' => 'screenshot', 'sort_order' => 0],
+            $s1->id => ['type' => 'screenshot', 'sort_order' => 1],
+            $s2->id => ['type' => 'screenshot', 'sort_order' => 2],
+            $s3->id => ['type' => 'screenshot', 'sort_order' => 3],
+            $s4->id => ['type' => 'screenshot', 'sort_order' => 4],
+        ]);
+
+        $features = [
+            ['title' => '200 recipes, 8 categories', 'description' => 'Breakfast & brunch, appetizers, poultry, beef & pork, seafood, vegetarian, sides, and desserts.', 'icon' => '🍳', 'sort_order' => 0],
+            ['title' => 'Serving scaler', 'description' => 'Rebalances whole numbers, fractions, mixed numbers, and ranges to any serving count, with °F/°C.', 'icon' => '⚖️', 'sort_order' => 1],
+            ['title' => 'Cook Mode & timers', 'description' => 'Step-by-step guidance with built-in per-step timers so you\'re not juggling your phone.', 'icon' => '⏱', 'sort_order' => 2],
+            ['title' => 'Shopping list', 'description' => 'Build a shopping list automatically from the recipes you\'ve picked.', 'icon' => '🛒', 'sort_order' => 3],
+            ['title' => 'Meal Planner Pro', 'description' => 'A weekly calendar that consolidates into one shopping list for the whole week.', 'icon' => '📅', 'sort_order' => 4],
+            ['title' => 'Favorites, collections & notes', 'description' => 'Save favorites, organize recipes into collections, and add personal ratings and notes.', 'icon' => '📝', 'sort_order' => 5],
+            ['title' => 'Validated backup & restore', 'description' => 'Your data stays on your device, with validated export/import and no account required.', 'icon' => '💾', 'sort_order' => 6],
+            ['title' => '5 languages', 'description' => 'English, French, Spanish, Italian, and German, with light and dark themes.', 'icon' => '🌐', 'sort_order' => 7],
+            ['title' => 'Share & print', 'description' => 'Share a recipe as text or print/save it as a PDF, right from the recipe page.', 'icon' => '🖨️', 'sort_order' => 8],
+        ];
+
+        foreach ($features as $feature) {
+            $app->features()->updateOrCreate(['title' => $feature['title']], $feature);
+        }
+
+        $this->command?->info("Air Fryer Recipes app_id: {$app->id}");
+    }
+
+    /**
+     * A single "Pro Upgrade" at $2.99 USD, matching seedTheStockPotEditions()
+     * exactly — the EditionEntitlement grants below (android + windows, both
+     * 'download') resolve to the license system's 'android_windows_bundle'
+     * platform_entitlement (one purchase, one license, 2 devices total across
+     * both platforms — see LICENSE_SYSTEM.md). The installer itself is free
+     * regardless (see FreeDownloadController); buying this edition is purely
+     * how a customer gets the license key that unlocks the app via its
+     * license-activation screen (Settings → License), which calls
+     * POST /api/license/activate.
+     */
+    private function seedAirFryerRecipesEditions(App $app): void
+    {
+        $android = Platform::where('code', 'android')->first();
+        $windows = Platform::where('code', 'windows')->first();
+
+        $edition = AppEdition::updateOrCreate(
+            ['app_id' => $app->id, 'slug' => 'pro-upgrade'],
+            [
+                'name' => 'Pro Upgrade',
+                'description' => 'Air Fryer Recipes is free to download and try for 3 days on Android and Windows. This one-time purchase keeps it unlocked permanently via a license key, activated on up to 2 of your devices, and also unlocks Meal Planner Pro.',
                 'price_cents' => 299,
                 'currency' => $app->currency ?? 'USD',
                 'active' => true,
